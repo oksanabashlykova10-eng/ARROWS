@@ -25,7 +25,7 @@
         
         /* Tabs Nav */
         #tabs-nav { display: flex; flex-wrap: wrap; background: #0d0d16; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .tab-btn { flex: 1 1 20%; background: transparent; color: #666; border: none; padding: 12px 5px; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.2s; border-bottom: 3px solid transparent; }
+        .tab-btn { flex: 1 1 33.333%; max-width: 33.333%; background: transparent; color: #666; border: none; padding: 10px 5px; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.2s; border-bottom: 3px solid transparent; }
         .tab-btn:hover { color: #fff; }
         .tab-btn.active { color: #fff; border-bottom: 3px solid var(--active-neon); text-shadow: 0 0 8px var(--active-neon); background: rgba(255,255,255,0.05); }
 
@@ -107,8 +107,8 @@
         
         .action-btn { background: transparent; color: white; border: 2px solid var(--neon-3); padding: 8px 20px; font-family: 'Orbitron', sans-serif; font-weight: bold; border-radius: 5px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; display: flex; align-items: center; gap: 8px;}
         .action-btn:hover { background: var(--neon-3); color: black; box-shadow: 0 0 15px var(--neon-3); }
-        .action-btn.export { border-color: var(--neon-4); color: var(--neon-4); }
-        .action-btn.export:hover { background: var(--neon-4); color: black; box-shadow: 0 0 15px var(--neon-4); }
+        .action-btn.export { border-color: var(--neon-2); color: var(--neon-2); }
+        .action-btn.export:hover { background: var(--neon-2); color: black; box-shadow: 0 0 15px var(--neon-2); }
         .preview-actions { display:flex; gap:10px; align-items:center; }
         .export-size-box { min-width:165px; padding:6px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.16); background:rgba(0,0,0,0.45); font-size:0.64rem; line-height:1.3; color:#aaa; text-align:center; }
         .export-size-box strong { color:var(--neon-4); display:block; font-size:0.7rem; }
@@ -125,6 +125,19 @@
         .special-setting-item .flex-row { margin-bottom: 2px; }
         .special-setting-item .special-arrow-note { margin: 0; padding-right: 82px; }
         .bonus-setting-item { background: rgba(255,255,255,0.018); }
+
+        .code-panel { border-color:rgba(255,0,255,0.55) !important; background:radial-gradient(circle at top right, rgba(255,0,255,0.09), rgba(0,0,0,0.23)); }
+        .code-output { min-height:230px; resize:vertical; font-size:0.67rem; line-height:1.45; color:#f4d8ff; border-color:rgba(255,0,255,0.36) !important; white-space:pre-wrap; word-break:break-all; }
+        .code-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:8px; }
+        .code-action-btn { min-height:40px; border:1px solid var(--neon-2); color:var(--neon-2); background:rgba(0,0,0,0.35); border-radius:7px; cursor:pointer; font-weight:bold; transition:.2s; }
+        .code-action-btn:hover { background:var(--neon-2); color:#090009; box-shadow:0 0 13px var(--neon-2); }
+        .code-action-btn.secondary { border-color:#aeb6bd; color:#dfe5e8; }
+        .code-action-btn.secondary:hover { background:#dfe5e8; color:#111; box-shadow:0 0 12px rgba(223,229,232,.5); }
+        .code-help { color:#9ca4aa; font-size:.7rem; line-height:1.48; margin:8px 0 10px; }
+        .code-status { min-height:18px; margin-top:8px; color:var(--neon-2); font-size:.7rem; line-height:1.35; }
+        .autosave-status { padding:9px 10px; border-radius:7px; border:1px solid rgba(255,0,255,.25); background:rgba(255,0,255,.035); color:#c5bcc8; font-size:.7rem; line-height:1.45; }
+        .project-file-label { display:flex !important; align-items:center; justify-content:center; min-height:40px; margin:0 !important; border:1px solid var(--neon-2); border-radius:7px; color:var(--neon-2) !important; cursor:pointer; text-transform:none !important; font-size:.78rem !important; transition:.2s; }
+        .project-file-label:hover { background:var(--neon-2); color:#090009 !important; box-shadow:0 0 13px var(--neon-2); }
 
 
         .game-frame-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 20px; position: relative; }
@@ -148,6 +161,7 @@
 <button class="tab-btn" data-color="var(--neon-3)" data-i18n="tab.rules" data-tab="tab-rules">Правила</button>
 <button class="tab-btn" data-color="var(--neon-4)" data-i18n="tab.questions" data-tab="tab-questions">Вопросы</button>
 <button class="tab-btn" data-color="var(--neon-1)" data-i18n="tab.audio" data-tab="tab-audio">Звуки</button>
+<button class="tab-btn" data-color="var(--neon-2)" data-i18n="tab.code" data-tab="tab-code">Код</button>
 </div>
 <div id="settings-area">
 <!-- 1. ДИЗАЙН И МЕДИА -->
@@ -532,7 +546,7 @@ _____ is capital. (London, LONDON)
 <div class="control-group"><div class="group-title" data-i18n="heading.loseSound">ЗВУК ПОРАЖЕНИЯ (ЖИЗНИ)</div><div class="audio-row"><div class="audio-row-left"><input checked="" name="snd-lose" onchange="toggleUrl('lose')" type="radio" value="1"/> 1. Спуск</div><div class="play-btn" onclick="previewSound('lose', 1)">▶</div></div><div class="audio-row"><div class="audio-row-left"><input name="snd-lose" onchange="toggleUrl('lose')" type="radio" value="2"/> 2. Сбой</div><div class="play-btn" onclick="previewSound('lose', 2)">▶</div></div><div class="audio-row"><div class="audio-row-left"><input name="snd-lose" onchange="toggleUrl('lose')" type="radio" value="3"/> 3. Гул</div><div class="play-btn" onclick="previewSound('lose', 3)">▶</div></div><div class="audio-row"><div class="audio-row-left"><input name="snd-lose" onchange="toggleUrl('lose')" type="radio" value="url"/> 4. Свой звук (URL)</div></div><input class="hidden" id="url-lose" oninput="pushLiveUpdate()" placeholder="https://...mp3" type="text"/></div>
 <div class="control-group">
 <div class="group-title" data-i18n="heading.arrowSound">ЗВУК УЛЁТА СТРЕЛОК</div>
-<div class="audio-row"><div class="audio-row-left"><input checked="" name="snd-arrow" onchange="toggleUrl('arrow')" type="radio" value="1"/> 1. Сухой «вжух» меча</div><div class="play-btn" onclick="previewSound('arrow', 1)">▶</div></div>
+<div class="audio-row"><div class="audio-row-left"><input checked="" name="snd-arrow" onchange="toggleUrl('arrow')" type="radio" value="1"/> 1. Взмах меча</div><div class="play-btn" onclick="previewSound('arrow', 1)">▶</div></div>
 <div class="audio-row"><div class="audio-row-left"><input name="snd-arrow" onchange="toggleUrl('arrow')" type="radio" value="2"/> 2. Мягкий воздушный свист</div><div class="play-btn" onclick="previewSound('arrow', 2)">▶</div></div>
 <div class="audio-row"><div class="audio-row-left"><input name="snd-arrow" onchange="toggleUrl('arrow')" type="radio" value="3"/> 3. Неоновый импульс</div><div class="play-btn" onclick="previewSound('arrow', 3)">▶</div></div>
 <div class="audio-row"><div class="audio-row-left"><input name="snd-arrow" onchange="toggleUrl('arrow')" type="radio" value="url"/> 4. Свой звук (URL)</div><div class="play-btn" onclick="previewSound('arrow', 'url')">▶</div></div>
@@ -548,6 +562,42 @@ _____ is capital. (London, LONDON)
 <input class="hidden" id="url-cor" oninput="pushLiveUpdate()" placeholder="https://...mp3" type="text"/>
 </div>
 <div class="control-group"><div class="group-title" data-i18n="heading.wrongSound">ЗВУК НЕПРАВИЛЬНОГО ОТВЕТА</div><div class="audio-row"><div class="audio-row-left"><input checked="" name="snd-err" onchange="toggleUrl('err')" type="radio" value="1"/> 1. Резкий сбой</div><div class="play-btn" onclick="previewSound('err', 1)">▶</div></div><div class="audio-row"><div class="audio-row-left"><input name="snd-err" onchange="toggleUrl('err')" type="radio" value="2"/> 2. Низкий гул</div><div class="play-btn" onclick="previewSound('err', 2)">▶</div></div><div class="audio-row"><div class="audio-row-left"><input name="snd-err" onchange="toggleUrl('err')" type="radio" value="3"/> 3. Короткий спуск</div><div class="play-btn" onclick="previewSound('err', 3)">▶</div></div><div class="audio-row"><div class="audio-row-left"><input name="snd-err" onchange="toggleUrl('err')" type="radio" value="url"/> 4. Свой звук (URL)</div></div><input class="hidden" id="url-err" oninput="pushLiveUpdate()" placeholder="https://...mp3" type="text"/></div>
+</div>
+<!-- 5. КОД И ПРОЕКТ -->
+<div class="tab-content" id="tab-code">
+<div class="control-group code-panel">
+<div class="group-title" data-i18n="heading.exportCode">КОД ДЛЯ ВСТАВКИ В GENIALLY</div>
+<p class="code-help" data-i18n="label.codeHelp">Весь HTML игры упакован внутрь srcdoc. Реальный адрес страницы редактора в коде iframe не используется.</p>
+<textarea class="code-output" id="generated-code" readonly spellcheck="false" aria-label="Готовый iframe-код"></textarea>
+<div class="code-actions">
+<button class="code-action-btn" data-i18n="button.refreshCode" onclick="refreshGeneratedCode(true)">⟳ Обновить код</button>
+<button class="code-action-btn" data-i18n="button.copyCode" onclick="copyGeneratedCode()">📋 Скопировать код</button>
+<button class="code-action-btn secondary" data-i18n="button.downloadHtml" onclick="downloadGameHtml()">⬇ Скачать HTML-файл</button>
+<button class="code-action-btn secondary" data-i18n="button.selectCode" onclick="selectGeneratedCode()">Выделить весь код</button>
+</div>
+<div class="code-status" id="code-status"></div>
+</div>
+
+<div class="control-group code-panel">
+<div class="group-title" data-i18n="heading.projectFiles">СОХРАНЕНИЕ ПРОЕКТА</div>
+<label data-i18n="label.projectName">Название проекта и файла</label>
+<input id="cfg-projectName" type="text" value="My_Arrows_Game" placeholder="Present_Simple_A1" oninput="scheduleAutosave()"/>
+<p class="code-help" data-i18n="label.projectHelp">JSON-файл сохраняет настройки, вопросы, изображения, звуки и расположение элементов. Его можно загрузить позже и продолжить работу.</p>
+<div class="code-actions">
+<button class="code-action-btn" data-i18n="button.saveProject" onclick="saveProjectToFile()">💾 Сохранить проект .json</button>
+<label class="project-file-label"><span data-i18n="button.loadProject">📂 Загрузить проект .json</span><input id="project-file-input" type="file" accept="application/json,.json" style="display:none" onchange="loadProjectFromFile(event)"/></label>
+</div>
+<div class="code-status" id="project-status"></div>
+</div>
+
+<div class="control-group code-panel">
+<div class="group-title" data-i18n="heading.autosave">АВТОСОХРАНЕНИЕ</div>
+<div class="autosave-status" id="autosave-status">Автосохранение включено. Изменения сохраняются в этом браузере каждые 5 секунд.</div>
+<div class="code-actions">
+<button class="code-action-btn secondary" data-i18n="button.restoreAutosave" onclick="restoreAutosaveManually()">↶ Восстановить автосохранение</button>
+<button class="code-action-btn secondary" data-i18n="button.clearAutosave" onclick="clearAutosave()">✕ Удалить автосохранение</button>
+</div>
+</div>
 </div>
 <div style="font-size: 0.65rem; color: #666; text-align: center; margin-top: auto; padding-top: 15px;">Все права принадлежат Башлыковой Оксане Михайловне, 2026</div>
 </div>
@@ -567,7 +617,7 @@ _____ is capital. (London, LONDON)
 <div class="preview-actions">
 <div class="export-size-box" id="export-size-indicator"><strong>Размер итоговой игры: —</strong><span>Подсчёт…</span></div>
 <button class="action-btn" onclick="triggerTestMode()">▶ Тестировать</button>
-<button class="action-btn export" onclick="exportGame()">💾 Код iframe</button>
+<button class="action-btn export" data-i18n="button.code" onclick="openCodeTab()">💗 Код</button>
 </div>
 </div>
 <div class="game-frame-container">
@@ -819,15 +869,49 @@ _____ is capital. (London, LONDON)
                     gain.gain.setValueAtTime(0.001, now); gain.gain.linearRampToValueAtTime(0.11, now + 0.025); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
                     osc.start(now); osc.stop(now + 0.25); return;
                 }
-                const duration = String(variant) === '2' ? 0.32 : 0.18;
+
+                const isSoft = String(variant) === '2';
+                const duration = isSoft ? 0.42 : 0.46;
                 const length = Math.max(1, Math.floor(gameAudioCtx.sampleRate * duration));
-                const buffer = gameAudioCtx.createBuffer(1, length, gameAudioCtx.sampleRate); const data = buffer.getChannelData(0);
-                for (let i=0;i<length;i++) { const envelope = Math.sin(Math.PI * i / length); data[i] = (Math.random()*2-1) * envelope; }
+                const buffer = gameAudioCtx.createBuffer(1, length, gameAudioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < length; i++) {
+                    const t = i / length;
+                    const envelope = Math.pow(Math.sin(Math.PI * t), isSoft ? 1.25 : 0.72) * Math.pow(1 - t, isSoft ? 0.12 : 0.32);
+                    data[i] = (Math.random() * 2 - 1) * envelope;
+                }
+
+                const output = gameAudioCtx.createDynamicsCompressor();
+                output.threshold.value = -10; output.knee.value = 10; output.ratio.value = 4; output.attack.value = 0.002; output.release.value = 0.14;
+                output.connect(gameAudioCtx.destination);
+
                 const src = gameAudioCtx.createBufferSource(); src.buffer = buffer;
-                const filter = gameAudioCtx.createBiquadFilter(); filter.type = String(variant) === '2' ? 'bandpass' : 'highpass';
-                filter.frequency.setValueAtTime(String(variant) === '2' ? 850 : 1500, now); filter.Q.value = String(variant) === '2' ? 0.8 : 1.6;
-                const gain = gameAudioCtx.createGain(); gain.gain.setValueAtTime(0.001, now); gain.gain.linearRampToValueAtTime(String(variant) === '2' ? 0.27 : 0.48, now + 0.018); gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-                src.connect(filter); filter.connect(gain); gain.connect(gameAudioCtx.destination); src.start(now); src.stop(now + duration);
+                const filter = gameAudioCtx.createBiquadFilter();
+                filter.type = isSoft ? 'bandpass' : 'highpass';
+                filter.frequency.setValueAtTime(isSoft ? 620 : 950, now);
+                filter.frequency.exponentialRampToValueAtTime(isSoft ? 1250 : 3800, now + duration * 0.72);
+                filter.Q.value = isSoft ? 0.72 : 1.15;
+                const gain = gameAudioCtx.createGain();
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(isSoft ? 0.81 : 1.44, now + (isSoft ? 0.03 : 0.014));
+                gain.gain.exponentialRampToValueAtTime(isSoft ? 0.25 : 0.42, now + duration * 0.44);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                src.connect(filter); filter.connect(gain); gain.connect(output); src.start(now); src.stop(now + duration);
+
+                // Яркий короткий щелчок хлыста — только для «Взмаха меча», без музыкального тона.
+                if (!isSoft) {
+                    const crackDuration = 0.075;
+                    const crackLength = Math.floor(gameAudioCtx.sampleRate * crackDuration);
+                    const crackBuffer = gameAudioCtx.createBuffer(1, crackLength, gameAudioCtx.sampleRate);
+                    const crackData = crackBuffer.getChannelData(0);
+                    for (let i = 0; i < crackLength; i++) crackData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / crackLength, 4.2);
+                    const crack = gameAudioCtx.createBufferSource(); crack.buffer = crackBuffer;
+                    const crackFilter = gameAudioCtx.createBiquadFilter(); crackFilter.type = 'highpass'; crackFilter.frequency.value = 3000; crackFilter.Q.value = 0.8;
+                    const crackGain = gameAudioCtx.createGain();
+                    const crackAt = now + 0.075;
+                    crackGain.gain.setValueAtTime(0.001, crackAt); crackGain.gain.linearRampToValueAtTime(1.18, crackAt + 0.004); crackGain.gain.exponentialRampToValueAtTime(0.001, crackAt + crackDuration);
+                    crack.connect(crackFilter); crackFilter.connect(crackGain); crackGain.connect(output); crack.start(crackAt); crack.stop(crackAt + crackDuration);
+                }
             }
 
             function playSound(event) {
@@ -1486,7 +1570,7 @@ _____ is capital. (London, LONDON)
                 charSadSrc: "https://img.genially.com/67961b32a116fb001568a75e/1c9ca612-bfba-43a0-a152-d1d775e34311.png", charHappySrc: "https://img.genially.com/67961b32a116fb001568a75e/83cdaca2-ddf5-42bb-8af9-fc7f5540270f.png"
             },
             uiLanguage: 'ru',
-            rules: { gridSize: 8, difficulty:'standard', arrowTypes: 4, countChameleon: 1, countTrap:0, countBomb:1, timer: 120, countLife: 2, countTime: 3, countFreeze: 2, qCount: 8, smartPause: true },
+            rules: { gridSize: 8, difficulty:'standard', arrowTypes: 4, countChameleon: 1, countTrap:0, countBomb:1, timer: 120, timerDisabled:false, countLife: 2, countTime: 3, countFreeze: 2, qCount: 8, smartPause: true },
             math: { enabled: true },
             audio: { winType:'4', winUrl:'', loseType:'1', loseUrl:'', arrowType:'1', arrowUrl:'', corType:'mixkit', corUrl:'https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', errType:'1', errUrl:'', timeType:'1', timeUrl:'' },
             positions: {
@@ -1500,16 +1584,16 @@ _____ is capital. (London, LONDON)
         };
 
         const UI_TRANSLATIONS = {
-            ru:{'tab.design':'Дизайн','tab.screens':'Экраны','tab.rules':'Правила','tab.questions':'Вопросы','tab.audio':'Звуки','preview.start':'Старт','preview.game':'Игра','preview.question':'Вопрос','preview.lose':'Поражение','preview.time':'Time out','preview.win':'Победа','preview.errors':'Ошибки','heading.language':'🌐 Язык интерфейса','label.chooseLanguage':'Выберите язык редактора','label.languageHint':'Переводятся названия вкладок и основные неоновые заголовки.','heading.quickThemes':'🎨 Быстрые темы','heading.gameBackground':'Фон игры (изображение)','heading.sadCharacter':'Персонаж (грустный)','heading.happyCharacter':'Персонаж (весёлый)','heading.arrowSettings':'Настройки стрелок','heading.screenBackground':'Фон экранов','heading.startScreen':'Экран старта','heading.gameQuestions':'Игровой экран и вопросы','heading.winScreen':'Экран победы','heading.loseScreen':'Экран поражения','heading.timeScreen':'Экран Time Out','heading.errorScreen':'Экран «Работа над ошибками»','heading.latex':'Математические формулы (LaTeX)','heading.winSound':'Звук победы (Win)','heading.loseSound':'Звук поражения (жизни)','heading.arrowSound':'Звук улёта стрелок','heading.correctSound':'Звук правильного ответа','heading.wrongSound':'Звук неправильного ответа','heading.fieldDifficulty':'Сложность игрового поля','heading.arrowDifficulty':'Сложность стрелок','heading.specialArrows':'Особые стрелки и бонусы'},
-            en:{'tab.design':'Design','tab.screens':'Screens','tab.rules':'Rules','tab.questions':'Questions','tab.audio':'Sounds','preview.start':'Start','preview.game':'Game','preview.question':'Question','preview.lose':'Defeat','preview.time':'Time out','preview.win':'Victory','preview.errors':'Errors','heading.language':'🌐 Interface language','label.chooseLanguage':'Choose the editor language','label.languageHint':'Tab names and main neon headings are translated.','heading.quickThemes':'🎨 Quick themes','heading.gameBackground':'Game background (image)','heading.sadCharacter':'Character (sad)','heading.happyCharacter':'Character (happy)','heading.arrowSettings':'Arrow settings','heading.screenBackground':'Screen background','heading.startScreen':'Start screen','heading.gameQuestions':'Game screen and questions','heading.winScreen':'Victory screen','heading.loseScreen':'Defeat screen','heading.timeScreen':'Time Out screen','heading.errorScreen':'Error review screen','heading.latex':'Mathematical formulas (LaTeX)','heading.winSound':'Victory sound (Win)','heading.loseSound':'Defeat sound (lives)','heading.arrowSound':'Arrow flight sound','heading.correctSound':'Correct answer sound','heading.wrongSound':'Wrong answer sound','heading.fieldDifficulty':'Game field difficulty','heading.arrowDifficulty':'Arrow difficulty','heading.specialArrows':'Special arrows and bonuses'},
-            de:{'tab.design':'Design','tab.screens':'Bildschirme','tab.rules':'Regeln','tab.questions':'Fragen','tab.audio':'Töne','preview.start':'Start','preview.game':'Spiel','preview.question':'Frage','preview.lose':'Niederlage','preview.time':'Zeit abgelaufen','preview.win':'Sieg','preview.errors':'Fehler','heading.language':'🌐 Sprache der Benutzeroberfläche','label.chooseLanguage':'Sprache des Editors wählen','label.languageHint':'Registerkarten und wichtige Neon-Überschriften werden übersetzt.','heading.quickThemes':'🎨 Schnellthemen','heading.gameBackground':'Spielhintergrund (Bild)','heading.sadCharacter':'Figur (traurig)','heading.happyCharacter':'Figur (fröhlich)','heading.arrowSettings':'Pfeileinstellungen','heading.screenBackground':'Bildschirmhintergrund','heading.startScreen':'Startbildschirm','heading.gameQuestions':'Spielbildschirm und Fragen','heading.winScreen':'Siegbildschirm','heading.loseScreen':'Niederlagenbildschirm','heading.timeScreen':'Zeit-abgelaufen-Bildschirm','heading.errorScreen':'Fehlerauswertung','heading.latex':'Mathematische Formeln (LaTeX)','heading.winSound':'Siegesklang','heading.loseSound':'Niederlagenklang','heading.arrowSound':'Pfeilflug-Geräusch','heading.correctSound':'Klang für richtige Antwort','heading.wrongSound':'Klang für falsche Antwort','heading.fieldDifficulty':'Schwierigkeitsgrad des Spielfelds','heading.arrowDifficulty':'Pfeilschwierigkeit','heading.specialArrows':'Spezialpfeile und Boni'},
-            es:{'tab.design':'Diseño','tab.screens':'Pantallas','tab.rules':'Reglas','tab.questions':'Preguntas','tab.audio':'Sonidos','preview.start':'Inicio','preview.game':'Juego','preview.question':'Pregunta','preview.lose':'Derrota','preview.time':'Tiempo agotado','preview.win':'Victoria','preview.errors':'Errores','heading.language':'🌐 Idioma de la interfaz','label.chooseLanguage':'Elige el idioma del editor','label.languageHint':'Se traducen las pestañas y los títulos principales de neón.','heading.quickThemes':'🎨 Temas rápidos','heading.gameBackground':'Fondo del juego (imagen)','heading.sadCharacter':'Personaje (triste)','heading.happyCharacter':'Personaje (feliz)','heading.arrowSettings':'Ajustes de flechas','heading.screenBackground':'Fondo de pantallas','heading.startScreen':'Pantalla de inicio','heading.gameQuestions':'Pantalla de juego y preguntas','heading.winScreen':'Pantalla de victoria','heading.loseScreen':'Pantalla de derrota','heading.timeScreen':'Pantalla de tiempo agotado','heading.errorScreen':'Pantalla de revisión de errores','heading.latex':'Fórmulas matemáticas (LaTeX)','heading.winSound':'Sonido de victoria','heading.loseSound':'Sonido de derrota','heading.arrowSound':'Sonido de vuelo de flechas','heading.correctSound':'Sonido de respuesta correcta','heading.wrongSound':'Sonido de respuesta incorrecta','heading.fieldDifficulty':'Dificultad del campo','heading.arrowDifficulty':'Dificultad de las flechas','heading.specialArrows':'Flechas especiales y bonificaciones'},
-            kk:{'tab.design':'Дизайн','tab.screens':'Экрандар','tab.rules':'Ережелер','tab.questions':'Сұрақтар','tab.audio':'Дыбыстар','preview.start':'Бастау','preview.game':'Ойын','preview.question':'Сұрақ','preview.lose':'Жеңіліс','preview.time':'Уақыт бітті','preview.win':'Жеңіс','preview.errors':'Қателер','heading.language':'🌐 Интерфейс тілі','label.chooseLanguage':'Редактор тілін таңдаңыз','label.languageHint':'Қойынды атаулары мен негізгі неон тақырыптары аударылады.','heading.quickThemes':'🎨 Жылдам тақырыптар','heading.gameBackground':'Ойын фоны (сурет)','heading.sadCharacter':'Кейіпкер (мұңды)','heading.happyCharacter':'Кейіпкер (көңілді)','heading.arrowSettings':'Жебе баптаулары','heading.screenBackground':'Экран фоны','heading.startScreen':'Бастау экраны','heading.gameQuestions':'Ойын экраны және сұрақтар','heading.winScreen':'Жеңіс экраны','heading.loseScreen':'Жеңіліс экраны','heading.timeScreen':'Уақыт біту экраны','heading.errorScreen':'Қателермен жұмыс экраны','heading.latex':'Математикалық формулалар (LaTeX)','heading.winSound':'Жеңіс дыбысы','heading.loseSound':'Жеңіліс дыбысы','heading.arrowSound':'Жебенің ұшу дыбысы','heading.correctSound':'Дұрыс жауап дыбысы','heading.wrongSound':'Қате жауап дыбысы','heading.fieldDifficulty':'Ойын алаңының күрделілігі','heading.arrowDifficulty':'Жебелер күрделілігі','heading.specialArrows':'Арнайы жебелер мен бонустар'},
-            zh:{'tab.design':'设计','tab.screens':'屏幕','tab.rules':'规则','tab.questions':'问题','tab.audio':'声音','preview.start':'开始','preview.game':'游戏','preview.question':'问题','preview.lose':'失败','preview.time':'时间到','preview.win':'胜利','preview.errors':'错误','heading.language':'🌐 界面语言','label.chooseLanguage':'选择编辑器语言','label.languageHint':'将翻译选项卡名称和主要霓虹标题。','heading.quickThemes':'🎨 快速主题','heading.gameBackground':'游戏背景（图像）','heading.sadCharacter':'角色（悲伤）','heading.happyCharacter':'角色（开心）','heading.arrowSettings':'箭头设置','heading.screenBackground':'屏幕背景','heading.startScreen':'开始屏幕','heading.gameQuestions':'游戏屏幕和问题','heading.winScreen':'胜利屏幕','heading.loseScreen':'失败屏幕','heading.timeScreen':'时间到屏幕','heading.errorScreen':'错题回顾屏幕','heading.latex':'数学公式（LaTeX）','heading.winSound':'胜利音效','heading.loseSound':'失败音效','heading.arrowSound':'箭头飞行音效','heading.correctSound':'正确答案音效','heading.wrongSound':'错误答案音效','heading.fieldDifficulty':'游戏区域难度','heading.arrowDifficulty':'箭头难度','heading.specialArrows':'特殊箭头与奖励'},
-            ko:{'tab.design':'디자인','tab.screens':'화면','tab.rules':'규칙','tab.questions':'질문','tab.audio':'소리','preview.start':'시작','preview.game':'게임','preview.question':'질문','preview.lose':'패배','preview.time':'시간 종료','preview.win':'승리','preview.errors':'오류','heading.language':'🌐 인터페이스 언어','label.chooseLanguage':'편집기 언어 선택','label.languageHint':'탭 이름과 주요 네온 제목이 번역됩니다.','heading.quickThemes':'🎨 빠른 테마','heading.gameBackground':'게임 배경(이미지)','heading.sadCharacter':'캐릭터(슬픔)','heading.happyCharacter':'캐릭터(행복)','heading.arrowSettings':'화살표 설정','heading.screenBackground':'화면 배경','heading.startScreen':'시작 화면','heading.gameQuestions':'게임 화면 및 질문','heading.winScreen':'승리 화면','heading.loseScreen':'패배 화면','heading.timeScreen':'시간 종료 화면','heading.errorScreen':'오답 검토 화면','heading.latex':'수학 공식(LaTeX)','heading.winSound':'승리 소리','heading.loseSound':'패배 소리','heading.arrowSound':'화살표 비행 소리','heading.correctSound':'정답 소리','heading.wrongSound':'오답 소리','heading.fieldDifficulty':'게임 필드 난이도','heading.arrowDifficulty':'화살표 난이도','heading.specialArrows':'특수 화살표와 보너스'}
+            ru:{'tab.design':'Дизайн','tab.screens':'Экраны','tab.rules':'Правила','tab.questions':'Вопросы','tab.audio':'Звуки','preview.start':'Старт','preview.game':'Игра','preview.question':'Вопрос','preview.lose':'Поражение','preview.time':'Time out','preview.win':'Победа','preview.errors':'Ошибки','heading.language':'🌐 Язык интерфейса','label.chooseLanguage':'Выберите язык редактора','label.languageHint':'Переводятся названия вкладок и основные неоновые заголовки.','heading.quickThemes':'🎨 Быстрые темы','heading.gameBackground':'Фон игры (изображение)','heading.sadCharacter':'Персонаж (грустный)','heading.happyCharacter':'Персонаж (весёлый)','heading.arrowSettings':'Настройки стрелок','heading.screenBackground':'Фон экранов','heading.startScreen':'Экран старта','heading.gameQuestions':'Игровой экран и вопросы','heading.winScreen':'Экран победы','heading.loseScreen':'Экран поражения','heading.timeScreen':'Экран Time Out','heading.errorScreen':'Экран «Работа над ошибками»','heading.latex':'Математические формулы (LaTeX)','heading.winSound':'Звук победы (Win)','heading.loseSound':'Звук поражения (жизни)','heading.arrowSound':'Звук улёта стрелок','heading.correctSound':'Звук правильного ответа','heading.wrongSound':'Звук неправильного ответа','heading.fieldDifficulty':'Сложность игрового поля','heading.arrowDifficulty':'Сложность стрелок','heading.specialArrows':'Особые стрелки и бонусы','tab.code':'Код','heading.exportCode':'Код для вставки в Genially','label.codeHelp':'Весь HTML игры упакован внутрь srcdoc. Реальный адрес страницы редактора в коде iframe не используется.','button.refreshCode':'⟳ Обновить код','button.copyCode':'📋 Скопировать код','button.downloadHtml':'⬇ Скачать HTML-файл','button.selectCode':'Выделить весь код','heading.projectFiles':'Сохранение проекта','label.projectName':'Название проекта и файла','label.projectHelp':'JSON-файл сохраняет настройки, вопросы, изображения, звуки и расположение элементов. Его можно загрузить позже и продолжить работу.','button.saveProject':'💾 Сохранить проект .json','button.loadProject':'📂 Загрузить проект .json','heading.autosave':'Автосохранение','button.restoreAutosave':'↶ Восстановить автосохранение','button.clearAutosave':'✕ Удалить автосохранение','button.code':'💗 Код'},
+            en:{'tab.design':'Design','tab.screens':'Screens','tab.rules':'Rules','tab.questions':'Questions','tab.audio':'Sounds','preview.start':'Start','preview.game':'Game','preview.question':'Question','preview.lose':'Defeat','preview.time':'Time out','preview.win':'Victory','preview.errors':'Errors','heading.language':'🌐 Interface language','label.chooseLanguage':'Choose the editor language','label.languageHint':'Tab names and main neon headings are translated.','heading.quickThemes':'🎨 Quick themes','heading.gameBackground':'Game background (image)','heading.sadCharacter':'Character (sad)','heading.happyCharacter':'Character (happy)','heading.arrowSettings':'Arrow settings','heading.screenBackground':'Screen background','heading.startScreen':'Start screen','heading.gameQuestions':'Game screen and questions','heading.winScreen':'Victory screen','heading.loseScreen':'Defeat screen','heading.timeScreen':'Time Out screen','heading.errorScreen':'Error review screen','heading.latex':'Mathematical formulas (LaTeX)','heading.winSound':'Victory sound (Win)','heading.loseSound':'Defeat sound (lives)','heading.arrowSound':'Arrow flight sound','heading.correctSound':'Correct answer sound','heading.wrongSound':'Wrong answer sound','heading.fieldDifficulty':'Game field difficulty','heading.arrowDifficulty':'Arrow difficulty','heading.specialArrows':'Special arrows and bonuses','tab.code':'Code','heading.exportCode':'Code for Genially','label.codeHelp':'The complete game HTML is packed inside srcdoc. The editor page address is not used in the iframe code.','button.refreshCode':'⟳ Refresh code','button.copyCode':'📋 Copy code','button.downloadHtml':'⬇ Download HTML file','button.selectCode':'Select all code','heading.projectFiles':'Save project','label.projectName':'Project and file name','label.projectHelp':'The JSON file stores settings, questions, images, sounds and element positions. Load it later to continue editing.','button.saveProject':'💾 Save project .json','button.loadProject':'📂 Load project .json','heading.autosave':'Autosave','button.restoreAutosave':'↶ Restore autosave','button.clearAutosave':'✕ Delete autosave','button.code':'💗 Code'},
+            de:{'tab.design':'Design','tab.screens':'Bildschirme','tab.rules':'Regeln','tab.questions':'Fragen','tab.audio':'Töne','preview.start':'Start','preview.game':'Spiel','preview.question':'Frage','preview.lose':'Niederlage','preview.time':'Zeit abgelaufen','preview.win':'Sieg','preview.errors':'Fehler','heading.language':'🌐 Sprache der Benutzeroberfläche','label.chooseLanguage':'Sprache des Editors wählen','label.languageHint':'Registerkarten und wichtige Neon-Überschriften werden übersetzt.','heading.quickThemes':'🎨 Schnellthemen','heading.gameBackground':'Spielhintergrund (Bild)','heading.sadCharacter':'Figur (traurig)','heading.happyCharacter':'Figur (fröhlich)','heading.arrowSettings':'Pfeileinstellungen','heading.screenBackground':'Bildschirmhintergrund','heading.startScreen':'Startbildschirm','heading.gameQuestions':'Spielbildschirm und Fragen','heading.winScreen':'Siegbildschirm','heading.loseScreen':'Niederlagenbildschirm','heading.timeScreen':'Zeit-abgelaufen-Bildschirm','heading.errorScreen':'Fehlerauswertung','heading.latex':'Mathematische Formeln (LaTeX)','heading.winSound':'Siegesklang','heading.loseSound':'Niederlagenklang','heading.arrowSound':'Pfeilflug-Geräusch','heading.correctSound':'Klang für richtige Antwort','heading.wrongSound':'Klang für falsche Antwort','heading.fieldDifficulty':'Schwierigkeitsgrad des Spielfelds','heading.arrowDifficulty':'Pfeilschwierigkeit','heading.specialArrows':'Spezialpfeile und Boni','tab.code':'Code','heading.exportCode':'Code für Genially','label.codeHelp':'Der vollständige Spiel-HTML-Code wird in srcdoc eingebettet. Die Adresse der Editor-Seite wird im iframe-Code nicht verwendet.','button.refreshCode':'⟳ Code aktualisieren','button.copyCode':'📋 Code kopieren','button.downloadHtml':'⬇ HTML-Datei herunterladen','button.selectCode':'Gesamten Code markieren','heading.projectFiles':'Projekt speichern','label.projectName':'Projekt- und Dateiname','label.projectHelp':'Die JSON-Datei speichert Einstellungen, Fragen, Bilder, Töne und Elementpositionen. Sie kann später wieder geladen werden.','button.saveProject':'💾 Projekt .json speichern','button.loadProject':'📂 Projekt .json laden','heading.autosave':'Automatisches Speichern','button.restoreAutosave':'↶ Autospeicherung wiederherstellen','button.clearAutosave':'✕ Autospeicherung löschen','button.code':'💗 Code'},
+            es:{'tab.design':'Diseño','tab.screens':'Pantallas','tab.rules':'Reglas','tab.questions':'Preguntas','tab.audio':'Sonidos','preview.start':'Inicio','preview.game':'Juego','preview.question':'Pregunta','preview.lose':'Derrota','preview.time':'Tiempo agotado','preview.win':'Victoria','preview.errors':'Errores','heading.language':'🌐 Idioma de la interfaz','label.chooseLanguage':'Elige el idioma del editor','label.languageHint':'Se traducen las pestañas y los títulos principales de neón.','heading.quickThemes':'🎨 Temas rápidos','heading.gameBackground':'Fondo del juego (imagen)','heading.sadCharacter':'Personaje (triste)','heading.happyCharacter':'Personaje (feliz)','heading.arrowSettings':'Ajustes de flechas','heading.screenBackground':'Fondo de pantallas','heading.startScreen':'Pantalla de inicio','heading.gameQuestions':'Pantalla de juego y preguntas','heading.winScreen':'Pantalla de victoria','heading.loseScreen':'Pantalla de derrota','heading.timeScreen':'Pantalla de tiempo agotado','heading.errorScreen':'Pantalla de revisión de errores','heading.latex':'Fórmulas matemáticas (LaTeX)','heading.winSound':'Sonido de victoria','heading.loseSound':'Sonido de derrota','heading.arrowSound':'Sonido de vuelo de flechas','heading.correctSound':'Sonido de respuesta correcta','heading.wrongSound':'Sonido de respuesta incorrecta','heading.fieldDifficulty':'Dificultad del campo','heading.arrowDifficulty':'Dificultad de las flechas','heading.specialArrows':'Flechas especiales y bonificaciones','tab.code':'Código','heading.exportCode':'Código para Genially','label.codeHelp':'Todo el HTML del juego se incluye dentro de srcdoc. La dirección de la página del editor no se utiliza en el código iframe.','button.refreshCode':'⟳ Actualizar código','button.copyCode':'📋 Copiar código','button.downloadHtml':'⬇ Descargar archivo HTML','button.selectCode':'Seleccionar todo el código','heading.projectFiles':'Guardar proyecto','label.projectName':'Nombre del proyecto y archivo','label.projectHelp':'El archivo JSON guarda ajustes, preguntas, imágenes, sonidos y posiciones. Puede cargarse después para continuar.','button.saveProject':'💾 Guardar proyecto .json','button.loadProject':'📂 Cargar proyecto .json','heading.autosave':'Guardado automático','button.restoreAutosave':'↶ Restaurar autoguardado','button.clearAutosave':'✕ Borrar autoguardado','button.code':'💗 Código'},
+            kk:{'tab.design':'Дизайн','tab.screens':'Экрандар','tab.rules':'Ережелер','tab.questions':'Сұрақтар','tab.audio':'Дыбыстар','preview.start':'Бастау','preview.game':'Ойын','preview.question':'Сұрақ','preview.lose':'Жеңіліс','preview.time':'Уақыт бітті','preview.win':'Жеңіс','preview.errors':'Қателер','heading.language':'🌐 Интерфейс тілі','label.chooseLanguage':'Редактор тілін таңдаңыз','label.languageHint':'Қойынды атаулары мен негізгі неон тақырыптары аударылады.','heading.quickThemes':'🎨 Жылдам тақырыптар','heading.gameBackground':'Ойын фоны (сурет)','heading.sadCharacter':'Кейіпкер (мұңды)','heading.happyCharacter':'Кейіпкер (көңілді)','heading.arrowSettings':'Жебе баптаулары','heading.screenBackground':'Экран фоны','heading.startScreen':'Бастау экраны','heading.gameQuestions':'Ойын экраны және сұрақтар','heading.winScreen':'Жеңіс экраны','heading.loseScreen':'Жеңіліс экраны','heading.timeScreen':'Уақыт біту экраны','heading.errorScreen':'Қателермен жұмыс экраны','heading.latex':'Математикалық формулалар (LaTeX)','heading.winSound':'Жеңіс дыбысы','heading.loseSound':'Жеңіліс дыбысы','heading.arrowSound':'Жебенің ұшу дыбысы','heading.correctSound':'Дұрыс жауап дыбысы','heading.wrongSound':'Қате жауап дыбысы','heading.fieldDifficulty':'Ойын алаңының күрделілігі','heading.arrowDifficulty':'Жебелер күрделілігі','heading.specialArrows':'Арнайы жебелер мен бонустар','tab.code':'Код','heading.exportCode':'Genially-ге арналған код','label.codeHelp':'Ойынның толық HTML коды srcdoc ішіне енгізіледі. iframe кодында редактор бетінің мекенжайы қолданылмайды.','button.refreshCode':'⟳ Кодты жаңарту','button.copyCode':'📋 Кодты көшіру','button.downloadHtml':'⬇ HTML файлын жүктеу','button.selectCode':'Барлық кодты белгілеу','heading.projectFiles':'Жобаны сақтау','label.projectName':'Жоба және файл атауы','label.projectHelp':'JSON файлы баптауларды, сұрақтарды, суреттерді, дыбыстарды және элемент орындарын сақтайды. Оны кейін қайта жүктеуге болады.','button.saveProject':'💾 Жобаны .json сақтау','button.loadProject':'📂 Жобаны .json жүктеу','heading.autosave':'Автосақтау','button.restoreAutosave':'↶ Автосақтауды қалпына келтіру','button.clearAutosave':'✕ Автосақтауды жою','button.code':'💗 Код'},
+            zh:{'tab.design':'设计','tab.screens':'屏幕','tab.rules':'规则','tab.questions':'问题','tab.audio':'声音','preview.start':'开始','preview.game':'游戏','preview.question':'问题','preview.lose':'失败','preview.time':'时间到','preview.win':'胜利','preview.errors':'错误','heading.language':'🌐 界面语言','label.chooseLanguage':'选择编辑器语言','label.languageHint':'将翻译选项卡名称和主要霓虹标题。','heading.quickThemes':'🎨 快速主题','heading.gameBackground':'游戏背景（图像）','heading.sadCharacter':'角色（悲伤）','heading.happyCharacter':'角色（开心）','heading.arrowSettings':'箭头设置','heading.screenBackground':'屏幕背景','heading.startScreen':'开始屏幕','heading.gameQuestions':'游戏屏幕和问题','heading.winScreen':'胜利屏幕','heading.loseScreen':'失败屏幕','heading.timeScreen':'时间到屏幕','heading.errorScreen':'错题回顾屏幕','heading.latex':'数学公式（LaTeX）','heading.winSound':'胜利音效','heading.loseSound':'失败音效','heading.arrowSound':'箭头飞行音效','heading.correctSound':'正确答案音效','heading.wrongSound':'错误答案音效','heading.fieldDifficulty':'游戏区域难度','heading.arrowDifficulty':'箭头难度','heading.specialArrows':'特殊箭头与奖励','tab.code':'代码','heading.exportCode':'用于 Genially 的代码','label.codeHelp':'完整游戏 HTML 被封装在 srcdoc 中。iframe 代码不会使用编辑器页面的真实地址。','button.refreshCode':'⟳ 更新代码','button.copyCode':'📋 复制代码','button.downloadHtml':'⬇ 下载 HTML 文件','button.selectCode':'选择全部代码','heading.projectFiles':'保存项目','label.projectName':'项目和文件名称','label.projectHelp':'JSON 文件会保存设置、问题、图片、声音和元素位置，之后可再次加载继续编辑。','button.saveProject':'💾 保存项目 .json','button.loadProject':'📂 加载项目 .json','heading.autosave':'自动保存','button.restoreAutosave':'↶ 恢复自动保存','button.clearAutosave':'✕ 删除自动保存','button.code':'💗 代码'},
+            ko:{'tab.design':'디자인','tab.screens':'화면','tab.rules':'규칙','tab.questions':'질문','tab.audio':'소리','preview.start':'시작','preview.game':'게임','preview.question':'질문','preview.lose':'패배','preview.time':'시간 종료','preview.win':'승리','preview.errors':'오류','heading.language':'🌐 인터페이스 언어','label.chooseLanguage':'편집기 언어 선택','label.languageHint':'탭 이름과 주요 네온 제목이 번역됩니다.','heading.quickThemes':'🎨 빠른 테마','heading.gameBackground':'게임 배경(이미지)','heading.sadCharacter':'캐릭터(슬픔)','heading.happyCharacter':'캐릭터(행복)','heading.arrowSettings':'화살표 설정','heading.screenBackground':'화면 배경','heading.startScreen':'시작 화면','heading.gameQuestions':'게임 화면 및 질문','heading.winScreen':'승리 화면','heading.loseScreen':'패배 화면','heading.timeScreen':'시간 종료 화면','heading.errorScreen':'오답 검토 화면','heading.latex':'수학 공식(LaTeX)','heading.winSound':'승리 소리','heading.loseSound':'패배 소리','heading.arrowSound':'화살표 비행 소리','heading.correctSound':'정답 소리','heading.wrongSound':'오답 소리','heading.fieldDifficulty':'게임 필드 난이도','heading.arrowDifficulty':'화살표 난이도','heading.specialArrows':'특수 화살표와 보너스','tab.code':'코드','heading.exportCode':'Genially 삽입 코드','label.codeHelp':'전체 게임 HTML이 srcdoc 안에 포함됩니다. iframe 코드에는 편집기 페이지의 실제 주소가 사용되지 않습니다.','button.refreshCode':'⟳ 코드 새로고침','button.copyCode':'📋 코드 복사','button.downloadHtml':'⬇ HTML 파일 다운로드','button.selectCode':'전체 코드 선택','heading.projectFiles':'프로젝트 저장','label.projectName':'프로젝트 및 파일 이름','label.projectHelp':'JSON 파일은 설정, 질문, 이미지, 소리 및 요소 위치를 저장하며 나중에 다시 불러올 수 있습니다.','button.saveProject':'💾 프로젝트 .json 저장','button.loadProject':'📂 프로젝트 .json 불러오기','heading.autosave':'자동 저장','button.restoreAutosave':'↶ 자동 저장 복원','button.clearAutosave':'✕ 자동 저장 삭제','button.code':'💗 코드'}
         };
         function setInterfaceLanguage(lang) {
-            const selected=UI_TRANSLATIONS[lang]?lang:'ru'; editorState.uiLanguage=selected;
+            const selected=UI_TRANSLATIONS[lang]?lang:'ru'; editorState.uiLanguage=selected; scheduleAutosave();
             const select=document.getElementById('cfg-interfaceLanguage'); if(select&&select.value!==selected) select.value=selected;
             document.documentElement.lang=selected;
             document.querySelectorAll('[data-i18n]').forEach(el=>{ const value=UI_TRANSLATIONS[selected][el.dataset.i18n]||UI_TRANSLATIONS.ru[el.dataset.i18n]; if(value) el.textContent=value; });
@@ -1646,7 +1730,8 @@ _____ is capital. (London, LONDON)
             editorState.rules.countChameleon = parseInt(document.getElementById('cfg-chameleon').value);
             editorState.rules.countTrap = parseInt(document.getElementById('cfg-trap').value)||0;
             editorState.rules.countBomb = parseInt(document.getElementById('cfg-bomb').value)||0;
-            editorState.rules.timer = document.getElementById('cfg-disableTimer').checked ? 9999 : parseInt(document.getElementById('cfg-timer').value);
+            editorState.rules.timerDisabled = document.getElementById('cfg-disableTimer').checked;
+            editorState.rules.timer = editorState.rules.timerDisabled ? 9999 : parseInt(document.getElementById('cfg-timer').value);
             editorState.rules.countLife = parseInt(document.getElementById('cfg-life').value);
             editorState.rules.countTime = parseInt(document.getElementById('cfg-time').value);
             editorState.rules.countFreeze = parseInt(document.getElementById('cfg-freeze').value);
@@ -1715,14 +1800,14 @@ _____ is capital. (London, LONDON)
         }
 
         let debounceTimer;
-        function pushLiveUpdate() { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { parseInputsToConfig(); scheduleExportSizeUpdate(); const iframe = document.getElementById('live-preview-frame'); if(iframe.contentWindow) iframe.contentWindow.postMessage({ action: 'syncConfig', config: editorState }, '*'); }, 50); }
+        function pushLiveUpdate() { scheduleAutosave(); clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { parseInputsToConfig(); scheduleExportSizeUpdate(); const iframe = document.getElementById('live-preview-frame'); if(iframe.contentWindow) iframe.contentWindow.postMessage({ action: 'syncConfig', config: editorState }, '*'); }, 50); }
 
         function switchPreviewMode(screenId, btn) { document.querySelectorAll('.scr-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('live-preview-frame').contentWindow.postMessage({ action: 'setScreen', screenId: screenId }, '*'); }
         function triggerTestMode() { document.getElementById('live-preview-frame').contentWindow.postMessage({ action: 'testGame' }, '*'); }
 
         window.addEventListener('message', (e) => {
             if (!e.data || typeof e.data !== 'object') return;
-            if (e.data.action === 'updatePos') editorState.positions[e.data.id] = e.data.pos;
+            if (e.data.action === 'updatePos') { editorState.positions[e.data.id] = e.data.pos; scheduleAutosave(); }
             if (e.data.action === 'iframeReady') {
                 const iframe = document.getElementById('live-preview-frame');
                 if (!iframe || !iframe.contentWindow) return;
@@ -1762,6 +1847,12 @@ _____ is capital. (London, LONDON)
             setInterfaceLanguage(editorState.uiLanguage || 'ru');
             fullRebuildPreview();
             scheduleExportSizeUpdate();
+            setTimeout(() => {
+                const restored = offerAutosaveRestore();
+                if (!restored) refreshGeneratedCode(false);
+                startAutosave();
+                autosaveDirty = false;
+            }, 80);
         }
 
         // DOMContentLoaded не ждет загрузки всех внешних картинок и шрифтов.
@@ -1781,9 +1872,39 @@ _____ is capital. (London, LONDON)
         }
         let previewExternalAudio = null;
         function previewWhoosh(variant) {
-            if (!audioCtxEditor) audioCtxEditor = new AudioContextForEditor(); if(audioCtxEditor.state==='suspended') audioCtxEditor.resume(); const now=audioCtxEditor.currentTime;
-            if(String(variant)==='3'){const osc=audioCtxEditor.createOscillator(),gain=audioCtxEditor.createGain();osc.connect(gain);gain.connect(audioCtxEditor.destination);osc.type='sawtooth';osc.frequency.setValueAtTime(1100,now);osc.frequency.exponentialRampToValueAtTime(120,now+.22);gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(.11,now+.025);gain.gain.exponentialRampToValueAtTime(.001,now+.24);osc.start(now);osc.stop(now+.25);return;}
-            const duration=String(variant)==='2'?.32:.18,length=Math.floor(audioCtxEditor.sampleRate*duration),buffer=audioCtxEditor.createBuffer(1,length,audioCtxEditor.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*Math.sin(Math.PI*i/length);const src=audioCtxEditor.createBufferSource(),filter=audioCtxEditor.createBiquadFilter(),gain=audioCtxEditor.createGain();src.buffer=buffer;filter.type=String(variant)==='2'?'bandpass':'highpass';filter.frequency.value=String(variant)==='2'?850:1500;filter.Q.value=String(variant)==='2'?.8:1.6;gain.gain.setValueAtTime(.001,now);gain.gain.linearRampToValueAtTime(String(variant)==='2'?.27:.48,now+.018);gain.gain.exponentialRampToValueAtTime(.001,now+duration);src.connect(filter);filter.connect(gain);gain.connect(audioCtxEditor.destination);src.start(now);src.stop(now+duration);
+            if (!audioCtxEditor) audioCtxEditor = new AudioContextForEditor();
+            if (audioCtxEditor.state === 'suspended') audioCtxEditor.resume();
+            const now = audioCtxEditor.currentTime;
+            if (String(variant) === '3') {
+                const osc=audioCtxEditor.createOscillator(), gain=audioCtxEditor.createGain();
+                osc.connect(gain); gain.connect(audioCtxEditor.destination); osc.type='sawtooth';
+                osc.frequency.setValueAtTime(1100,now); osc.frequency.exponentialRampToValueAtTime(120,now+.22);
+                gain.gain.setValueAtTime(.001,now); gain.gain.linearRampToValueAtTime(.11,now+.025); gain.gain.exponentialRampToValueAtTime(.001,now+.24);
+                osc.start(now); osc.stop(now+.25); return;
+            }
+            const isSoft = String(variant) === '2';
+            const duration = isSoft ? 0.42 : 0.46;
+            const length = Math.floor(audioCtxEditor.sampleRate * duration);
+            const buffer = audioCtxEditor.createBuffer(1, length, audioCtxEditor.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i=0; i<length; i++) {
+                const t=i/length;
+                data[i]=(Math.random()*2-1)*Math.pow(Math.sin(Math.PI*t),isSoft?1.25:.72)*Math.pow(1-t,isSoft?.12:.32);
+            }
+            const output=audioCtxEditor.createDynamicsCompressor();
+            output.threshold.value=-10; output.knee.value=10; output.ratio.value=4; output.attack.value=.002; output.release.value=.14; output.connect(audioCtxEditor.destination);
+            const src=audioCtxEditor.createBufferSource(), filter=audioCtxEditor.createBiquadFilter(), gain=audioCtxEditor.createGain();
+            src.buffer=buffer; filter.type=isSoft?'bandpass':'highpass'; filter.frequency.setValueAtTime(isSoft?620:950,now); filter.frequency.exponentialRampToValueAtTime(isSoft?1250:3800,now+duration*.72); filter.Q.value=isSoft?.72:1.15;
+            gain.gain.setValueAtTime(.001,now); gain.gain.linearRampToValueAtTime(isSoft?.81:1.44,now+(isSoft?.03:.014)); gain.gain.exponentialRampToValueAtTime(isSoft?.25:.42,now+duration*.44); gain.gain.exponentialRampToValueAtTime(.001,now+duration);
+            src.connect(filter); filter.connect(gain); gain.connect(output); src.start(now); src.stop(now+duration);
+            if(!isSoft){
+                const crackDuration=.075, crackLength=Math.floor(audioCtxEditor.sampleRate*crackDuration), crackBuffer=audioCtxEditor.createBuffer(1,crackLength,audioCtxEditor.sampleRate), crackData=crackBuffer.getChannelData(0);
+                for(let i=0;i<crackLength;i++) crackData[i]=(Math.random()*2-1)*Math.pow(1-i/crackLength,4.2);
+                const crack=audioCtxEditor.createBufferSource(), crackFilter=audioCtxEditor.createBiquadFilter(), crackGain=audioCtxEditor.createGain(), crackAt=now+.075;
+                crack.buffer=crackBuffer; crackFilter.type='highpass'; crackFilter.frequency.value=3000; crackFilter.Q.value=.8;
+                crackGain.gain.setValueAtTime(.001,crackAt); crackGain.gain.linearRampToValueAtTime(1.18,crackAt+.004); crackGain.gain.exponentialRampToValueAtTime(.001,crackAt+crackDuration);
+                crack.connect(crackFilter); crackFilter.connect(crackGain); crackGain.connect(output); crack.start(crackAt); crack.stop(crackAt+crackDuration);
+            }
         }
         function previewSound(event, variant) {
             if (variant === 'mixkit' || variant === 'url') {
@@ -1803,6 +1924,15 @@ _____ is capital. (London, LONDON)
             else if (event === 'time') { osc.type = 'triangle'; if(variant == 1) { osc.frequency.setValueAtTime(400, now); osc.frequency.linearRampToValueAtTime(100, now+1); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+1); osc.start(now); osc.stop(now+1); } else if(variant == 2) { osc.type = 'square'; osc.frequency.setValueAtTime(600, now); osc.frequency.linearRampToValueAtTime(400, now+0.5); osc.frequency.linearRampToValueAtTime(600, now+1); gain.gain.setValueAtTime(0.05, now); gain.gain.linearRampToValueAtTime(0, now+1.5); osc.start(now); osc.stop(now+1.5); } else { osc.frequency.setValueAtTime(150, now); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+1.5); osc.start(now); osc.stop(now+1.5); } }
         }
 
+        function escapeForSrcdocAttribute(html) {
+            return String(html)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         function buildExportBundle() {
             parseInputsToConfig();
             let tmpl=document.getElementById('game-engine-template').innerHTML;
@@ -1816,22 +1946,137 @@ _____ is capital. (London, LONDON)
                     document.addEventListener('keydown',function(e){const key=String(e.key||'').toLowerCase();if(e.key==='F12'||((e.ctrlKey||e.metaKey)&&e.shiftKey&&(key==='i'||key==='j'))||((e.ctrlKey||e.metaKey)&&key==='u')){e.preventDefault();return false;}});
                 <\/script>
             `);
-            const base64=btoa(unescape(encodeURIComponent(tmpl))); const dataUrl=`data:text/html;base64,${base64}`;
-            const iframeCode=`<iframe src="${dataUrl}" width="100%" height="600" style="border:none; border-radius:15px; background: transparent; box-shadow:0 0 20px rgba(0,0,0,0.5);" allow="autoplay" allowtransparency="true"></iframe>`;
-            return {tmpl,dataUrl,iframeCode,bytes:new Blob([iframeCode]).size};
+            const escapedHtml=escapeForSrcdocAttribute(tmpl);
+            const iframeCode=`<iframe srcdoc='${escapedHtml}' width="100%" height="100%" frameborder="0" style="border:none; width:100%; height:100%; background:transparent;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+            return {tmpl,iframeCode,bytes:new Blob([iframeCode],{type:'text/plain;charset=utf-8'}).size};
         }
 
         let exportSizeTimer;
-        function scheduleExportSizeUpdate(){ clearTimeout(exportSizeTimer); exportSizeTimer=setTimeout(updateExportSizeIndicator,260); }
+        function scheduleExportSizeUpdate(){ clearTimeout(exportSizeTimer); exportSizeTimer=setTimeout(updateExportSizeIndicator,300); }
         function updateExportSizeIndicator(){
-            const box=document.getElementById('export-size-indicator'); if(!box)return;
-            try{const bundle=buildExportBundle(),mb=bundle.bytes/1024/1024; box.classList.remove('warning','danger'); let note='Оптимальный размер'; if(mb>10){box.classList.add('danger');note='⚠️ Очень большой код: уменьшите изображения';}else if(mb>5){box.classList.add('warning');note='⚠️ Тяжёлый код: возможна медленная загрузка';} box.innerHTML=`<strong>Размер итоговой игры: ${mb.toFixed(2)} МБ</strong><span>${note}</span>`;}catch(error){box.innerHTML='<strong>Размер итоговой игры: —</strong><span>Не удалось подсчитать</span>';}
+            const box=document.getElementById('export-size-indicator');
+            try{
+                const bundle=buildExportBundle(),mb=bundle.bytes/1024/1024;
+                if(box){box.classList.remove('warning','danger');let note='Оптимальный размер';if(mb>10){box.classList.add('danger');note='⚠️ Очень большой код: уменьшите изображения';}else if(mb>5){box.classList.add('warning');note='⚠️ Тяжёлый код: возможна медленная загрузка';}box.innerHTML=`<strong>Размер итоговой игры: ${mb.toFixed(2)} МБ</strong><span>${note}</span>`;}
+                const area=document.getElementById('generated-code'); if(area) area.value=bundle.iframeCode;
+                return bundle;
+            }catch(error){
+                if(box)box.innerHTML='<strong>Размер итоговой игры: —</strong><span>Не удалось подсчитать</span>';
+                setCodeStatus('Не удалось сформировать код: '+(error?.message||error),true);
+                return null;
+            }
         }
 
-        function exportGame() {
-            const bundle=buildExportBundle(); updateExportSizeIndicator();
-            prompt('Скопируйте этот автономный iframe-код и вставьте напрямую в Genially (Ctrl+C):',bundle.iframeCode);
+        function setCodeStatus(message,isError=false){const el=document.getElementById('code-status');if(!el)return;el.textContent=message||'';el.style.color=isError?'#ff6b86':'var(--neon-2)';}
+        function refreshGeneratedCode(showMessage=false){const bundle=updateExportSizeIndicator();if(bundle&&showMessage)setCodeStatus('Код обновлён.');return bundle;}
+        function selectGeneratedCode(){const area=document.getElementById('generated-code');if(!area)return;area.focus();area.select();area.setSelectionRange(0,area.value.length);setCodeStatus('Весь код выделен.');}
+        function copyGeneratedCode(){
+            const bundle=refreshGeneratedCode(false); if(!bundle)return;
+            const done=()=>setCodeStatus('Код iframe скопирован в буфер обмена.');
+            if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(bundle.iframeCode).then(done).catch(()=>fallbackCopy(bundle.iframeCode,done));
+            else fallbackCopy(bundle.iframeCode,done);
         }
+        function sanitizeFilename(name,fallback='neon_arrows_game'){
+            const cleaned=String(name||'').trim().replace(/[\\/:*?"<>|]+/g,'_').replace(/\s+/g,'_').replace(/^\.+|\.+$/g,'').slice(0,90);
+            return cleaned||fallback;
+        }
+        function downloadBlob(blob,filename){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);}
+        function downloadGameHtml(){
+            const bundle=refreshGeneratedCode(false);if(!bundle)return;
+            const base=sanitizeFilename(document.getElementById('cfg-projectName')?.value||editorState.design.startTitle,'neon_arrows_game');
+            downloadBlob(new Blob([bundle.tmpl],{type:'text/html;charset=utf-8'}),base+'.html');
+            setCodeStatus('HTML-файл игры сохранён локально.');
+        }
+        function openCodeTab(){
+            const tab=document.querySelector('.tab-btn[data-tab="tab-code"]'); if(tab)tab.click();
+            setTimeout(()=>{refreshGeneratedCode(false);document.getElementById('generated-code')?.scrollIntoView({block:'nearest'});},40);
+        }
+        function exportGame(){openCodeTab();}
+
+        const AUTOSAVE_KEY='neonArrowsEditor.autosave.v2';
+        var autosaveDirty=false,autosaveIntervalId=null,isRestoringProject=false;
+        function deepClone(value){return JSON.parse(JSON.stringify(value));}
+        function collectProjectSnapshot(){
+            parseInputsToConfig();
+            return {app:'NEON_ARROWS_EDITOR',version:2,savedAt:new Date().toISOString(),projectName:document.getElementById('cfg-projectName')?.value||'My_Arrows_Game',editorState:deepClone(editorState),questionsArray:deepClone(questionsArray),bulkText:document.getElementById('q-bulk-text')?.value||''};
+        }
+        function setProjectStatus(message,isError=false){const el=document.getElementById('project-status');if(!el)return;el.textContent=message||'';el.style.color=isError?'#ff6b86':'var(--neon-2)';}
+        function setAutosaveStatus(message,isError=false){const el=document.getElementById('autosave-status');if(!el)return;el.textContent=message||'';el.style.color=isError?'#ff8ba0':'#c5bcc8';}
+        function scheduleAutosave(){if(!isRestoringProject)autosaveDirty=true;}
+        function saveAutosaveNow(){
+            if(isRestoringProject)return false;
+            try{const snapshot=collectProjectSnapshot();localStorage.setItem(AUTOSAVE_KEY,JSON.stringify(snapshot));autosaveDirty=false;const stamp=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});setAutosaveStatus(`Автосохранение выполнено в ${stamp}.`);return true;}
+            catch(error){setAutosaveStatus('Автосохранение не выполнено: браузеру не хватило локального места. Сохраните проект в JSON-файл.',true);return false;}
+        }
+        function startAutosave(){
+            if(autosaveIntervalId)return;
+            autosaveIntervalId=setInterval(()=>{if(autosaveDirty)saveAutosaveNow();},5000);
+            window.addEventListener('beforeunload',()=>{if(autosaveDirty)saveAutosaveNow();});
+            document.addEventListener('input',scheduleAutosave,true);document.addEventListener('change',scheduleAutosave,true);
+        }
+        function clearAutosave(){try{localStorage.removeItem(AUTOSAVE_KEY);autosaveDirty=false;setAutosaveStatus('Автосохранение удалено из этого браузера.');}catch(error){setAutosaveStatus('Не удалось удалить автосохранение.',true);}}
+
+        function questionsFromGameDB(db){
+            return (Array.isArray(db)?db:[]).filter(q=>q&&q.type).map(q=>{
+                const base={type:q.type,question:q.text||'',hasImg:Boolean(q.img),imgSrc:q.img||null,prompt:q.prompt||''};
+                if(q.type==='choice')return{...base,correct:q.correct,wrong:(q.options||[]).filter(v=>v!==q.correct)};
+                if(q.type==='input')return{...base,correct:Array.isArray(q.correct)?q.correct:[q.correct]};
+                if(q.type==='order')return{...base,question:q.correct||q.text||''};
+                if(q.type==='multi')return{...base,correct:[...(q.correct||[])],wrong:(q.options||[]).filter(v=>!(q.correct||[]).includes(v))};
+                if(q.type==='pairs')return{...base,pairs:deepClone(q.pairs||[])};
+                if(q.type==='categories')return{...base,categories:deepClone(q.categories||[])};
+                if(q.type==='error')return{...base,correct:q.correct};
+                if(q.type==='gaps')return{...base,answers:[...(q.answers||[])]};
+                return base;
+            });
+        }
+        function mergeState(saved){
+            if(!saved||typeof saved!=='object')throw new Error('В файле нет настроек редактора.');
+            ['design','media','rules','math','audio','positions'].forEach(key=>{if(saved[key]&&typeof saved[key]==='object')editorState[key]={...editorState[key],...deepClone(saved[key])};});
+            if(saved.uiLanguage)editorState.uiLanguage=saved.uiLanguage;
+            if(Array.isArray(saved.questionsDB))editorState.questionsDB=deepClone(saved.questionsDB);
+        }
+        function setInputValue(id,value){const el=document.getElementById(id);if(!el||value===undefined||value===null)return;if(el.type==='checkbox')el.checked=Boolean(value);else el.value=String(value);}
+        function applyStateToEditorControls(snapshot){
+            isRestoringProject=true;
+            try{
+                const savedState=snapshot.editorState||snapshot.state||snapshot;
+                mergeState(savedState);
+                Object.entries(editorState.design||{}).forEach(([key,value])=>setInputValue('cfg-'+key,value));
+                setInputValue('val-bg',editorState.media.bgSrc);setInputValue('val-char-sad',editorState.media.charSadSrc);setInputValue('val-char-happy',editorState.media.charHappySrc);
+                setInputValue('cfg-gridSize',editorState.rules.gridSize);setInputValue('cfg-difficulty',editorState.rules.difficulty);setInputValue('cfg-arrowTypes',editorState.rules.arrowTypes);setInputValue('cfg-chameleon',editorState.rules.countChameleon);setInputValue('cfg-trap',editorState.rules.countTrap);setInputValue('cfg-bomb',editorState.rules.countBomb);
+                const timerDisabled=Boolean(editorState.rules.timerDisabled||Number(editorState.rules.timer)>=9999);setInputValue('cfg-disableTimer',timerDisabled);setInputValue('cfg-timer',timerDisabled?120:editorState.rules.timer);const timerInput=document.getElementById('cfg-timer');if(timerInput)timerInput.disabled=timerDisabled;
+                setInputValue('cfg-life',editorState.rules.countLife);setInputValue('cfg-time',editorState.rules.countTime);setInputValue('cfg-freeze',editorState.rules.countFreeze);setInputValue('cfg-qCount',editorState.rules.qCount);setInputValue('cfg-smartPause',editorState.rules.smartPause);setInputValue('cfg-enableLatex',editorState.math?.enabled);
+                ['win','lose','arrow','cor','err','time'].forEach(k=>{const type=String(editorState.audio?.[k+'Type']??'1');const radio=document.querySelector(`input[name="snd-${k}"][value="${CSS.escape(type)}"]`);if(radio)radio.checked=true;setInputValue('url-'+k,editorState.audio?.[k+'Url']||'');toggleUrl(k);});
+                questionsArray=Array.isArray(snapshot.questionsArray)?deepClone(snapshot.questionsArray):questionsFromGameDB(editorState.questionsDB);
+                if(snapshot.bulkText!==undefined)setInputValue('q-bulk-text',snapshot.bulkText);
+                setInputValue('cfg-projectName',snapshot.projectName||'My_Arrows_Game');
+                setInputValue('cfg-interfaceLanguage',editorState.uiLanguage||'ru');setInterfaceLanguage(editorState.uiLanguage||'ru');
+                document.querySelectorAll('.preset-item').forEach(el=>el.classList.remove('selected'));
+                [['bg',editorState.media.bgSrc],['char-sad',editorState.media.charSadSrc],['char-happy',editorState.media.charHappySrc]].forEach(([type,url])=>{document.querySelectorAll(`#grid-${type} .preset-item img`).forEach(img=>{if(img.src===url||img.getAttribute('src')===url)img.closest('.preset-item')?.classList.add('selected');});});
+                updateQuestionsList();checkQuestionWarning();fullRebuildPreview();refreshGeneratedCode(false);
+                autosaveDirty=false;
+            }finally{isRestoringProject=false;}
+        }
+        function saveProjectToFile(){
+            try{const snapshot=collectProjectSnapshot();const base=sanitizeFilename(snapshot.projectName,'neon_arrows_project');downloadBlob(new Blob([JSON.stringify(snapshot,null,2)],{type:'application/json;charset=utf-8'}),base+'.json');setProjectStatus(`Проект сохранён: ${base}.json`);saveAutosaveNow();}
+            catch(error){setProjectStatus('Не удалось сохранить проект: '+(error?.message||error),true);}
+        }
+        async function loadProjectFromFile(event){
+            const input=event.target,file=input.files?.[0];if(!file)return;
+            try{const data=JSON.parse(await file.text());applyStateToEditorControls(data);setProjectStatus(`Проект загружен: ${file.name}`);scheduleAutosave();saveAutosaveNow();}
+            catch(error){setProjectStatus('Не удалось загрузить JSON-проект: '+(error?.message||error),true);}
+            finally{input.value='';}
+        }
+        function readAutosave(){try{const raw=localStorage.getItem(AUTOSAVE_KEY);return raw?JSON.parse(raw):null;}catch(error){return null;}}
+        function offerAutosaveRestore(){
+            const snapshot=readAutosave();if(!snapshot)return false;
+            const date=snapshot.savedAt?new Date(snapshot.savedAt).toLocaleString():'';
+            const restore=window.confirm(`Найден незавершённый проект${date?' от '+date:''}. Восстановить?`);
+            if(restore){applyStateToEditorControls(snapshot);setAutosaveStatus('Незавершённый проект восстановлен.');return true;}
+            try{localStorage.removeItem(AUTOSAVE_KEY);}catch(error){}return false;
+        }
+        function restoreAutosaveManually(){const snapshot=readAutosave();if(!snapshot){setAutosaveStatus('Сохранённый незавершённый проект не найден.',true);return;}if(window.confirm('Восстановить последнее автосохранение? Текущие несохранённые изменения будут заменены.')){applyStateToEditorControls(snapshot);setAutosaveStatus('Автосохранение восстановлено.');}}
     </script>
 
     <script>
