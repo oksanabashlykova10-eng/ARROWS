@@ -567,7 +567,6 @@ _____ is capital. (London, LONDON)
 <div class="tab-content" id="tab-code">
 <div class="control-group code-panel">
 <div class="group-title" data-i18n="heading.exportCode">КОД ДЛЯ ВСТАВКИ В GENIALLY</div>
-<p class="code-help" data-i18n="label.codeHelp">Весь HTML игры упакован внутрь srcdoc. Реальный адрес страницы редактора в коде iframe не используется.</p>
 <textarea class="code-output" id="generated-code" readonly spellcheck="false" aria-label="Готовый iframe-код"></textarea>
 <div class="code-actions">
 <button class="code-action-btn" data-i18n="button.refreshCode" onclick="refreshGeneratedCode(true)">⟳ Обновить код</button>
@@ -617,7 +616,6 @@ _____ is capital. (London, LONDON)
 <div class="preview-actions">
 <div class="export-size-box" id="export-size-indicator"><strong>Размер итоговой игры: —</strong><span>Подсчёт…</span></div>
 <button class="action-btn" onclick="triggerTestMode()">▶ Тестировать</button>
-<button class="action-btn export" data-i18n="button.code" onclick="openCodeTab()">💗 Код</button>
 </div>
 </div>
 <div class="game-frame-container">
@@ -641,12 +639,12 @@ _____ is capital. (London, LONDON)
                     --color-up: #00f3ff; --color-down: #ff00ff; --color-left: #39ff14; --color-right: #fffb00; 
                 }
                 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-                body { display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; margin:0; font-family: 'Roboto', sans-serif; background: transparent !important; background-color: transparent !important;}
-                html { background: transparent !important; background-color: transparent !important;}
+                html, body { width: 100%; height: 100%; min-width: 0; min-height: 0; overflow: hidden; background: transparent !important; background-color: transparent !important; }
+                body { display: flex; justify-content: stretch; align-items: stretch; margin:0; font-family: 'Roboto', sans-serif; }
                 
                 #dynamic-styles {}
 
-                #game-container { width: 100%; max-width: 1000px; height: 100%; max-height: 800px; position: relative; border-radius: 15px; overflow: hidden; background: transparent !important; background-color: transparent !important;}
+                #game-container { width: 100vw; height: 100vh; max-width: none; max-height: none; min-width: 0; min-height: 0; position: relative; border-radius: 0; overflow: hidden; background: transparent !important; background-color: transparent !important; }
                 .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; transition: opacity 0.3s ease; }
                 .hidden { display: none !important; }
                 
@@ -893,8 +891,8 @@ _____ is capital. (London, LONDON)
                 filter.Q.value = isSoft ? 0.72 : 1.15;
                 const gain = gameAudioCtx.createGain();
                 gain.gain.setValueAtTime(0.001, now);
-                gain.gain.linearRampToValueAtTime(isSoft ? 0.81 : 1.44, now + (isSoft ? 0.03 : 0.014));
-                gain.gain.exponentialRampToValueAtTime(isSoft ? 0.25 : 0.42, now + duration * 0.44);
+                gain.gain.linearRampToValueAtTime(isSoft ? 0.54 : 0.96, now + (isSoft ? 0.03 : 0.014));
+                gain.gain.exponentialRampToValueAtTime(isSoft ? 0.17 : 0.28, now + duration * 0.44);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
                 src.connect(filter); filter.connect(gain); gain.connect(output); src.start(now); src.stop(now + duration);
 
@@ -909,7 +907,7 @@ _____ is capital. (London, LONDON)
                     const crackFilter = gameAudioCtx.createBiquadFilter(); crackFilter.type = 'highpass'; crackFilter.frequency.value = 3000; crackFilter.Q.value = 0.8;
                     const crackGain = gameAudioCtx.createGain();
                     const crackAt = now + 0.075;
-                    crackGain.gain.setValueAtTime(0.001, crackAt); crackGain.gain.linearRampToValueAtTime(1.18, crackAt + 0.004); crackGain.gain.exponentialRampToValueAtTime(0.001, crackAt + crackDuration);
+                    crackGain.gain.setValueAtTime(0.001, crackAt); crackGain.gain.linearRampToValueAtTime(0.79, crackAt + 0.004); crackGain.gain.exponentialRampToValueAtTime(0.001, crackAt + crackDuration);
                     crack.connect(crackFilter); crackFilter.connect(crackGain); crackGain.connect(output); crack.start(crackAt); crack.stop(crackAt + crackDuration);
                 }
             }
@@ -1020,7 +1018,7 @@ _____ is capital. (London, LONDON)
             function applyConfigToDOM() {
                 let css = `
                     :root { --color-up: ${CONFIG.design.arrowUpColor}; --color-down: ${CONFIG.design.arrowDownColor}; --color-left: ${CONFIG.design.arrowLeftColor}; --color-right: ${CONFIG.design.arrowRightColor}; }
-                    #game-container { background: ${CONFIG.media.bgSrc !== 'transparent' && CONFIG.media.bgSrc !== '' ? `url('${CONFIG.media.bgSrc}') center/cover` : 'transparent'} !important; border: 2px solid ${CONFIG.design.gameBorder}; box-shadow: 0 0 15px ${CONFIG.design.gameBorder} inset; }
+                    #game-container { background: ${CONFIG.media.bgSrc !== 'transparent' && CONFIG.media.bgSrc !== '' ? `url('${CONFIG.media.bgSrc}') center / 100% 100% no-repeat` : 'transparent'} !important; border: 2px solid ${CONFIG.design.gameBorder}; box-shadow: 0 0 15px ${CONFIG.design.gameBorder} inset; }
                     .screen { background-color: rgba(${hexToRgb(CONFIG.design.screenBg)}, ${CONFIG.design.screenAlpha}) !important; }
                     #question-modal { background-color: rgba(${hexToRgb(CONFIG.design.qModalBg)}, ${CONFIG.design.qModalAlpha}); border: 2px solid ${CONFIG.design.aNeon}; box-shadow: 0 0 20px ${CONFIG.design.aNeon}; }
                     #q-text { font-family: ${CONFIG.design.qFont}; font-size: ${CONFIG.design.qSize}rem; color: ${CONFIG.design.qColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
@@ -1895,14 +1893,14 @@ _____ is capital. (London, LONDON)
             output.threshold.value=-10; output.knee.value=10; output.ratio.value=4; output.attack.value=.002; output.release.value=.14; output.connect(audioCtxEditor.destination);
             const src=audioCtxEditor.createBufferSource(), filter=audioCtxEditor.createBiquadFilter(), gain=audioCtxEditor.createGain();
             src.buffer=buffer; filter.type=isSoft?'bandpass':'highpass'; filter.frequency.setValueAtTime(isSoft?620:950,now); filter.frequency.exponentialRampToValueAtTime(isSoft?1250:3800,now+duration*.72); filter.Q.value=isSoft?.72:1.15;
-            gain.gain.setValueAtTime(.001,now); gain.gain.linearRampToValueAtTime(isSoft?.81:1.44,now+(isSoft?.03:.014)); gain.gain.exponentialRampToValueAtTime(isSoft?.25:.42,now+duration*.44); gain.gain.exponentialRampToValueAtTime(.001,now+duration);
+            gain.gain.setValueAtTime(.001,now); gain.gain.linearRampToValueAtTime(isSoft?.54:.96,now+(isSoft?.03:.014)); gain.gain.exponentialRampToValueAtTime(isSoft?.17:.28,now+duration*.44); gain.gain.exponentialRampToValueAtTime(.001,now+duration);
             src.connect(filter); filter.connect(gain); gain.connect(output); src.start(now); src.stop(now+duration);
             if(!isSoft){
                 const crackDuration=.075, crackLength=Math.floor(audioCtxEditor.sampleRate*crackDuration), crackBuffer=audioCtxEditor.createBuffer(1,crackLength,audioCtxEditor.sampleRate), crackData=crackBuffer.getChannelData(0);
                 for(let i=0;i<crackLength;i++) crackData[i]=(Math.random()*2-1)*Math.pow(1-i/crackLength,4.2);
                 const crack=audioCtxEditor.createBufferSource(), crackFilter=audioCtxEditor.createBiquadFilter(), crackGain=audioCtxEditor.createGain(), crackAt=now+.075;
                 crack.buffer=crackBuffer; crackFilter.type='highpass'; crackFilter.frequency.value=3000; crackFilter.Q.value=.8;
-                crackGain.gain.setValueAtTime(.001,crackAt); crackGain.gain.linearRampToValueAtTime(1.18,crackAt+.004); crackGain.gain.exponentialRampToValueAtTime(.001,crackAt+crackDuration);
+                crackGain.gain.setValueAtTime(.001,crackAt); crackGain.gain.linearRampToValueAtTime(.79,crackAt+.004); crackGain.gain.exponentialRampToValueAtTime(.001,crackAt+crackDuration);
                 crack.connect(crackFilter); crackFilter.connect(crackGain); crackGain.connect(output); crack.start(crackAt); crack.stop(crackAt+crackDuration);
             }
         }
@@ -1947,7 +1945,7 @@ _____ is capital. (London, LONDON)
                 <\/script>
             `);
             const escapedHtml=escapeForSrcdocAttribute(tmpl);
-            const iframeCode=`<iframe srcdoc='${escapedHtml}' width="100%" height="100%" frameborder="0" style="border:none; width:100%; height:100%; background:transparent;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+            const iframeCode=`<iframe srcdoc='${escapedHtml}' width="100%" height="100%" frameborder="0" scrolling="no" style="border:0; display:block; width:100%; height:100%; min-width:100%; min-height:100%; margin:0; padding:0; background:transparent; overflow:hidden;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
             return {tmpl,iframeCode,bytes:new Blob([iframeCode],{type:'text/plain;charset=utf-8'}).size};
         }
 
