@@ -299,6 +299,7 @@
 <div class="color-option"><span>Текст кнопки</span><input id="cfg-winBtnColor" oninput="pushLiveUpdate()" type="color" value="#39ff14"/></div>
 <div class="color-option"><span>Неон кнопки</span><input id="cfg-winBtnGlow" oninput="pushLiveUpdate()" type="color" value="#39ff14"/></div>
 </div>
+<p style="font-size:.67rem;color:#8f98a5;line-height:1.4;margin:11px 0 0;">Плашка результатов на экране победы передвигается и меняет размер мышью. Подписи используют цвет и неон кнопки «Play Again», цифры остаются белыми.</p>
 </div><div class="control-group">
 <div class="group-title" data-i18n="heading.loseScreen">Экран поражения</div>
 <label>Заголовок</label>
@@ -487,6 +488,11 @@
 <div class="control-group">
 <label>КОЛИЧЕСТВО ПЛАШЕК С ВОПРОСАМИ</label>
 <input id="cfg-qCount" max="30" min="4" onchange="checkQuestionWarning(); pushLiveUpdate();" type="number" value="8"/>
+<label style="display:flex;align-items:center;gap:9px;color:#fff;text-transform:none;font-size:.82rem;cursor:pointer;margin-top:10px;">
+<input checked id="cfg-randomQuestions" onchange="pushLiveUpdate()" type="checkbox"/>
+<span>Рандомный порядок вопросов</span>
+</label>
+<p style="font-size:.67rem;color:#8f98a5;line-height:1.4;margin:7px 0 0;">Если галочка включена, в каждой игре вопросы перемешиваются заново.</p>
 </div>
 <p id="q-warning" style="color:#ff073a; display:none; font-size:0.75rem; font-weight:bold; margin-bottom: 10px; line-height: 1.2;">Внимание! Количество плашек с вопросами не совпадает с количеством введенных вопросов.</p><div class="control-group latex-panel">
 <div class="group-title" data-i18n="heading.latex" style="color:var(--neon-5);">Математические формулы (LaTeX)</div>
@@ -525,21 +531,28 @@
 <label>БЫСТРОЕ ДОБАВЛЕНИЕ ВОПРОСОВ</label>
 <div class="question-format-help">
 <strong>1. Один правильный ответ:</strong><br><code>I ___ tired. | am | is | are</code><br><br>
-<strong>2. Вписать слово:</strong><br><code>_____ is capital. (London, LONDON)</code><br><br>
+<strong>2. Вписать слово:</strong><br><code>_______ is the capital of Great Britain. (London, LONDON)</code><br><br>
 <strong>3. Собрать предложение:</strong><br><code>[ORDER] Put the words in the correct order | The cat is sleeping.</code><br><br>
 <strong>4. Выбрать несколько ответов:</strong><br><code>[MULTI] Choose irregular verbs | come, run, sleep | skate | jump | clean</code><br><br>
-<strong>5. Соединить пары:</strong><br><code>[PAIRS] Match the words | cat = кошка | dog = собака | bird = птица</code><br><br>
-<strong>6. Распределить по категориям:</strong><br><code>[CATEGORIES] Sort the words | Countable: apple, egg | Uncountable: milk, bread</code><br><br>
+<strong>5. Соединить пары:</strong><br>
+Можно создать от <strong>2 до 10 пар</strong>. После задания добавляйте каждую новую пару через знак <strong>|</strong>, а слова внутри пары соединяйте знаком <strong>=</strong>.<br>
+<code>[PAIRS] Match the words | cat = кошка | dog = собака | bird = птица</code><br>
+<span style="color:#8f98a5;">Правая колонка автоматически перемешивается так, чтобы готовые пары не стояли напротив друг друга.</span><br><br>
+<strong>6. Распределить по категориям:</strong><br>
+Можно создать от <strong>2 до 4 категорий</strong>. Каждую новую категорию добавляйте через знак <strong>|</strong>. После названия категории поставьте двоеточие, а слова внутри категории разделяйте запятыми.<br>
+<code>[CATEGORIES] Sort the words into the correct boxes. | Countable: apple, egg | Uncountable: milk, bread</code><br>
+<code>[CATEGORIES] Sort the verbs by -ed pronunciation. | /t/: helped, washed | /d/: played, cleaned | /ɪd/: wanted, started</code><br>
+<span style="color:#8f98a5;">Все слова в верхнем банке автоматически перемешиваются при каждом открытии задания.</span><br><br>
 <strong>7. Найти ошибку:</strong><br><code>[ERROR] Find the mistake. // She go to school every day. | go</code><br><br>
 <strong>8. Заполнить пропуски словами из рамки:</strong><br><code>[GAPS] Fill the gaps using Present Simple. // I ___ to school and ___ football. | go | play</code><br>
 <span style="display:block;margin-top:8px;color:#888;">До знаков // обязательно напишите задание. После // — предложение с пропусками. Затем укажите по одному точному слову для каждого пропуска. В игре слова перемешиваются в рамке: ребёнок выбирает слово, затем нужный пропуск. Кнопка Restart очищает ответ.</span>
 </div>
 <textarea id="q-bulk-text">I ___ tired. | am | is | are
-_____ is capital. (London, LONDON)
+_______ is the capital of Great Britain. (London, LONDON)
 [ORDER] Put the words in the correct order | The cat is sleeping.
 [MULTI] Choose irregular verbs | come, run, sleep | skate | jump | clean
-[PAIRS] Match the words | cat = кошка | dog = собака
-[CATEGORIES] Sort the words | Countable: apple, egg | Uncountable: milk, bread
+[PAIRS] Match the words | cat = кошка | dog = собака | bird = птица
+[CATEGORIES] Sort the words into the correct boxes. | Countable: apple, egg | Uncountable: milk, bread
 [ERROR] Find the mistake. // She go to school every day. | go
 [GAPS] Fill the gaps using Present Simple. // I ___ to school and ___ football. | go | play</textarea>
 <button class="action-btn-small" onclick="parseBulkQuestions()" style="margin-top:10px; padding:12px; border-color:var(--neon-4); color:var(--neon-4);">Сформировать карточки ⬇️</button>
@@ -700,33 +713,123 @@ _____ is capital. (London, LONDON)
                 .loading-percent { margin-top:12px; font-family:'Orbitron',sans-serif; color:#fff; text-shadow:0 0 8px #fff; }
 
                 #question-modal { padding: 35px 25px; width: 90%; max-width: 550px; max-height: 92%; overflow-y: auto; text-align: center; margin: 0 auto; position: relative; top: 50%; transform: translateY(-50%); border-radius: 15px; box-shadow: 0 0 25px rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center;}
+                #question-modal.categories-mode { width:min(94%,1000px); max-width:1000px; }
                 #q-dynamic-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; margin-top: 10px;}
                 
-                .answer-btn { padding: 12px 25px; border-radius: 8px; display: inline-block; width: auto; height: auto; transition: all 0.3s ease; cursor: pointer; text-transform: none; line-height: 1.2; }
+                /* Единый красочный стиль плашек во всех типах вопросов */
+                .answer-btn, .word-chunk, .error-word {
+                    --card-color:#00f3ff;
+                    padding:11px 20px;
+                    border-radius:10px;
+                    display:inline-flex;
+                    align-items:center;
+                    justify-content:center;
+                    width:auto;
+                    min-height:44px;
+                    height:auto;
+                    border:2px solid var(--card-color);
+                    background:color-mix(in srgb, var(--card-color) 17%, rgba(5,5,16,.94));
+                    color:#fff;
+                    box-shadow:0 0 11px color-mix(in srgb, var(--card-color) 72%, transparent), inset 0 0 10px rgba(255,255,255,.035);
+                    text-shadow:0 0 7px var(--card-color);
+                    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease, opacity .18s ease;
+                    cursor:pointer;
+                    text-transform:none;
+                    line-height:1.2;
+                    font-weight:700;
+                    overflow-wrap:anywhere;
+                }
+                .answer-btn:hover, .word-chunk:hover, .error-word:hover {
+                    box-shadow:0 0 19px var(--card-color), inset 0 0 13px color-mix(in srgb, var(--card-color) 20%, transparent);
+                    transform:translateY(-2px) scale(1.03);
+                    filter:brightness(1.15);
+                }
                 #btn-check-answer { background: transparent; color: white; padding: 12px 40px; border-radius: 8px; text-transform: uppercase; font-family: 'Orbitron', sans-serif; margin-top: 25px; cursor: pointer; transition: all 0.3s ease; display: block; width: fit-content; }
                 #btn-check-answer:hover { filter: brightness(1.3); transform: scale(1.05); }
 
-                .word-chunk { display: inline-block; padding: 10px 18px; margin: 5px; background: rgba(0,243,255,0.1); border: 1px solid rgba(0,243,255,0.5); border-radius: 5px; cursor: pointer; color: white; transition: 0.2s; }
-                .word-chunk:hover { background: rgba(0,243,255,0.3); }
-                #constructed-answer { min-height: 55px; border-bottom: 2px dashed rgba(255,255,255,0.3); margin-bottom: 20px; padding: 5px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center;}
+                #constructed-answer {
+                    min-height:72px;
+                    margin-bottom:16px;
+                    padding:12px;
+                    width:100%;
+                    display:flex;
+                    flex-wrap:wrap;
+                    justify-content:center;
+                    align-items:center;
+                    gap:8px;
+                    border:1px dashed rgba(255,255,255,.30);
+                    border-radius:13px;
+                    background:rgba(0,0,0,.26);
+                }
+                .order-word-bank {
+                    width:100%;
+                    min-height:64px;
+                    padding:12px;
+                    display:flex;
+                    flex-wrap:wrap;
+                    justify-content:center;
+                    align-items:center;
+                    gap:8px;
+                    border:1px solid rgba(0,243,255,.42);
+                    border-radius:13px;
+                    background:rgba(0,0,0,.24);
+                    box-shadow:0 0 12px rgba(0,243,255,.18), inset 0 0 13px rgba(0,243,255,.05);
+                }
+                #q-dynamic-area > div:not(#constructed-answer) .word-chunk { margin:5px; }
                 .text-input { width: 90%; padding: 15px; background: rgba(0,0,0,0.6); color: white; text-align: center; outline: none; margin-bottom: 15px; border-radius: 8px;}
-                .multi-option.selected-answer { border-color:var(--neon-green) !important; box-shadow:0 0 14px var(--neon-green), inset 0 0 8px rgba(57,255,20,.28) !important; transform:translateY(-2px); }
-                .matching-list, .category-list { width:100%; display:flex; flex-direction:column; gap:9px; }
-                .matching-row, .category-row { display:grid; grid-template-columns:minmax(100px,1fr) minmax(130px,1fr); gap:10px; align-items:center; padding:8px; border:1px solid rgba(255,255,255,.12); border-radius:8px; background:rgba(0,0,0,.25); color:#fff; }
-                .matching-row select, .category-row select { width:100%; padding:9px; border-radius:7px; background:#0c0c16; color:#fff; border:1px solid rgba(255,255,255,.25); }
-                .error-word { padding:9px 13px; border-radius:7px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.3); color:#fff; cursor:pointer; }
-                .error-word:hover { border-color:var(--neon-yellow); box-shadow:0 0 10px var(--neon-yellow); }
+                .multi-option.selected-answer {
+                    border-color:var(--neon-green) !important;
+                    box-shadow:0 0 20px var(--neon-green), inset 0 0 13px rgba(57,255,20,.28) !important;
+                    transform:translateY(-3px) scale(1.04);
+                    filter:brightness(1.18);
+                }
+                /* Интерактивное задание PAIRS: цветная левая колонка и нейтральная правая */
+                #question-modal.matching-mode { width:min(94%,860px); max-width:860px; }
+                .matching-activity { width:100%; display:flex; flex-direction:column; align-items:center; gap:14px; }
+                .matching-board { width:100%; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; align-items:start; }
+                .matching-column { display:flex; flex-direction:column; gap:9px; min-width:0; }
+                .matching-card { width:100%; min-height:48px; padding:10px 14px; border-radius:11px; color:#fff; font-weight:700; cursor:pointer; transition:transform .16s ease, box-shadow .16s ease, filter .16s ease, background .16s ease, border-color .16s ease; overflow-wrap:anywhere; }
+                .matching-left-card { --pair-color:#00f3ff; border:2px solid var(--pair-color); background:color-mix(in srgb, var(--pair-color) 18%, rgba(5,5,16,.94)); box-shadow:0 0 12px color-mix(in srgb, var(--pair-color) 72%, transparent), inset 0 0 12px rgba(255,255,255,.035); text-shadow:0 0 8px var(--pair-color); }
+                .matching-left-card:hover, .matching-left-card.selected { transform:translateY(-2px); filter:brightness(1.18); box-shadow:0 0 20px var(--pair-color), inset 0 0 14px color-mix(in srgb, var(--pair-color) 18%, transparent); }
+                .matching-left-card.paired { opacity:.72; }
+                .matching-right-card { --pair-color:#7b8491; border:2px solid rgba(180,190,205,.42); background:linear-gradient(135deg,rgba(85,93,108,.30),rgba(22,24,34,.93)); box-shadow:inset 0 0 12px rgba(255,255,255,.035); }
+                .matching-right-card:hover { transform:translateY(-2px); border-color:#c7ced8; filter:brightness(1.15); }
+                .matching-right-card.paired { border-color:var(--pair-color); background:color-mix(in srgb, var(--pair-color) 18%, rgba(5,5,16,.94)); box-shadow:0 0 16px var(--pair-color), inset 0 0 12px color-mix(in srgb, var(--pair-color) 16%, transparent); text-shadow:0 0 8px var(--pair-color); }
+                .matching-actions { width:100%; display:flex; justify-content:center; }
+                .matching-restart-btn { padding:8px 20px; border-radius:8px; border:1px solid rgba(255,255,255,.45); background:rgba(0,0,0,.35); color:#fff; cursor:pointer; text-transform:uppercase; transition:.18s; }
+                .matching-restart-btn:hover { border-color:var(--neon-yellow); color:var(--neon-yellow); box-shadow:0 0 10px rgba(255,251,0,.4); }
+                @media (max-width:620px) { .matching-board { gap:9px; } .matching-card { padding:8px 9px; min-height:43px; } }
+
+                /* Интерактивное задание Categories */
+                .category-activity { width:100%; display:flex; flex-direction:column; align-items:stretch; gap:14px; }
+                .category-hint { color:#aeb7c3; text-align:center; line-height:1.35; }
+                .category-bank { min-height:72px; padding:14px; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px; border:1px dashed rgba(255,255,255,.28); border-radius:13px; background:rgba(0,0,0,.26); }
+                .category-chip { min-width:74px; padding:10px 16px; border-radius:10px; border:2px solid var(--chip-color,#00f3ff); background:color-mix(in srgb, var(--chip-color,#00f3ff) 16%, rgba(5,5,14,.92)); color:#fff; box-shadow:0 0 10px color-mix(in srgb, var(--chip-color,#00f3ff) 78%, transparent), inset 0 0 10px rgba(255,255,255,.04); cursor:pointer; transition:transform .16s ease, box-shadow .16s ease, filter .16s ease; }
+                .category-chip:hover { transform:translateY(-2px); filter:brightness(1.2); }
+                .category-chip.selected { transform:translateY(-3px) scale(1.04); box-shadow:0 0 18px var(--chip-color,#00f3ff), inset 0 0 14px color-mix(in srgb, var(--chip-color,#00f3ff) 22%, transparent); }
+                .category-grid { width:100%; display:grid; gap:13px; grid-template-columns:repeat(var(--category-columns,2), minmax(0,1fr)); }
+                .category-box { min-height:150px; display:flex; flex-direction:column; overflow:hidden; border:2px solid var(--category-color,#00f3ff); border-radius:15px; background:color-mix(in srgb, var(--category-color,#00f3ff) 13%, rgba(6,6,16,.9)); box-shadow:0 0 13px color-mix(in srgb, var(--category-color,#00f3ff) 70%, transparent), inset 0 0 18px color-mix(in srgb, var(--category-color,#00f3ff) 13%, transparent); cursor:pointer; transition:filter .18s ease, transform .18s ease; }
+                .category-box:hover { filter:brightness(1.12); transform:translateY(-1px); }
+                .category-box-title { padding:11px 10px; text-align:center; font-weight:700; color:#fff; border-bottom:1px solid color-mix(in srgb, var(--category-color,#00f3ff) 55%, transparent); background:color-mix(in srgb, var(--category-color,#00f3ff) 14%, rgba(0,0,0,.45)); text-shadow:0 0 9px var(--category-color,#00f3ff); }
+                .category-dropzone { flex:1; min-height:95px; padding:12px; display:flex; flex-wrap:wrap; align-content:flex-start; justify-content:center; gap:9px; }
+                .category-dropzone .category-chip { --chip-color:var(--category-color,#00f3ff) !important; }
+                .category-actions { width:100%; display:flex; justify-content:center; }
+                .category-restart-btn { padding:8px 20px; border-radius:8px; border:1px solid rgba(255,255,255,.45); background:rgba(0,0,0,.35); color:#fff; cursor:pointer; text-transform:uppercase; transition:.18s; }
+                .category-restart-btn:hover { border-color:var(--neon-yellow); color:var(--neon-yellow); box-shadow:0 0 10px rgba(255,251,0,.4); }
+                @media (max-width:720px) { .category-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; } .category-box { min-height:120px; } }
+                /* Красочное задание GAPS в стиле Categories */
+                #question-modal.gaps-mode { width:min(94%,900px); max-width:900px; }
                 .gaps-activity { width:100%; display:flex; flex-direction:column; align-items:center; gap:16px; }
-                .gaps-sentence { width:100%; line-height:2.65; color:#fff; text-align:center; }
-                .gap-slot { min-width:92px; min-height:42px; padding:7px 12px; margin:0 5px; border-radius:8px; border:2px dashed var(--neon-blue); background:rgba(0,0,0,.55); color:#fff; text-align:center; box-shadow:0 0 8px rgba(0,243,255,.28); cursor:pointer; font:inherit; vertical-align:middle; transition:.18s; }
-                .gap-slot:hover, .gap-slot.ready { border-style:solid; box-shadow:0 0 14px var(--neon-blue); }
-                .gap-slot.filled { border-style:solid; border-color:var(--neon-green); box-shadow:0 0 12px rgba(57,255,20,.48); }
-                .gap-word-bank-wrap { width:100%; padding:13px; border:1px solid rgba(0,243,255,.45); border-radius:10px; background:rgba(0,0,0,.28); box-shadow:inset 0 0 12px rgba(0,243,255,.08); }
-                .gap-word-bank-title { color:#9aa6ae; margin-bottom:9px; text-transform:uppercase; letter-spacing:.04em; }
-                .gap-word-bank { display:flex; flex-wrap:wrap; justify-content:center; gap:9px; min-height:43px; }
-                .gap-word { padding:9px 15px; border-radius:8px; border:1px solid var(--neon-blue); background:rgba(0,243,255,.08); color:#fff; cursor:pointer; transition:.18s; }
-                .gap-word:hover, .gap-word.selected { background:rgba(0,243,255,.22); box-shadow:0 0 12px var(--neon-blue); transform:translateY(-1px); }
-                .gap-word.used { opacity:.18; pointer-events:none; transform:none; box-shadow:none; }
+                .gaps-sentence { width:100%; line-height:2.65; color:#fff; text-align:center; padding:16px 14px; border:1px dashed rgba(255,255,255,.28); border-radius:13px; background:rgba(0,0,0,.26); }
+                .gap-slot { --gap-color:var(--neon-blue); min-width:92px; min-height:42px; padding:7px 12px; margin:0 5px; border-radius:9px; border:2px dashed var(--gap-color); background:color-mix(in srgb, var(--gap-color) 8%, rgba(0,0,0,.72)); color:#fff; text-align:center; box-shadow:0 0 9px color-mix(in srgb, var(--gap-color) 45%, transparent); cursor:pointer; font:inherit; vertical-align:middle; transition:.18s; }
+                .gap-slot:hover, .gap-slot.ready { border-style:solid; box-shadow:0 0 16px var(--gap-color); }
+                .gap-slot.filled { border-style:solid; background:color-mix(in srgb, var(--gap-color) 18%, rgba(5,5,16,.94)); box-shadow:0 0 16px var(--gap-color), inset 0 0 11px color-mix(in srgb, var(--gap-color) 16%, transparent); text-shadow:0 0 7px var(--gap-color); }
+                .gap-word-bank-wrap { width:100%; padding:14px; border:1px solid rgba(0,243,255,.60); border-radius:13px; background:rgba(0,0,0,.28); box-shadow:0 0 13px rgba(0,243,255,.23), inset 0 0 14px rgba(0,243,255,.08); }
+                .gap-word-bank-title { color:#aeb7c3; margin-bottom:10px; text-transform:uppercase; letter-spacing:.04em; text-align:center; }
+                .gap-word-bank { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; min-height:46px; }
+                .gap-word { --gap-color:#00f3ff; padding:10px 17px; border-radius:10px; border:2px solid var(--gap-color); background:color-mix(in srgb, var(--gap-color) 17%, rgba(5,5,16,.94)); color:#fff; box-shadow:0 0 11px color-mix(in srgb, var(--gap-color) 72%, transparent), inset 0 0 10px rgba(255,255,255,.035); cursor:pointer; transition:.18s; text-shadow:0 0 7px var(--gap-color); }
+                .gap-word:hover, .gap-word.selected { box-shadow:0 0 19px var(--gap-color), inset 0 0 13px color-mix(in srgb, var(--gap-color) 20%, transparent); transform:translateY(-2px) scale(1.03); filter:brightness(1.15); }
+                .gap-word.used { opacity:.16; pointer-events:none; transform:none; box-shadow:none; }
                 .gap-actions { display:flex; justify-content:center; width:100%; }
                 .gap-restart-btn { padding:8px 20px; border-radius:8px; border:1px solid rgba(255,255,255,.45); background:rgba(0,0,0,.35); color:#fff; cursor:pointer; text-transform:uppercase; transition:.18s; }
                 .gap-restart-btn:hover { border-color:var(--neon-yellow); color:var(--neon-yellow); box-shadow:0 0 10px rgba(255,251,0,.4); }
@@ -746,6 +849,18 @@ _____ is capital. (London, LONDON)
                 body:not(.editor-mode) .resize-handle { display: none !important; pointer-events: none !important; }
                 
                 .fw-particle { position: absolute; border-radius: 50%; pointer-events: none; }
+
+                /* Плашка результатов на экране победы */
+                #el-win-stats { padding:14px 18px; border:2px solid; border-radius:15px; display:flex; flex-direction:column; justify-content:center; container-type:inline-size; overflow:hidden; }
+                .win-stars { display:flex; justify-content:center; gap:8px; margin-bottom:8px; line-height:1; }
+                .win-star { font-size:clamp(18px,7cqw,38px); color:rgba(255,255,255,.18); text-shadow:none; }
+                .win-star.filled { color:#ffd43b; text-shadow:0 0 8px #ffd43b,0 0 18px #ff9d00; }
+                .win-stats-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px 18px; align-items:center; }
+                .win-stat-row { display:flex; justify-content:space-between; align-items:baseline; gap:10px; min-width:0; }
+                .win-stat-row.wide { grid-column:1 / -1; }
+                .win-stat-label,.win-stat-value { font-size:clamp(11px,3.8cqw,22px); line-height:1.28; white-space:nowrap; }
+                .win-stat-label { font-weight:700; overflow:hidden; text-overflow:ellipsis; }
+                .win-stat-value { color:#fff; font-weight:700; text-shadow:0 0 7px rgba(255,255,255,.72); }
                 
                 /* Окно разбора ошибок */
                 #error-review-overlay { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 50; flex-direction: column; align-items: center; justify-content: center; padding: 20px; display: none; }
@@ -818,6 +933,17 @@ _____ is capital. (London, LONDON)
 <div class="screen hidden" id="win-screen">
 <div class="draggable-el char" id="el-win-char"><img src=""/><div class="resize-handle"></div></div>
 <div class="draggable-el text-box" id="el-win-box"><h1 id="el-win-title"></h1><div class="resize-handle"></div></div>
+<div class="draggable-el" id="el-win-stats">
+<div class="win-stars" id="win-stars"></div>
+<div class="win-stats-grid">
+<div class="win-stat-row"><span class="win-stat-label" id="win-label-questions"></span><span class="win-stat-value" id="win-stat-questions"></span></div>
+<div class="win-stat-row"><span class="win-stat-label" id="win-label-errors"></span><span class="win-stat-value" id="win-stat-errors"></span></div>
+<div class="win-stat-row"><span class="win-stat-label" id="win-label-time"></span><span class="win-stat-value" id="win-stat-time"></span></div>
+<div class="win-stat-row"><span class="win-stat-label" id="win-label-score"></span><span class="win-stat-value" id="win-stat-score"></span></div>
+<div class="win-stat-row wide"><span class="win-stat-label" id="win-label-best"></span><span class="win-stat-value" id="win-stat-best"></span></div>
+</div>
+<div class="resize-handle"></div>
+</div>
 <div class="draggable-el" id="el-win-btn" style="width:250px; height:60px;"><button class="neon-btn"></button><div class="resize-handle"></div></div>
 <button class="btn-show-errors-ui" onclick="showErrorReview()"></button>
 </div>
@@ -830,13 +956,13 @@ _____ is capital. (London, LONDON)
 <script>
             let CONFIG = {}; let isEditor = true;
             const GAME_TEXTS = {
-                ru: { question: 'Вопрос' },
-                en: { question: 'Question' },
-                de: { question: 'Frage' },
-                es: { question: 'Pregunta' },
-                kk: { question: 'Сұрақ' },
-                zh: { question: '问题' },
-                ko: { question: '질문' }
+                ru: { question:'Вопрос', check:'Проверить', restart:'Сбросить', gapHint:'Выберите слово, затем нажмите на нужный пропуск', questions:'Вопросы:', errors:'Ошибки:', timeLeft:'Осталось времени:', score:'Очки:', best:'Лучший результат:' },
+                en: { question:'Question', check:'Check', restart:'Restart', gapHint:'Choose a word, then click the correct gap', questions:'Questions:', errors:'Errors:', timeLeft:'Time left:', score:'Score:', best:'Best score:' },
+                de: { question:'Frage', check:'Prüfen', restart:'Neu starten', gapHint:'Wähle ein Wort und klicke dann auf die richtige Lücke', questions:'Fragen:', errors:'Fehler:', timeLeft:'Restzeit:', score:'Punkte:', best:'Bestes Ergebnis:' },
+                es: { question:'Pregunta', check:'Comprobar', restart:'Reiniciar', gapHint:'Elige una palabra y pulsa el espacio correcto', questions:'Preguntas:', errors:'Errores:', timeLeft:'Tiempo restante:', score:'Puntos:', best:'Mejor resultado:' },
+                kk: { question:'Сұрақ', check:'Тексеру', restart:'Қайта бастау', gapHint:'Сөзді таңдап, дұрыс бос орынды басыңыз', questions:'Сұрақтар:', errors:'Қателер:', timeLeft:'Қалған уақыт:', score:'Ұпай:', best:'Үздік нәтиже:' },
+                zh: { question:'问题', check:'检查', restart:'重新开始', gapHint:'选择一个词，然后点击正确的空格', questions:'问题:', errors:'错误:', timeLeft:'剩余时间:', score:'得分:', best:'最佳成绩:' },
+                ko: { question:'질문', check:'확인', restart:'다시 시작', gapHint:'단어를 선택한 다음 알맞은 빈칸을 누르세요', questions:'질문:', errors:'오류:', timeLeft:'남은 시간:', score:'점수:', best:'최고 기록:' }
             };
             function gameText(key) {
                 const lang = GAME_TEXTS[CONFIG.uiLanguage] ? CONFIG.uiLanguage : 'ru';
@@ -1131,7 +1257,7 @@ _____ is capital. (London, LONDON)
                         const questionWasVisible = !document.getElementById('question-overlay').classList.contains('hidden');
                         initGameLogic();
                         if (questionWasVisible) {
-                            currentQuestionsQueue = [...(CONFIG.questionsDB || [])];
+                            currentQuestionsQueue = makeQuestionQueue();
                             triggerQuestion();
                         }
                     }
@@ -1146,7 +1272,7 @@ _____ is capital. (London, LONDON)
                         if (screen) {
                             screen.classList.remove('hidden');
                             if (e.data.screenId === 'question-overlay') {
-                                currentQuestionsQueue = [...(CONFIG.questionsDB || [])];
+                                currentQuestionsQueue = makeQuestionQueue();
                                 triggerQuestion();
                             }
                             if (['win-screen', 'lose-screen', 'time-screen'].includes(e.data.screenId)) {
@@ -1174,20 +1300,18 @@ _____ is capital. (London, LONDON)
                     .screen { background-color: rgba(${hexToRgb(CONFIG.design.screenBg)}, ${CONFIG.design.screenAlpha}) !important; }
                     #question-modal { background-color: rgba(${hexToRgb(CONFIG.design.qModalBg)}, ${CONFIG.design.qModalAlpha}); border: 2px solid ${CONFIG.design.aNeon}; box-shadow: 0 0 20px ${CONFIG.design.aNeon}; }
                     #q-text { font-family: ${CONFIG.design.qFont}; font-size: ${CONFIG.design.qSize}rem; color: ${CONFIG.design.qColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-                    .answer-btn { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; color: ${CONFIG.design.aColor}; background: ${CONFIG.design.aBg}; border: 2px solid rgba(255,255,255,0.05); }
-                    .answer-btn:hover { border-color: ${CONFIG.design.aNeon}; box-shadow: 0 0 15px ${CONFIG.design.aNeon}, inset 0 0 10px ${CONFIG.design.aNeon}; transform: translateY(-2px); }
+                    .answer-btn { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; color: ${CONFIG.design.aColor}; }
                     .text-input { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; border: 2px solid ${CONFIG.design.aBg}; }
                     .text-input:focus { border-color: ${CONFIG.design.aNeon}; box-shadow: 0 0 15px ${CONFIG.design.aNeon}; }
-                    .word-chunk { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; }
-                    .matching-row, .category-row,
-                    .matching-row span, .category-row span,
-                    .matching-row select, .category-row select,
+                    .word-chunk { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; color: ${CONFIG.design.aColor}; }
+                    .matching-card,
+                    .category-chip, .category-box-title, .category-restart-btn,
                     .error-word, .gaps-sentence, .gap-slot, .gap-word {
                         font-family: ${CONFIG.design.aFont} !important;
                         font-size: ${CONFIG.design.aSize}rem !important;
                         color: ${CONFIG.design.aColor};
                     }
-                    .matching-row select, .category-row select { color: ${CONFIG.design.aColor}; }
+                    .matching-restart-btn, .category-restart-btn { font-family:${CONFIG.design.aFont}; font-size:${Math.max(0.75, Number(CONFIG.design.aSize || 1) * 0.82)}rem !important; }
                     .gap-word-bank-title {
                         font-family: ${CONFIG.design.aFont};
                         font-size: ${Math.max(0.8, Number(CONFIG.design.aSize || 1) * 0.82)}rem;
@@ -1204,6 +1328,8 @@ _____ is capital. (London, LONDON)
                     #el-start-btn button { font-family: ${CONFIG.design.startFont}; background-color: ${CONFIG.design.startBtnBg}; color: ${CONFIG.design.startBtnColor}; border-color: ${CONFIG.design.startBtnGlow}; box-shadow: 0 0 10px ${CONFIG.design.startBtnGlow}, inset 0 0 10px ${CONFIG.design.startBtnGlow}; }
                     #el-win-title { font-family: ${CONFIG.design.winFont}; font-size: ${CONFIG.design.winTitleSize}rem; color: ${CONFIG.design.winTitleColor}; text-shadow: 0 0 15px ${CONFIG.design.winTitleGlow}, 0 0 30px ${CONFIG.design.winTitleGlow}; }
                     #el-win-box { background-color: rgba(${hexToRgb(CONFIG.design.winBoxBg)}, ${CONFIG.design.winBoxAlpha}); border-radius: 15px; }
+                    #el-win-stats { font-family:${CONFIG.design.winFont}; background-color:rgba(${hexToRgb(CONFIG.design.winBoxBg)}, ${Math.max(0.35, Number(CONFIG.design.winBoxAlpha || 0.5))}); border-color:${CONFIG.design.winBtnGlow}; box-shadow:0 0 15px ${CONFIG.design.winBtnGlow}, inset 0 0 12px rgba(${hexToRgb(CONFIG.design.winBtnGlow)},.16); }
+                    #el-win-stats .win-stat-label { color:${CONFIG.design.winBtnColor}; text-shadow:0 0 8px ${CONFIG.design.winBtnGlow},0 0 16px ${CONFIG.design.winBtnGlow}; }
                     #el-win-btn button { font-family: ${CONFIG.design.winFont}; background-color: ${CONFIG.design.winBtnBg}; color: ${CONFIG.design.winBtnColor}; border-color: ${CONFIG.design.winBtnGlow}; box-shadow: 0 0 10px ${CONFIG.design.winBtnGlow}, inset 0 0 10px ${CONFIG.design.winBtnGlow}; }
                     #el-lose-title { font-family: ${CONFIG.design.loseFont}; font-size: ${CONFIG.design.loseTitleSize}rem; color: ${CONFIG.design.loseTitleColor}; text-shadow: 0 0 15px ${CONFIG.design.loseTitleGlow}, 0 0 30px ${CONFIG.design.loseTitleGlow}; }
                     #el-lose-box { background-color: rgba(${hexToRgb(CONFIG.design.loseBoxBg)}, ${CONFIG.design.loseBoxAlpha}); border-radius: 15px; }
@@ -1228,6 +1354,7 @@ _____ is capital. (London, LONDON)
                 document.getElementById('dynamic-styles').innerHTML = css;
                 document.getElementById('el-start-title').innerText = CONFIG.design.startTitle; document.getElementById('el-start-desc').innerText = CONFIG.design.startDesc; document.querySelector('#el-start-btn button').innerText = CONFIG.design.startBtnText;
                 document.getElementById('el-win-title').innerText = CONFIG.design.winTitle; document.querySelector('#el-win-btn button').innerText = CONFIG.design.winBtnText;
+                document.getElementById('btn-check-answer').innerText = gameText('check');
                 document.getElementById('el-lose-title').innerText = CONFIG.design.loseTitle; document.querySelector('#el-lose-btn button').innerText = CONFIG.design.loseBtnText;
                 document.getElementById('el-time-title').innerText = CONFIG.design.timeTitle; document.querySelector('#el-time-btn button').innerText = CONFIG.design.timeBtnText;
                 document.getElementById('error-review-title').innerText = CONFIG.design.errorTitle;
@@ -1236,6 +1363,7 @@ _____ is capital. (London, LONDON)
                 document.querySelector('#el-start-char img').src = CONFIG.media.charSadSrc; document.querySelector('#el-lose-char img').src = CONFIG.media.charSadSrc; document.querySelector('#el-time-char img').src = CONFIG.media.charSadSrc; document.querySelector('#el-win-char img').src = CONFIG.media.charHappySrc;
                 document.getElementById('character-center').style.backgroundImage = `url('${CONFIG.media.charSadSrc}')`;
                 for(let id in CONFIG.positions) { let el = document.getElementById(id); if(el) { el.style.left = CONFIG.positions[id].x; el.style.top = CONFIG.positions[id].y; el.style.width = CONFIG.positions[id].w; el.style.height = CONFIG.positions[id].h; } }
+                renderWinStats(true);
                 normalizeLegacyPositions();
             }
 
@@ -1243,6 +1371,123 @@ _____ is capital. (London, LONDON)
             let gridData = [], currentLives = 3, maxLives = 3, totalTiles = 0, timeRemaining = 120, gameFinished = false;
             let timerInterval = null, combo = 0, isTimerFrozen = false, freezeTimeout = null, fwInterval = null, fwStopTimeout = null, chameleonInterval = null, pendingWinTimeout = null, winWatchInterval = null, boardReady = false;
             let currentQuestionsQueue = []; let errorLog = []; let activeQuestion = null;
+            let correctAnswers = 0, wrongAnswers = 0, finalScore = 0, bestScoreMemory = 0;
+
+            const QUESTION_CARD_PALETTE=['#00f3ff','#ff2d75','#ffd43b','#39ff14','#ff8a00','#9d5cff','#31e6a1','#ff5ac8','#63a4ff','#f05d5e'];
+
+            function shuffledCopy(items) {
+                const result = [...(items || [])];
+                for (let i = result.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [result[i], result[j]] = [result[j], result[i]];
+                }
+                return result;
+            }
+
+            function shuffledDifferent(items, keyFn = value => value) {
+                const source=[...(items||[])];
+                if(source.length<2)return source;
+                const original=source.map(keyFn);
+                for(let attempt=0;attempt<20;attempt++){
+                    const candidate=shuffledCopy(source);
+                    if(candidate.some((item,index)=>keyFn(item)!==original[index]))return candidate;
+                }
+                const offset=1+Math.floor(Math.random()*(source.length-1));
+                return source.map((_,index)=>source[(index+offset)%source.length]);
+            }
+
+            function derangedCopy(items, keyFn = value => value) {
+                const source=[...(items||[])];
+                if(source.length<2)return source;
+                if(source.length===2)return [source[1],source[0]];
+                const original=source.map(keyFn);
+                for(let attempt=0;attempt<60;attempt++){
+                    const candidate=shuffledCopy(source);
+                    if(candidate.every((item,index)=>keyFn(item)!==original[index]))return candidate;
+                }
+                const offset=1+Math.floor(Math.random()*(source.length-1));
+                return source.map((_,index)=>source[(index+offset)%source.length]);
+            }
+
+            function applyQuestionCardColor(element,index) {
+                if(!element)return element;
+                element.style.setProperty('--card-color',QUESTION_CARD_PALETTE[index%QUESTION_CARD_PALETTE.length]);
+                return element;
+            }
+
+            function makeQuestionQueue() {
+                const source = [...(CONFIG.questionsDB || [])];
+                if(isEditor || CONFIG.rules.randomQuestions === false)return source;
+                return shuffledDifferent(source.map((question,index)=>({question,index})),item=>item.index).map(item=>item.question);
+            }
+
+            function formatGameTime(seconds) {
+                if (CONFIG.rules.timer >= 9999) return '∞';
+                const safe = Math.max(0, Number(seconds || 0));
+                return `${Math.floor(safe / 60).toString().padStart(2,'0')}:${Math.floor(safe % 60).toString().padStart(2,'0')}`;
+            }
+
+            function scoreKey() {
+                const basis = `${CONFIG.design?.startTitle || 'ARROWS'}|${CONFIG.rules?.qCount || 0}|${(CONFIG.questionsDB || []).map(q => q.text || q.correct || '').join('|')}`;
+                let hash = 2166136261;
+                for (let i = 0; i < basis.length; i++) { hash ^= basis.charCodeAt(i); hash = Math.imul(hash, 16777619); }
+                return `neon_arrows_best_${(hash >>> 0).toString(16)}`;
+            }
+
+            function readBestScore() {
+                try { return Math.max(bestScoreMemory, Number(localStorage.getItem(scoreKey()) || 0)); } catch (error) { return bestScoreMemory; }
+            }
+
+            function saveBestScore(value) {
+                const previous = readBestScore();
+                bestScoreMemory = Math.max(previous, Number(value || 0));
+                try { localStorage.setItem(scoreKey(), String(bestScoreMemory)); } catch (error) {}
+                return bestScoreMemory;
+            }
+
+            function calculateFinalScore() {
+                const timeBonus = CONFIG.rules.timer >= 9999 ? 0 : Math.max(0, timeRemaining) * 10;
+                return Math.max(0, correctAnswers * 300 + timeBonus + Math.max(0, currentLives) * 100 - wrongAnswers * 75);
+            }
+
+            function calculateStars(total) {
+                const accuracy = total > 0 ? correctAnswers / total : 1;
+                if (accuracy >= 0.85) return 3;
+                if (accuracy >= 0.6) return 2;
+                return 1;
+            }
+
+            function renderWinStats(previewSample = false) {
+                const total = Math.max(1, Number(CONFIG.rules?.qCount || 0));
+                const sampleCorrect = Math.min(7, total);
+                const stats = previewSample ? {
+                    correct: sampleCorrect,
+                    errors: Math.max(0, total - sampleCorrect),
+                    time: CONFIG.rules?.timer >= 9999 ? '∞' : '00:34',
+                    score: 2450,
+                    best: Math.max(2450, readBestScore()),
+                    stars: total <= 1 ? 3 : (sampleCorrect / total >= .85 ? 3 : sampleCorrect / total >= .6 ? 2 : 1)
+                } : {
+                    correct: correctAnswers,
+                    errors: wrongAnswers,
+                    time: formatGameTime(timeRemaining),
+                    score: finalScore || calculateFinalScore(),
+                    best: readBestScore(),
+                    stars: calculateStars(total)
+                };
+                const labels = {questions:'questions',errors:'errors',time:'timeLeft',score:'score',best:'best'};
+                Object.entries(labels).forEach(([id,key]) => { const el=document.getElementById(`win-label-${id}`); if(el) el.innerText=gameText(key); });
+                const values = {
+                    questions:`${stats.correct}/${total}`,
+                    errors:String(stats.errors),
+                    time:String(stats.time),
+                    score:String(stats.score),
+                    best:String(stats.best)
+                };
+                Object.entries(values).forEach(([id,value]) => { const el=document.getElementById(`win-stat-${id}`); if(el) el.innerText=value; });
+                const starsEl=document.getElementById('win-stars');
+                if(starsEl) starsEl.innerHTML=[1,2,3].map(i=>`<span class="win-star ${i<=stats.stars?'filled':''}">★</span>`).join('');
+            }
             
             const getArrowSymbols = () => {
                 const s = CONFIG.design.arrowStyle;
@@ -1314,6 +1559,7 @@ _____ is capital. (London, LONDON)
                 gridContainer.innerHTML = ''; gridData = []; errorLog = []; activeQuestion = null;
                 document.getElementById('question-overlay')?.classList.add('hidden');
                 currentLives = CONFIG.rules.countLife; maxLives = currentLives; timeRemaining = CONFIG.rules.timer; combo = 0; isTimerFrozen = false; gameFinished = false;
+                correctAnswers = 0; wrongAnswers = 0; finalScore = 0;
                 clearInterval(timerInterval); clearTimeout(freezeTimeout); clearInterval(fwInterval); clearTimeout(fwStopTimeout); clearInterval(chameleonInterval); clearTimeout(pendingWinTimeout); clearInterval(winWatchInterval);
                 document.querySelectorAll('.fw-particle').forEach(el => el.remove());
                 document.getElementById('timer').classList.remove('frozen-timer'); document.getElementById('character-center').classList.remove('happy-jump');
@@ -1322,7 +1568,7 @@ _____ is capital. (London, LONDON)
                 document.querySelectorAll('.btn-show-errors-ui').forEach(b => b.style.display = 'none');
                 updateUI(); totalTiles = 0;
                 
-                if (CONFIG.questionsDB) { currentQuestionsQueue = [...CONFIG.questionsDB]; }
+                if (CONFIG.questionsDB) { currentQuestionsQueue = makeQuestionQueue(); }
 
                 let size = CONFIG.rules.gridSize;
                 for (let y = 0; y < size; y++) { let row = []; for (let x = 0; x < size; x++) row.push(null); gridData.push(row); }
@@ -1514,13 +1760,14 @@ _____ is capital. (London, LONDON)
 
             function triggerQuestion() {
                 if (!CONFIG.questionsDB || CONFIG.questionsDB.length === 0) return false;
-                if (currentQuestionsQueue.length === 0) { currentQuestionsQueue = [...CONFIG.questionsDB]; }
+                if (currentQuestionsQueue.length === 0) { currentQuestionsQueue = makeQuestionQueue(); }
                 activeQuestion = currentQuestionsQueue.shift();
                 if (!activeQuestion) return false;
                 if (CONFIG.rules.smartPause) clearInterval(timerInterval); 
                 document.getElementById('question-overlay').classList.remove('hidden');
                 
                 const dynamicArea = document.getElementById('q-dynamic-area'); const checkBtn = document.getElementById('btn-check-answer'); const qImg = document.getElementById('q-img');
+                const questionModal=document.getElementById('question-modal'); questionModal.classList.remove('categories-mode','matching-mode','gaps-mode'); if(activeQuestion.type==='categories')questionModal.classList.add('categories-mode'); else if(activeQuestion.type==='pairs')questionModal.classList.add('matching-mode'); else if(activeQuestion.type==='gaps')questionModal.classList.add('gaps-mode');
                 if (activeQuestion.img) { qImg.src = activeQuestion.img; qImg.style.display = 'inline-block'; } else { qImg.style.display = 'none'; }
                 
                 const textEl = document.getElementById('q-text');
@@ -1532,44 +1779,140 @@ _____ is capital. (London, LONDON)
                     textEl.style.display = 'none';
                 }
                 
-                dynamicArea.innerHTML = ''; checkBtn.classList.add('hidden'); checkBtn.onclick = null;
+                dynamicArea.innerHTML = ''; checkBtn.classList.add('hidden'); checkBtn.onclick = null; checkBtn.innerText = gameText('check');
 
-                if (activeQuestion.type === 'choice') { activeQuestion.options.forEach(opt => { let btn = document.createElement('button'); btn.className = 'answer-btn'; btn.innerText = opt; btn.onclick = () => checkAnswer(opt === activeQuestion.correct); dynamicArea.appendChild(btn); }); } 
+                if (activeQuestion.type === 'choice') {
+                    const options=shuffledDifferent((activeQuestion.options||[]).map((value,index)=>({value,id:index})),item=>item.id);
+                    options.forEach((item,index)=>{
+                        const btn=applyQuestionCardColor(document.createElement('button'),index); btn.className='answer-btn'; btn.innerText=item.value;
+                        btn.onclick=()=>checkAnswer(item.value===activeQuestion.correct); dynamicArea.appendChild(btn);
+                    });
+                }
                 else if (activeQuestion.type === 'multi') {
-                    const selected=new Set(); activeQuestion.options.forEach(opt=>{ const btn=document.createElement('button'); btn.className='answer-btn multi-option'; btn.innerText=opt; btn.onclick=()=>{ selected.has(opt)?selected.delete(opt):selected.add(opt); btn.classList.toggle('selected-answer',selected.has(opt)); }; dynamicArea.appendChild(btn); });
+                    const selected=new Set();
+                    const options=shuffledDifferent((activeQuestion.options||[]).map((value,index)=>({value,id:index})),item=>item.id);
+                    options.forEach((item,index)=>{
+                        const btn=applyQuestionCardColor(document.createElement('button'),index); btn.className='answer-btn multi-option'; btn.innerText=item.value;
+                        btn.onclick=()=>{ selected.has(item.value)?selected.delete(item.value):selected.add(item.value); btn.classList.toggle('selected-answer',selected.has(item.value)); };
+                        dynamicArea.appendChild(btn);
+                    });
                     checkBtn.classList.remove('hidden'); checkBtn.onclick=()=>{ const correct=new Set(activeQuestion.correct); checkAnswer(selected.size===correct.size&&[...selected].every(v=>correct.has(v))); };
                 }
                 else if (activeQuestion.type === 'order') {
-                    let words = [...activeQuestion.words].sort(() => Math.random() - 0.5); let constructBox = document.createElement('div'); constructBox.id = 'constructed-answer'; let wordBank = document.createElement('div');
-                    words.forEach(word => { let chunk = document.createElement('span'); chunk.className = 'word-chunk'; chunk.innerText = word; chunk.onclick = function() { (this.parentNode === wordBank) ? constructBox.appendChild(this) : wordBank.appendChild(this); }; wordBank.appendChild(chunk); });
+                    const wordItems=(activeQuestion.words||[]).map((word,index)=>({word,id:index}));
+                    const words=shuffledDifferent(wordItems,item=>item.id);
+                    const constructBox=document.createElement('div'); constructBox.id='constructed-answer';
+                    const wordBank=document.createElement('div'); wordBank.className='order-word-bank';
+                    words.forEach((item,index)=>{
+                        const chunk=applyQuestionCardColor(document.createElement('span'),index); chunk.className='word-chunk'; chunk.innerText=item.word;
+                        chunk.onclick=function(){ (this.parentNode===wordBank)?constructBox.appendChild(this):wordBank.appendChild(this); };
+                        wordBank.appendChild(chunk);
+                    });
                     dynamicArea.appendChild(constructBox); dynamicArea.appendChild(wordBank);
-                    checkBtn.classList.remove('hidden'); checkBtn.onclick = () => checkAnswer(Array.from(constructBox.children).map(c => c.innerText).join(' ') === activeQuestion.correct);
+                    checkBtn.classList.remove('hidden'); checkBtn.onclick=()=>checkAnswer(Array.from(constructBox.children).map(c=>c.innerText).join(' ')===activeQuestion.correct);
                 }
                 else if (activeQuestion.type === 'input') {
                     let input = document.createElement('input'); input.type = 'text'; input.className = 'text-input'; input.placeholder = 'Введите ответ...'; dynamicArea.appendChild(input); 
                     checkBtn.classList.remove('hidden'); checkBtn.onclick = () => checkAnswer(activeQuestion.correct.map(c=>c.toLowerCase()).includes(input.value.trim().toLowerCase()));
                 }
                 else if (activeQuestion.type === 'pairs') {
-                    const wrap=document.createElement('div'); wrap.className='matching-list'; const rights=activeQuestion.pairs.map(p=>p.right).sort(()=>Math.random()-.5); const selects=[];
-                    activeQuestion.pairs.forEach(pair=>{ const row=document.createElement('div'); row.className='matching-row'; const left=document.createElement('span'); left.innerText=pair.left; const sel=document.createElement('select'); sel.innerHTML='<option value="">—</option>'+rights.map(r=>`<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join(''); row.append(left,sel); wrap.appendChild(row); selects.push({sel,correct:pair.right}); });
-                    dynamicArea.appendChild(wrap); checkBtn.classList.remove('hidden'); checkBtn.onclick=()=>checkAnswer(selects.every(v=>v.sel.value===v.correct));
+                    const palette=['#00f3ff','#ff2d75','#ffd43b','#39ff14','#ff8a00','#9d5cff','#31e6a1','#ff5ac8','#63a4ff','#f05d5e'];
+                    const pairs=(activeQuestion.pairs||[]).slice(0,10);
+                    const activity=document.createElement('div'); activity.className='matching-activity';
+                    const board=document.createElement('div'); board.className='matching-board';
+                    const leftColumn=document.createElement('div'); leftColumn.className='matching-column matching-left-column';
+                    const rightColumn=document.createElement('div'); rightColumn.className='matching-column matching-right-column';
+                    const leftRecords=[]; let selectedRecord=null;
+                    const setSelected=record=>{ leftRecords.forEach(item=>item.leftBtn.classList.remove('selected')); selectedRecord=record; if(selectedRecord)selectedRecord.leftBtn.classList.add('selected'); };
+                    const unpair=record=>{
+                        if(!record||!record.rightBtn)return;
+                        record.rightBtn.classList.remove('paired'); record.rightBtn.style.removeProperty('--pair-color'); record.rightBtn.dataset.leftIndex='';
+                        record.leftBtn.classList.remove('paired'); record.rightBtn=null;
+                    };
+                    pairs.forEach((pair,index)=>{
+                        const color=palette[index%palette.length];
+                        const leftBtn=document.createElement('button'); leftBtn.type='button'; leftBtn.className='matching-card matching-left-card'; leftBtn.innerText=pair.left; leftBtn.style.setProperty('--pair-color',color);
+                        const record={index,leftBtn,correct:String(pair.right),color,rightBtn:null}; leftRecords.push(record);
+                        leftBtn.onclick=()=>{ if(record.rightBtn)unpair(record); setSelected(selectedRecord===record?null:record); };
+                        leftColumn.appendChild(leftBtn);
+                    });
+                    derangedCopy(pairs.map((pair,index)=>({value:String(pair.right),id:index})),item=>item.id).forEach(item=>{
+                        const rightBtn=document.createElement('button'); rightBtn.type='button'; rightBtn.className='matching-card matching-right-card'; rightBtn.innerText=item.value; rightBtn.dataset.value=item.value; rightBtn.dataset.leftIndex='';
+                        rightBtn.onclick=()=>{
+                            const assignedIndex=rightBtn.dataset.leftIndex;
+                            if(assignedIndex!=='' && !selectedRecord){ unpair(leftRecords[Number(assignedIndex)]); return; }
+                            if(!selectedRecord)return;
+                            if(assignedIndex!=='')unpair(leftRecords[Number(assignedIndex)]);
+                            if(selectedRecord.rightBtn)unpair(selectedRecord);
+                            selectedRecord.rightBtn=rightBtn; rightBtn.dataset.leftIndex=String(selectedRecord.index); rightBtn.classList.add('paired'); rightBtn.style.setProperty('--pair-color',selectedRecord.color); selectedRecord.leftBtn.classList.add('paired'); setSelected(null);
+                        };
+                        rightColumn.appendChild(rightBtn);
+                    });
+                    const actions=document.createElement('div'); actions.className='matching-actions';
+                    const restart=document.createElement('button'); restart.type='button'; restart.className='matching-restart-btn'; restart.innerText=`↻ ${gameText('restart')}`;
+                    restart.onclick=()=>{ leftRecords.forEach(unpair); setSelected(null); };
+                    actions.appendChild(restart); board.append(leftColumn,rightColumn); activity.append(board,actions); dynamicArea.appendChild(activity);
+                    checkBtn.classList.remove('hidden'); checkBtn.innerText=gameText('check'); checkBtn.onclick=()=>checkAnswer(leftRecords.length>=2&&leftRecords.every(record=>record.rightBtn&&record.rightBtn.dataset.value===record.correct));
                 }
                 else if (activeQuestion.type === 'categories') {
-                    const wrap=document.createElement('div'); wrap.className='category-list'; const categories=activeQuestion.categories.map(c=>c.name); const rows=[]; const items=activeQuestion.categories.flatMap(c=>c.items.map(item=>({item,category:c.name}))).sort(()=>Math.random()-.5);
-                    items.forEach(obj=>{ const row=document.createElement('div'); row.className='category-row'; const label=document.createElement('span'); label.innerText=obj.item; const sel=document.createElement('select'); sel.innerHTML='<option value="">—</option>'+categories.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join(''); row.append(label,sel); wrap.appendChild(row); rows.push({sel,correct:obj.category}); });
-                    dynamicArea.appendChild(wrap); checkBtn.classList.remove('hidden'); checkBtn.onclick=()=>checkAnswer(rows.every(v=>v.sel.value===v.correct));
+                    const palette=['#00f3ff','#ff2d75','#ffd43b','#39ff14'];
+                    const activity=document.createElement('div'); activity.className='category-activity';
+                    const bank=document.createElement('div'); bank.className='category-bank';
+                    const grid=document.createElement('div'); grid.className='category-grid';
+                    const categoryCount=Math.max(2,Math.min(4,activeQuestion.categories.length));
+                    grid.style.setProperty('--category-columns',categoryCount===4?2:categoryCount);
+                    let selectedChip=null;
+                    const chipRecords=[];
+                    const setSelected=chip=>{
+                        chipRecords.forEach(record=>record.chip.classList.remove('selected'));
+                        selectedChip=chip;
+                        if(selectedChip) selectedChip.classList.add('selected');
+                    };
+                    const makeChip=(obj,index)=>{
+                        const chip=document.createElement('button'); chip.type='button'; chip.className='category-chip'; chip.innerText=obj.item;
+                        chip.dataset.correctCategory=obj.category; chip.dataset.itemId=`category-item-${index}`;
+                        chip.style.setProperty('--chip-color',palette[index%palette.length]);
+                        chip.onclick=e=>{
+                            e.stopPropagation();
+                            if(chip.parentElement?.classList.contains('category-dropzone')) { bank.appendChild(chip); chip.dataset.assigned=''; setSelected(null); }
+                            else setSelected(selectedChip===chip?null:chip);
+                        };
+                        chipRecords.push({chip,correct:obj.category});
+                        return chip;
+                    };
+                    const sourceItems=activeQuestion.categories.flatMap((c,categoryIndex)=>c.items.map((item,itemIndex)=>({item,category:c.name,id:`${categoryIndex}-${itemIndex}`})));
+                    const items=shuffledDifferent(sourceItems,obj=>obj.id);
+                    items.forEach((obj,index)=>bank.appendChild(makeChip(obj,index)));
+                    activeQuestion.categories.slice(0,4).forEach((category,index)=>{
+                        const box=document.createElement('div'); box.className='category-box'; box.style.setProperty('--category-color',palette[index]);
+                        const title=document.createElement('div'); title.className='category-box-title'; title.innerText=category.name;
+                        const drop=document.createElement('div'); drop.className='category-dropzone'; drop.dataset.category=category.name;
+                        box.append(title,drop);
+                        box.onclick=()=>{
+                            if(!selectedChip) return;
+                            drop.appendChild(selectedChip); selectedChip.dataset.assigned=category.name; setSelected(null);
+                        };
+                        grid.appendChild(box);
+                    });
+                    const actions=document.createElement('div'); actions.className='category-actions';
+                    const restart=document.createElement('button'); restart.type='button'; restart.className='category-restart-btn'; restart.innerText=`↻ ${gameText('restart')}`;
+                    restart.onclick=()=>{ chipRecords.forEach(record=>{ bank.appendChild(record.chip); record.chip.dataset.assigned=''; }); setSelected(null); };
+                    actions.appendChild(restart); activity.append(bank,grid,actions); dynamicArea.appendChild(activity);
+                    checkBtn.classList.remove('hidden'); checkBtn.innerText=gameText('check');
+                    checkBtn.onclick=()=>checkAnswer(chipRecords.every(record=>record.chip.dataset.assigned===record.correct));
                 }
                 else if (activeQuestion.type === 'error') {
                     const normalize=v=>String(v).toLowerCase().replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,'');
-                    activeQuestion.text.split(/\s+/).forEach(word=>{ const btn=document.createElement('button'); btn.className='error-word'; btn.innerText=word; btn.onclick=()=>checkAnswer(normalize(word)===normalize(activeQuestion.correct)); dynamicArea.appendChild(btn); });
+                    activeQuestion.text.split(/\s+/).forEach((word,index)=>{ const btn=applyQuestionCardColor(document.createElement('button'),index); btn.className='error-word'; btn.innerText=word; btn.onclick=()=>checkAnswer(normalize(word)===normalize(activeQuestion.correct)); dynamicArea.appendChild(btn); });
                 }
                 else if (activeQuestion.type === 'gaps') {
                     const activity=document.createElement('div'); activity.className='gaps-activity';
                     const sentence=document.createElement('div'); sentence.className='gaps-sentence';
                     const parts=activeQuestion.text.split(/_{3,}/); const slots=[];
-                    const tokens=(activeQuestion.answers||[]).map((word,index)=>({id:`gap-token-${index}`,word:String(word)})).sort(()=>Math.random()-.5);
+                    const palette=['#00f3ff','#ff2d75','#ffd43b','#39ff14','#ff8a00','#9d5cff','#31e6a1','#ff5ac8','#63a4ff','#f05d5e'];
+                    const tokens=shuffledDifferent((activeQuestion.answers||[]).map((word,index)=>({id:`gap-token-${index}`,word:String(word),color:palette[index%palette.length]})),token=>token.id);
                     const bankWrap=document.createElement('div'); bankWrap.className='gap-word-bank-wrap';
-                    const bankTitle=document.createElement('div'); bankTitle.className='gap-word-bank-title'; bankTitle.innerText='Choose a word, then click the correct gap';
+                    const bankTitle=document.createElement('div'); bankTitle.className='gap-word-bank-title'; bankTitle.innerText=gameText('gapHint');
                     const bank=document.createElement('div'); bank.className='gap-word-bank';
                     let selectedButton=null;
                     const setSelected=(button)=>{
@@ -1579,13 +1922,13 @@ _____ is capital. (London, LONDON)
                         slots.forEach(slot=>slot.classList.toggle('ready',!!selectedButton));
                     };
                     tokens.forEach(token=>{
-                        const button=document.createElement('button'); button.type='button'; button.className='gap-word'; button.innerText=token.word; button.dataset.tokenId=token.id;
+                        const button=document.createElement('button'); button.type='button'; button.className='gap-word'; button.innerText=token.word; button.dataset.tokenId=token.id; button.dataset.tokenColor=token.color; button.style.setProperty('--gap-color',token.color);
                         button.onclick=()=>setSelected(selectedButton===button?null:button); bank.appendChild(button);
                     });
                     const returnSlotWord=(slot)=>{
                         const tokenId=slot.dataset.tokenId; if(!tokenId)return;
                         const button=bank.querySelector(`[data-token-id="${tokenId}"]`); if(button)button.classList.remove('used','selected');
-                        slot.dataset.tokenId=''; slot.innerText='___'; slot.classList.remove('filled');
+                        slot.dataset.tokenId=''; slot.innerText='___'; slot.classList.remove('filled'); slot.style.removeProperty('--gap-color');
                     };
                     parts.forEach((part,index)=>{
                         sentence.appendChild(document.createTextNode(part));
@@ -1594,14 +1937,14 @@ _____ is capital. (London, LONDON)
                             slot.onclick=()=>{
                                 if(slot.dataset.tokenId) returnSlotWord(slot);
                                 if(!selectedButton)return;
-                                slot.dataset.tokenId=selectedButton.dataset.tokenId; slot.innerText=selectedButton.innerText; slot.classList.add('filled');
+                                slot.dataset.tokenId=selectedButton.dataset.tokenId; slot.innerText=selectedButton.innerText; slot.style.setProperty('--gap-color',selectedButton.dataset.tokenColor||'#00f3ff'); slot.classList.add('filled');
                                 selectedButton.classList.add('used'); setSelected(null);
                             };
                             sentence.appendChild(slot); slots.push(slot);
                         }
                     });
                     const actions=document.createElement('div'); actions.className='gap-actions';
-                    const restart=document.createElement('button'); restart.type='button'; restart.className='gap-restart-btn'; restart.innerText='↻ Restart';
+                    const restart=document.createElement('button'); restart.type='button'; restart.className='gap-restart-btn'; restart.innerText=`↻ ${gameText('restart')}`;
                     restart.onclick=()=>{ slots.forEach(returnSlotWord); bank.querySelectorAll('.gap-word').forEach(btn=>btn.classList.remove('used','selected')); setSelected(null); };
                     actions.appendChild(restart); bankWrap.append(bankTitle,bank); activity.append(sentence,bankWrap,actions); dynamicArea.appendChild(activity);
                     checkBtn.classList.remove('hidden'); checkBtn.onclick=()=>checkAnswer(activeQuestion.answers.every((answer,i)=>String(answer).trim().toLowerCase()===(slots[i]?.innerText||'').trim().toLowerCase()));
@@ -1624,12 +1967,14 @@ _____ is capital. (London, LONDON)
             function checkAnswer(isCorrect) {
                 const overlay = document.getElementById('question-overlay');
                 if (isCorrect) {
+                    correctAnswers++;
                     playSound('cor');
                     overlay.classList.add('hidden');
                     combo++;
                     checkComboStatus();
                     if (!maybeFinishGame() && CONFIG.rules.smartPause && !gameFinished) startTimer();
                 } else {
+                    wrongAnswers++;
                     playSound('err');
                     const modal = document.getElementById('question-modal');
                     modal.classList.add('shake');
@@ -1658,6 +2003,9 @@ _____ is capital. (London, LONDON)
                 clearInterval(winWatchInterval);
                 clearTimeout(pendingWinTimeout);
                 document.getElementById('question-overlay')?.classList.add('hidden');
+                finalScore = calculateFinalScore();
+                saveBestScore(finalScore);
+                renderWinStats(false);
                 try { playSound('win'); } catch (error) { console.warn('Win sound:', error); }
                 try {
                     const character = document.getElementById('character-center');
@@ -1725,6 +2073,7 @@ _____ is capital. (London, LONDON)
                 document.querySelectorAll('.btn-show-errors-ui').forEach(b => b.style.display = 'none');
                 const target = document.getElementById(id);
                 if (target) target.classList.remove('hidden');
+                if(id === 'win-screen') renderWinStats(isEditor);
                 if(CONFIG.design.errorReviewEnabled !== false && (id === 'win-screen' || id === 'lose-screen' || id === 'time-screen') && errorLog.length > 0) {
                     target?.querySelector('.btn-show-errors-ui')?.style.setProperty('display', 'block');
                 }
@@ -1737,7 +2086,7 @@ _____ is capital. (London, LONDON)
             function getPreviewErrorItems() {
                 if (errorLog.length > 0) return errorLog;
                 const q = Array.isArray(CONFIG.questionsDB) && CONFIG.questionsDB.length ? CONFIG.questionsDB[0] : null;
-                if (!q) return [{ text: '_____ is capital.', correct: 'London или LONDON' }];
+                if (!q) return [{ text: '_______ is the capital of Great Britain.', correct: 'London или LONDON' }];
                 const correct = getCorrectAnswerText(q) || 'Правильный ответ';
                 return [{ text: q.text || q.correct || 'Пример вопроса', correct }];
             }
@@ -1831,13 +2180,13 @@ _____ is capital. (London, LONDON)
                 charSadSrc: "https://img.genially.com/67961b32a116fb001568a75e/1c9ca612-bfba-43a0-a152-d1d775e34311.png", charHappySrc: "https://img.genially.com/67961b32a116fb001568a75e/83cdaca2-ddf5-42bb-8af9-fc7f5540270f.png"
             },
             uiLanguage: 'ru',
-            rules: { gridSize: 8, difficulty:'standard', arrowTypes: 4, countChameleon: 1, countTrap:0, countBomb:1, timer: 120, timerDisabled:false, countLife: 2, countTime: 3, countFreeze: 2, qCount: 8, smartPause: true },
+            rules: { gridSize: 8, difficulty:'standard', arrowTypes: 4, countChameleon: 1, countTrap:0, countBomb:1, timer: 120, timerDisabled:false, countLife: 2, countTime: 3, countFreeze: 2, qCount: 8, randomQuestions:true, smartPause: true },
             math: { enabled: true },
             audio: { winType:'4', winUrl:'', loseType:'1', loseUrl:'', arrowType:'1', arrowUrl:'', corType:'mixkit', corUrl:'https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', errType:'1', errUrl:'', timeType:'1', timeUrl:'' },
             positions: {
                 'game-area': {x: 'calc(50% - 330px)', y: '90px', w: '660px', h: '660px'},
                 'el-start-char': {x:'calc(50% - 150px)', y:'90px', w:'300px', h:'300px'}, 'el-start-box': {x:'calc(50% - 375px)', y:'405px', w:'750px', h:'min-content'}, 'el-start-btn': {x:'calc(50% - 150px)', y:'720px', w:'300px', h:'90px'},
-                'el-win-char': {x:'calc(50% - 150px)', y:'135px', w:'300px', h:'300px'}, 'el-win-box': {x:'calc(50% - 225px)', y:'495px', w:'450px', h:'min-content'}, 'el-win-btn': {x:'calc(50% - 187.5px)', y:'675px', w:'375px', h:'90px'},
+                'el-win-char': {x:'calc(50% - 150px)', y:'105px', w:'300px', h:'300px'}, 'el-win-box': {x:'calc(50% - 225px)', y:'405px', w:'450px', h:'min-content'}, 'el-win-stats': {x:'calc(50% - 235px)', y:'520px', w:'470px', h:'145px'}, 'el-win-btn': {x:'calc(50% - 187.5px)', y:'700px', w:'375px', h:'90px'},
                 'el-lose-char': {x:'calc(50% - 150px)', y:'135px', w:'300px', h:'300px'}, 'el-lose-box': {x:'calc(50% - 225px)', y:'495px', w:'450px', h:'min-content'}, 'el-lose-btn': {x:'calc(50% - 187.5px)', y:'675px', w:'375px', h:'90px'},
                 'el-time-char': {x:'calc(50% - 150px)', y:'135px', w:'300px', h:'300px'}, 'el-time-box': {x:'calc(50% - 225px)', y:'495px', w:'450px', h:'min-content'}, 'el-time-btn': {x:'calc(50% - 187.5px)', y:'675px', w:'375px', h:'90px'}
             },
@@ -1909,10 +2258,16 @@ _____ is capital. (London, LONDON)
                     const parts=removePrefix(str,str.match(/^\[MULTI\]/i)[0]).split('|').map(v=>v.trim()); if(parts.length>=3){qObj.type='multi';qObj.question=parts[0];qObj.correct=parts[1].split(',').map(v=>v.trim()).filter(Boolean);qObj.wrong=parts.slice(2).flatMap(v=>v.split(',')).map(v=>v.trim()).filter(Boolean);questionsArray.push(qObj);} return;
                 }
                 if(/^\[PAIRS\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[PAIRS\]/i)[0]).split('|').map(v=>v.trim()); const pairs=parts.slice(1).map(v=>v.split('=').map(x=>x.trim())).filter(v=>v.length>=2&&v[0]&&v[1]).map(v=>({left:v[0],right:v.slice(1).join('=').trim()})); if(pairs.length){qObj.type='pairs';qObj.question=parts[0]||'Соедините пары';qObj.pairs=pairs;questionsArray.push(qObj);} return;
+                    const parts=removePrefix(str,str.match(/^\[PAIRS\]/i)[0]).split('|').map(v=>v.trim());
+                    const pairs=parts.slice(1).map(v=>v.split('=').map(x=>x.trim())).filter(v=>v.length>=2&&v[0]&&v[1]).map(v=>({left:v[0],right:v.slice(1).join('=').trim()}));
+                    if(pairs.length<2||pairs.length>10){ alert('Для задания [PAIRS] нужно указать от 2 до 10 пар. Каждую новую пару добавляйте через |, а слова внутри пары соединяйте знаком =.'); return; }
+                    qObj.type='pairs';qObj.question=parts[0]||'Соедините пары';qObj.pairs=pairs;questionsArray.push(qObj);return;
                 }
                 if(/^\[CATEGORIES\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[CATEGORIES\]/i)[0]).split('|').map(v=>v.trim()); const categories=parts.slice(1).map(v=>{const pos=v.indexOf(':');if(pos<0)return null;return{name:v.slice(0,pos).trim(),items:v.slice(pos+1).split(',').map(x=>x.trim()).filter(Boolean)}}).filter(v=>v&&v.name&&v.items.length); if(categories.length){qObj.type='categories';qObj.question=parts[0]||'Распределите по категориям';qObj.categories=categories;questionsArray.push(qObj);} return;
+                    const parts=removePrefix(str,str.match(/^\[CATEGORIES\]/i)[0]).split('|').map(v=>v.trim());
+                    const categories=parts.slice(1).map(v=>{const pos=v.indexOf(':');if(pos<0)return null;return{name:v.slice(0,pos).trim(),items:v.slice(pos+1).split(',').map(x=>x.trim()).filter(Boolean)}}).filter(v=>v&&v.name&&v.items.length);
+                    if(categories.length<2||categories.length>4){ alert('Для задания [CATEGORIES] нужно указать от 2 до 4 категорий. Каждую категорию добавляйте через |.'); return; }
+                    qObj.type='categories';qObj.question=parts[0]||'Распределите по категориям';qObj.categories=categories;questionsArray.push(qObj);return;
                 }
                 if(/^\[ERROR\]/i.test(str)) {
                     const parts=removePrefix(str,str.match(/^\[ERROR\]/i)[0]).split('|').map(v=>v.trim());
@@ -2004,6 +2359,7 @@ _____ is capital. (London, LONDON)
             editorState.rules.countTime = parseInt(document.getElementById('cfg-time').value);
             editorState.rules.countFreeze = parseInt(document.getElementById('cfg-freeze').value);
             editorState.rules.qCount = parseInt(document.getElementById('cfg-qCount').value);
+            editorState.rules.randomQuestions = document.getElementById('cfg-randomQuestions').checked;
             editorState.rules.smartPause = document.getElementById('cfg-smartPause').checked;
             editorState.math.enabled = document.getElementById('cfg-enableLatex').checked;
             
@@ -2384,6 +2740,7 @@ _____ is capital. (London, LONDON)
             editorState.layoutVersion = Number(saved.layoutVersion || 1);
             ['design','media','rules','math','audio','positions'].forEach(key=>{if(saved[key]&&typeof saved[key]==='object')editorState[key]={...editorState[key],...deepClone(saved[key])};});
             if(saved.uiLanguage)editorState.uiLanguage=saved.uiLanguage;
+            if(saved.rules && saved.rules.randomQuestions === undefined) editorState.rules.randomQuestions = true;
             if(Array.isArray(saved.questionsDB))editorState.questionsDB=deepClone(saved.questionsDB);
         }
         function setInputValue(id,value){const el=document.getElementById(id);if(!el||value===undefined||value===null)return;if(el.type==='checkbox')el.checked=Boolean(value);else el.value=String(value);}
@@ -2396,7 +2753,7 @@ _____ is capital. (London, LONDON)
                 setInputValue('val-bg',editorState.media.bgSrc);setInputValue('val-char-sad',editorState.media.charSadSrc);setInputValue('val-char-happy',editorState.media.charHappySrc);
                 setInputValue('cfg-gridSize',editorState.rules.gridSize);setInputValue('cfg-difficulty',editorState.rules.difficulty);setInputValue('cfg-arrowTypes',editorState.rules.arrowTypes);setInputValue('cfg-chameleon',editorState.rules.countChameleon);setInputValue('cfg-trap',editorState.rules.countTrap);setInputValue('cfg-bomb',editorState.rules.countBomb);
                 const timerDisabled=Boolean(editorState.rules.timerDisabled||Number(editorState.rules.timer)>=9999);setInputValue('cfg-disableTimer',timerDisabled);setInputValue('cfg-timer',timerDisabled?120:editorState.rules.timer);const timerInput=document.getElementById('cfg-timer');if(timerInput)timerInput.disabled=timerDisabled;
-                setInputValue('cfg-life',editorState.rules.countLife);setInputValue('cfg-time',editorState.rules.countTime);setInputValue('cfg-freeze',editorState.rules.countFreeze);setInputValue('cfg-qCount',editorState.rules.qCount);setInputValue('cfg-smartPause',editorState.rules.smartPause);setInputValue('cfg-enableLatex',editorState.math?.enabled);
+                setInputValue('cfg-life',editorState.rules.countLife);setInputValue('cfg-time',editorState.rules.countTime);setInputValue('cfg-freeze',editorState.rules.countFreeze);setInputValue('cfg-qCount',editorState.rules.qCount);setInputValue('cfg-randomQuestions',editorState.rules.randomQuestions!==false);setInputValue('cfg-smartPause',editorState.rules.smartPause);setInputValue('cfg-enableLatex',editorState.math?.enabled);
                 ['win','lose','arrow','cor','err','time'].forEach(k=>{const type=String(editorState.audio?.[k+'Type']??'1');const radio=document.querySelector(`input[name="snd-${k}"][value="${CSS.escape(type)}"]`);if(radio)radio.checked=true;setInputValue('url-'+k,editorState.audio?.[k+'Url']||'');toggleUrl(k);});
                 questionsArray=Array.isArray(snapshot.questionsArray)?deepClone(snapshot.questionsArray):questionsFromGameDB(editorState.questionsDB);
                 if(snapshot.bulkText!==undefined)setInputValue('q-bulk-text',snapshot.bulkText);
