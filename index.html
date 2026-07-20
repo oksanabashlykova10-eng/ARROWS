@@ -536,8 +536,12 @@
 <div class="control-group">
 <label>БЫСТРОЕ ДОБАВЛЕНИЕ ВОПРОСОВ</label>
 <div class="question-format-help">
-<strong>1. Один правильный ответ:</strong><br><code>I ___ tired. | am | is | are</code><br><br>
-<strong>2. Вписать слово:</strong><br><code>_______ is the capital of Great Britain. (London, LONDON)</code><br><br>
+<strong>1. Один правильный ответ:</strong><br>
+До знаков <strong>//</strong> напишите задание, после <strong>//</strong> — предложение или вопрос. Первый вариант после знака <strong>|</strong> является правильным.<br>
+<code>[CHOICE] Choose the correct answer. // I ___ tired. | am | is | are</code><br><br>
+<strong>2. Вписать слово:</strong><br>
+До знаков <strong>//</strong> напишите задание, после <strong>//</strong> — предложение с пропуском. В круглых скобках укажите все допустимые варианты ответа через запятую.<br>
+<code>[INPUT] Complete the sentence. // _______ is the capital of Great Britain. (London, LONDON)</code><br><br>
 <strong>3. Собрать предложение:</strong><br><code>[ORDER] Put the words in the correct order | The cat is sleeping.</code><br><br>
 <strong>4. Выбрать несколько ответов:</strong><br><code>[MULTI] Choose irregular verbs | come, run, sleep | skate | jump | clean</code><br><br>
 <strong>5. Соединить пары:</strong><br>
@@ -553,8 +557,8 @@
 <strong>8. Заполнить пропуски словами из рамки:</strong><br><code>[GAPS] Fill the gaps using Present Simple. // I ___ to school and ___ football. | go | play</code><br>
 <span style="display:block;margin-top:8px;color:#888;">До знаков // обязательно напишите задание. После // — предложение с пропусками. Затем укажите по одному точному слову для каждого пропуска. В игре слова перемешиваются в рамке: ребёнок выбирает слово, затем нужный пропуск. Кнопка Restart очищает ответ.</span>
 </div>
-<textarea id="q-bulk-text">I ___ tired. | am | is | are
-_______ is the capital of Great Britain. (London, LONDON)
+<textarea id="q-bulk-text">[CHOICE] Choose the correct answer. // I ___ tired. | am | is | are
+[INPUT] Complete the sentence. // _______ is the capital of Great Britain. (London, LONDON)
 [ORDER] Put the words in the correct order | The cat is sleeping.
 [MULTI] Choose irregular verbs | come, run, sleep | skate | jump | clean
 [PAIRS] Match the words | cat = кошка | dog = собака | bird = птица
@@ -741,6 +745,14 @@ _______ is the capital of Great Britain. (London, LONDON)
                 #q-dynamic-area { display: flex; flex-wrap: wrap; justify-content: center; align-items:center; gap: 15px; width: 100%; margin-top: 12px;}
                 #q-img { max-width:min(76%,560px); max-height:300px; width:auto; height:auto; object-fit:contain; border-radius:12px; margin-bottom:22px; display:none; box-shadow:0 0 18px rgba(0,0,0,.62); }
                 #q-text { width:100%; max-width:900px; line-height:1.3; }
+                .question-stem {
+                    width:100%;
+                    max-width:900px;
+                    margin:2px auto 14px;
+                    line-height:1.35;
+                    text-align:center;
+                    overflow-wrap:anywhere;
+                }
                 @media (max-width:700px) {
                     #question-modal { width:95%; min-height:0; padding:28px 20px; }
                     #q-img { max-width:86%; max-height:230px; }
@@ -1329,7 +1341,7 @@ _______ is the capital of Great Britain. (London, LONDON)
                     #game-container { background: ${CONFIG.media.bgSrc !== 'transparent' && CONFIG.media.bgSrc !== '' ? `url('${CONFIG.media.bgSrc}') center / 100% 100% no-repeat` : 'transparent'} !important; border: 2px solid ${CONFIG.design.gameBorder}; box-shadow: 0 0 15px ${CONFIG.design.gameBorder} inset; }
                     .screen { background-color: rgba(${hexToRgb(CONFIG.design.screenBg)}, ${CONFIG.design.screenAlpha}) !important; }
                     #question-modal { background-color: rgba(${hexToRgb(CONFIG.design.qModalBg)}, ${CONFIG.design.qModalAlpha}); border: 2px solid ${CONFIG.design.aNeon}; box-shadow: 0 0 20px ${CONFIG.design.aNeon}; }
-                    #q-text { font-family: ${CONFIG.design.qFont}; font-size: ${CONFIG.design.qSize}rem; color: ${CONFIG.design.qColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+                    #q-text, .question-stem { font-family: ${CONFIG.design.qFont}; font-size: ${CONFIG.design.qSize}rem; color: ${CONFIG.design.qColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
                     .answer-btn { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; color: ${CONFIG.design.aColor}; }
                     .text-input { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; border: 2px solid ${CONFIG.design.aBg}; }
                     .text-input:focus { border-color: ${CONFIG.design.aNeon}; box-shadow: 0 0 15px ${CONFIG.design.aNeon}; }
@@ -1810,8 +1822,16 @@ _______ is the capital of Great Britain. (London, LONDON)
                 }
                 
                 dynamicArea.innerHTML = ''; checkBtn.classList.add('hidden'); checkBtn.onclick = null; checkBtn.innerText = gameText('check');
+                const appendQuestionStem = () => {
+                    if (!activeQuestion.prompt || !String(activeQuestion.text || '').trim()) return;
+                    const stem = document.createElement('div');
+                    stem.className = 'question-stem';
+                    stem.innerText = activeQuestion.text;
+                    dynamicArea.appendChild(stem);
+                };
 
                 if (activeQuestion.type === 'choice') {
+                    appendQuestionStem();
                     const options=shuffledDifferent((activeQuestion.options||[]).map((value,index)=>({value,id:index})),item=>item.id);
                     options.forEach((item,index)=>{
                         const btn=applyQuestionCardColor(document.createElement('button'),index); btn.className='answer-btn'; btn.innerText=item.value;
@@ -1842,6 +1862,7 @@ _______ is the capital of Great Britain. (London, LONDON)
                     checkBtn.classList.remove('hidden'); checkBtn.onclick=()=>checkAnswer(Array.from(constructBox.children).map(c=>c.innerText).join(' ')===activeQuestion.correct);
                 }
                 else if (activeQuestion.type === 'input') {
+                    appendQuestionStem();
                     let input = document.createElement('input'); input.type = 'text'; input.className = 'text-input'; input.placeholder = 'Введите ответ...'; dynamicArea.appendChild(input); 
                     checkBtn.classList.remove('hidden'); checkBtn.onclick = () => checkAnswer(activeQuestion.correct.map(c=>c.toLowerCase()).includes(input.value.trim().toLowerCase()));
                 }
@@ -2289,6 +2310,44 @@ _______ is the capital of Great Britain. (London, LONDON)
             };
             const qObj = { hasImg: false, imgSrc: null, prompt: '' };
 
+            if (/^\[CHOICE\]/i.test(str)) {
+                const prefix = str.match(/^\[CHOICE\]/i)[0];
+                const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
+                const taskAndSentence = (parts[0] || '').split('//');
+                const task = (taskAndSentence.shift() || '').trim();
+                const sentence = taskAndSentence.join('//').trim();
+                if (!task || !sentence || !parts[1]) {
+                    return fail('Формат [CHOICE]: задание // предложение или вопрос | правильный ответ | неправильные варианты.');
+                }
+                qObj.type = 'choice';
+                qObj.prompt = task;
+                qObj.question = sentence;
+                qObj.correct = parts[1];
+                qObj.wrong = parts.slice(2).filter(Boolean);
+                return qObj;
+            }
+
+            if (/^\[INPUT\]/i.test(str)) {
+                const prefix = str.match(/^\[INPUT\]/i)[0];
+                const body = removePrefix(str, prefix);
+                const match = body.match(inputRegex);
+                if (!match) {
+                    return fail('Формат [INPUT]: задание // предложение с пропуском (допустимый ответ, другой вариант).');
+                }
+                const taskAndSentence = (match[1] || '').split('//');
+                const task = (taskAndSentence.shift() || '').trim();
+                const sentence = taskAndSentence.join('//').trim();
+                const accepted = match[2].split(',').map(v => v.trim()).filter(Boolean);
+                if (!task || !sentence || !accepted.length) {
+                    return fail('В [INPUT] обязательно напишите задание до //, предложение после // и допустимые ответы в скобках.');
+                }
+                qObj.type = 'input';
+                qObj.prompt = task;
+                qObj.question = sentence;
+                qObj.correct = accepted;
+                return qObj;
+            }
+
             if (/^\[MULTI\]/i.test(str)) {
                 const prefix = str.match(/^\[MULTI\]/i)[0];
                 const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
@@ -2413,10 +2472,12 @@ _______ is the capital of Great Britain. (London, LONDON)
             const prompt = String(q.prompt || '').trim();
 
             if (q.type === 'choice') {
-                return [question, q.correct, ...(q.wrong || [])].filter(v => v !== undefined && v !== null && String(v).trim() !== '').join(' | ');
+                const body = [question, q.correct, ...(q.wrong || [])].filter(v => v !== undefined && v !== null && String(v).trim() !== '').join(' | ');
+                return prompt ? `[CHOICE] ${prompt} // ${body}` : body;
             }
             if (q.type === 'input') {
-                return `${question} (${(q.correct || []).join(', ')})`;
+                const body = `${question} (${(q.correct || []).join(', ')})`;
+                return prompt ? `[INPUT] ${prompt} // ${body}` : body;
             }
             if (q.type === 'multi') {
                 return `[MULTI] ${question} | ${(q.correct || []).join(', ')} | ${(q.wrong || []).join(' | ')}`;
@@ -2496,9 +2557,11 @@ _______ is the capital of Great Britain. (London, LONDON)
                 let answerHTML = '';
 
                 if (q.type === 'choice') {
-                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem"><span style="color:var(--neon-3)">✔ ${escapeEditorHtml(q.correct)}</span> | <span style="color:#888">${escapeEditorHtml((q.wrong || []).join(', '))}</span></span>`;
+                    const task = q.prompt ? `<strong style="color:#fff;">${escapeEditorHtml(q.prompt)}</strong><br>` : '';
+                    answerHTML = `${task}<span style="color:#ddd;">${escapeEditorHtml(q.question)}</span><br><span style="font-size:.75rem"><span style="color:var(--neon-3)">✔ ${escapeEditorHtml(q.correct)}</span> | <span style="color:#888">${escapeEditorHtml((q.wrong || []).join(', '))}</span></span>`;
                 } else if (q.type === 'input') {
-                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">Принимает: ${escapeEditorHtml((q.correct || []).join(', '))}</span>`;
+                    const task = q.prompt ? `<strong style="color:#fff;">${escapeEditorHtml(q.prompt)}</strong><br>` : '';
+                    answerHTML = `${task}<span style="color:#ddd;">${escapeEditorHtml(q.question)}</span><br><span style="font-size:.75rem;color:var(--neon-3)">Принимает: ${escapeEditorHtml((q.correct || []).join(', '))}</span>`;
                 } else if (q.type === 'multi') {
                     answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">✔ ${escapeEditorHtml((q.correct || []).join(', '))}</span><br><span style="font-size:.72rem;color:#888">Другие: ${escapeEditorHtml((q.wrong || []).join(', '))}</span>`;
                 } else if (q.type === 'pairs') {
@@ -2631,7 +2694,7 @@ _______ is the capital of Great Britain. (London, LONDON)
             });
             
             editorState.questionsDB = questionsArray.map(q => {
-                let base = { type: q.type, text: q.question, img: q.imgSrc };
+                let base = { type: q.type, text: q.question, prompt: q.prompt || '', img: q.imgSrc };
                 if (q.type === 'choice') return { ...base, options: [q.correct, ...q.wrong].sort(() => Math.random() - 0.5), correct: q.correct };
                 if (q.type === 'input') return { ...base, correct: q.correct };
                 if (q.type === 'order') return { ...base, prompt: q.prompt, words: q.question.split(' '), correct: q.question };
