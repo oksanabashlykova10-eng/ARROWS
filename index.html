@@ -81,8 +81,14 @@
         .q-item { background: rgba(255,255,255,0.05); border-left: 3px solid var(--neon-4); padding: 10px; margin-bottom: 10px; font-size: 0.8rem; position: relative; border-radius: 4px; }
         .q-item-del { position: absolute; top: 5px; right: 5px; color: #ff073a; cursor: pointer; font-weight: bold; font-size: 1rem; line-height: 1; transition: 0.2s;}
         .q-item-del:hover { transform: scale(1.2); }
-        .q-img-controls { margin-top: 8px; display: flex; gap: 5px; }
+        .q-img-controls { margin-top: 8px; display: flex; gap: 5px; flex-wrap: wrap; }
         .q-img-controls .action-btn-small { padding: 4px 8px; font-size: 0.7rem; width: auto; display: inline-block; margin: 0; }
+        .q-item-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:9px; }
+        .q-edit-btn { width:auto; padding:6px 10px; border-color:var(--neon-1); color:var(--neon-1); }
+        .q-edit-panel { margin-top:10px; padding:9px; border:1px solid rgba(0,243,255,.35); border-radius:7px; background:rgba(0,0,0,.28); text-align:left; }
+        .q-edit-panel textarea { min-height:92px; margin:0 0 8px; font-size:.72rem; line-height:1.4; border-color:rgba(0,243,255,.38); }
+        .q-edit-panel-actions { display:flex; gap:7px; flex-wrap:wrap; }
+        .q-edit-panel-actions .action-btn-small { width:auto; padding:6px 10px; }
 
 
         .latex-panel { border-color: rgba(255,157,0,0.55) !important; background: radial-gradient(circle at top right, rgba(255,157,0,0.08), rgba(0,0,0,0.22)); }
@@ -555,11 +561,11 @@ _______ is the capital of Great Britain. (London, LONDON)
 [CATEGORIES] Sort the words into the correct boxes. | Countable: apple, egg | Uncountable: milk, bread
 [ERROR] Find the mistake. // She go to school every day. | go
 [GAPS] Fill the gaps using Present Simple. // I ___ to school and ___ football. | go | play</textarea>
-<button class="action-btn-small" onclick="parseBulkQuestions()" style="margin-top:10px; padding:12px; border-color:var(--neon-4); color:var(--neon-4);">Сформировать карточки ⬇️</button>
+<button class="action-btn-small" onclick="parseBulkQuestions()" style="margin-top:10px; padding:12px; border-color:var(--neon-4); color:var(--neon-4);">Сформировать карточки ⬇️</button><div style="margin-top:8px;color:#9aa1ad;font-size:.68rem;line-height:1.4;">Новые вопросы добавляются в конец списка. Уже созданные карточки не удаляются. Каждую карточку можно исправить кнопкой «Редактировать».</div>
 </div>
 <div style="padding: 0; background: transparent; border:none; font-size: 0.8rem; color:#aaa;">
                     КАРТОЧКИ ИГРЫ (<span id="q-count">0</span>)<br/>
-<div id="questions-list" style="margin-top:10px; color:#666; text-align:center; max-height: 250px; overflow-y: auto; padding-right: 5px;">Вопросы пока не добавлены</div>
+<div id="questions-list" style="margin-top:10px; color:#666; text-align:center; max-height: 400px; overflow-y: auto; padding-right: 5px;">Вопросы пока не добавлены</div>
 </div>
 </div>
 <!-- 4. ЗВУКИ -->
@@ -712,9 +718,33 @@ _______ is the capital of Great Britain. (London, LONDON)
                 .loading-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--neon-blue),var(--neon-pink)); transition:width .18s ease; }
                 .loading-percent { margin-top:12px; font-family:'Orbitron',sans-serif; color:#fff; text-shadow:0 0 8px #fff; }
 
-                #question-modal { padding: 35px 25px; width: 90%; max-width: 550px; max-height: 92%; overflow-y: auto; text-align: center; margin: 0 auto; position: relative; top: 50%; transform: translateY(-50%); border-radius: 15px; box-shadow: 0 0 25px rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center;}
-                #question-modal.categories-mode { width:min(94%,1000px); max-width:1000px; }
-                #q-dynamic-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; margin-top: 10px;}
+                #question-modal {
+                    padding: 42px 48px;
+                    width: min(94%, 940px);
+                    max-width: 940px;
+                    min-height: min(68vh, 560px);
+                    max-height: 94%;
+                    overflow-y: auto;
+                    text-align: center;
+                    margin: 0 auto;
+                    position: relative;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    border-radius: 15px;
+                    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
+                #question-modal.categories-mode { width:min(96%,1040px); max-width:1040px; }
+                #q-dynamic-area { display: flex; flex-wrap: wrap; justify-content: center; align-items:center; gap: 15px; width: 100%; margin-top: 12px;}
+                #q-img { max-width:min(76%,560px); max-height:300px; width:auto; height:auto; object-fit:contain; border-radius:12px; margin-bottom:22px; display:none; box-shadow:0 0 18px rgba(0,0,0,.62); }
+                #q-text { width:100%; max-width:900px; line-height:1.3; }
+                @media (max-width:700px) {
+                    #question-modal { width:95%; min-height:0; padding:28px 20px; }
+                    #q-img { max-width:86%; max-height:230px; }
+                }
                 
                 /* Единый красочный стиль плашек во всех типах вопросов */
                 .answer-btn, .word-chunk, .error-word {
@@ -784,7 +814,7 @@ _______ is the capital of Great Britain. (London, LONDON)
                     filter:brightness(1.18);
                 }
                 /* Интерактивное задание PAIRS: цветная левая колонка и нейтральная правая */
-                #question-modal.matching-mode { width:min(94%,860px); max-width:860px; }
+                #question-modal.matching-mode { width:min(96%,980px); max-width:980px; }
                 .matching-activity { width:100%; display:flex; flex-direction:column; align-items:center; gap:14px; }
                 .matching-board { width:100%; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; align-items:start; }
                 .matching-column { display:flex; flex-direction:column; gap:9px; min-width:0; }
@@ -818,7 +848,7 @@ _______ is the capital of Great Britain. (London, LONDON)
                 .category-restart-btn:hover { border-color:var(--neon-yellow); color:var(--neon-yellow); box-shadow:0 0 10px rgba(255,251,0,.4); }
                 @media (max-width:720px) { .category-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; } .category-box { min-height:120px; } }
                 /* Красочное задание GAPS в стиле Categories */
-                #question-modal.gaps-mode { width:min(94%,900px); max-width:900px; }
+                #question-modal.gaps-mode { width:min(96%,980px); max-width:980px; }
                 .gaps-activity { width:100%; display:flex; flex-direction:column; align-items:center; gap:16px; }
                 .gaps-sentence { width:100%; line-height:2.65; color:#fff; text-align:center; padding:16px 14px; border:1px dashed rgba(255,255,255,.28); border-radius:13px; background:rgba(0,0,0,.26); }
                 .gap-slot { --gap-color:var(--neon-blue); min-width:92px; min-height:42px; padding:7px 12px; margin:0 5px; border-radius:9px; border:2px dashed var(--gap-color); background:color-mix(in srgb, var(--gap-color) 8%, rgba(0,0,0,.72)); color:#fff; text-align:center; box-shadow:0 0 9px color-mix(in srgb, var(--gap-color) 45%, transparent); cursor:pointer; font:inherit; vertical-align:middle; transition:.18s; }
@@ -912,7 +942,7 @@ _______ is the capital of Great Britain. (London, LONDON)
 </div>
 <div class="screen hidden" id="question-overlay">
 <div id="question-modal">
-<img id="q-img" style="max-width: 100%; max-height: 180px; border-radius: 10px; margin-bottom: 15px; display: none; box-shadow: 0 0 15px rgba(0,0,0,0.5);"/>
+<img id="q-img" alt="" />
 <p id="q-text" style="margin: 0 0 20px 0;"></p>
 <div id="q-dynamic-area"></div>
 <button class="hidden" id="btn-check-answer">Check</button>
@@ -2246,87 +2276,317 @@ _______ is the capital of Great Britain. (London, LONDON)
         }
 
         let questionsArray = [];
+
+        function parseQuestionSourceLine(rawLine, showAlerts = true) {
+            const str = String(rawLine || '').trim();
+            if (!str || (str.startsWith('//') && !str.substring(2).trim())) return null;
+
+            const inputRegex = /^(.*?)\(([^)]+)\)\s*$/;
+            const removePrefix = (value, prefix) => value.slice(prefix.length).trim();
+            const fail = message => {
+                if (showAlerts) alert(message);
+                return null;
+            };
+            const qObj = { hasImg: false, imgSrc: null, prompt: '' };
+
+            if (/^\[MULTI\]/i.test(str)) {
+                const prefix = str.match(/^\[MULTI\]/i)[0];
+                const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
+                if (parts.length < 3) return fail('Формат [MULTI]: задание | правильные ответы через запятую | неправильные варианты.');
+                qObj.type = 'multi';
+                qObj.question = parts[0];
+                qObj.correct = parts[1].split(',').map(v => v.trim()).filter(Boolean);
+                qObj.wrong = parts.slice(2).flatMap(v => v.split(',')).map(v => v.trim()).filter(Boolean);
+                return qObj.correct.length && qObj.wrong.length ? qObj : fail('В [MULTI] должны быть правильные и неправильные варианты.');
+            }
+
+            if (/^\[PAIRS\]/i.test(str)) {
+                const prefix = str.match(/^\[PAIRS\]/i)[0];
+                const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
+                const pairs = parts.slice(1)
+                    .map(v => v.split('=').map(x => x.trim()))
+                    .filter(v => v.length >= 2 && v[0] && v[1])
+                    .map(v => ({ left: v[0], right: v.slice(1).join('=').trim() }));
+                if (pairs.length < 2 || pairs.length > 10) {
+                    return fail('Для задания [PAIRS] нужно указать от 2 до 10 пар. Каждую новую пару добавляйте через |, а слова внутри пары соединяйте знаком =.');
+                }
+                qObj.type = 'pairs';
+                qObj.question = parts[0] || 'Соедините пары';
+                qObj.pairs = pairs;
+                return qObj;
+            }
+
+            if (/^\[CATEGORIES\]/i.test(str)) {
+                const prefix = str.match(/^\[CATEGORIES\]/i)[0];
+                const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
+                const categories = parts.slice(1).map(v => {
+                    const pos = v.indexOf(':');
+                    if (pos < 0) return null;
+                    return {
+                        name: v.slice(0, pos).trim(),
+                        items: v.slice(pos + 1).split(',').map(x => x.trim()).filter(Boolean)
+                    };
+                }).filter(v => v && v.name && v.items.length);
+                if (categories.length < 2 || categories.length > 4) {
+                    return fail('Для задания [CATEGORIES] нужно указать от 2 до 4 категорий. Каждую категорию добавляйте через |.');
+                }
+                qObj.type = 'categories';
+                qObj.question = parts[0] || 'Распределите по категориям';
+                qObj.categories = categories;
+                return qObj;
+            }
+
+            if (/^\[ERROR\]/i.test(str)) {
+                const prefix = str.match(/^\[ERROR\]/i)[0];
+                const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
+                const taskAndSentence = (parts[0] || '').split('//');
+                const hasTask = taskAndSentence.length > 1;
+                const task = hasTask ? (taskAndSentence.shift() || '').trim() : '';
+                const sentence = hasTask ? taskAndSentence.join('//').trim() : (parts[0] || '').trim();
+                if (!sentence || !parts[1]) return fail('Формат [ERROR]: задание // предложение с ошибкой | ошибочное слово.');
+                qObj.type = 'error';
+                qObj.prompt = task;
+                qObj.question = sentence;
+                qObj.correct = parts[1];
+                return qObj;
+            }
+
+            if (/^\[ORDER\]/i.test(str)) {
+                const prefix = str.match(/^\[ORDER\]/i)[0];
+                const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
+                if (!parts[0] || !parts[1]) return fail('Формат [ORDER]: задание | правильное предложение.');
+                qObj.type = 'order';
+                qObj.prompt = parts[0];
+                qObj.question = parts.slice(1).join(' | ').trim();
+                return qObj;
+            }
+
+            if (/^\[GAPS\]/i.test(str)) {
+                const prefix = str.match(/^\[GAPS\]/i)[0];
+                const parts = removePrefix(str, prefix).split('|').map(v => v.trim());
+                const taskAndSentence = (parts[0] || '').split('//');
+                const task = (taskAndSentence.shift() || '').trim();
+                const sentence = taskAndSentence.join('//').trim();
+                const answers = parts.slice(1).map(v => v.trim()).filter(Boolean);
+                const gaps = (sentence.match(/_{3,}/g) || []).length;
+                if (!task || !sentence) return fail('В [GAPS] обязательно напишите задание до // и предложение с пропусками после //.');
+                if (answers.length !== gaps) return fail(`В [GAPS] найдено пропусков: ${gaps}, а слов указано: ${answers.length}. Нужно по одному слову для каждого пропуска.`);
+                qObj.type = 'gaps';
+                qObj.prompt = task;
+                qObj.question = sentence;
+                qObj.answers = answers;
+                return qObj;
+            }
+
+            if (str.includes('|')) {
+                const parts = str.split('|').map(v => v.trim());
+                if (parts.length < 2 || !parts[0] || !parts[1]) return fail('Формат выбора ответа: вопрос | правильный ответ | неправильные варианты.');
+                qObj.type = 'choice';
+                qObj.question = parts[0];
+                qObj.correct = parts[1];
+                qObj.wrong = parts.slice(2).filter(Boolean);
+                return qObj;
+            }
+
+            if (inputRegex.test(str)) {
+                const match = str.match(inputRegex);
+                qObj.type = 'input';
+                qObj.question = match[1].trim();
+                qObj.correct = match[2].split(',').map(v => v.trim()).filter(Boolean);
+                return qObj.correct.length ? qObj : fail('В скобках нужно указать хотя бы один допустимый ответ.');
+            }
+
+            qObj.type = 'order';
+            if (str.includes('//')) {
+                const parts = str.split('//');
+                qObj.prompt = parts[0].trim();
+                qObj.question = parts.slice(1).join('//').trim();
+            } else {
+                qObj.question = str;
+            }
+            return qObj.question ? qObj : null;
+        }
+
+        function questionToSource(q) {
+            if (!q) return '';
+            const question = String(q.question || '').trim();
+            const prompt = String(q.prompt || '').trim();
+
+            if (q.type === 'choice') {
+                return [question, q.correct, ...(q.wrong || [])].filter(v => v !== undefined && v !== null && String(v).trim() !== '').join(' | ');
+            }
+            if (q.type === 'input') {
+                return `${question} (${(q.correct || []).join(', ')})`;
+            }
+            if (q.type === 'multi') {
+                return `[MULTI] ${question} | ${(q.correct || []).join(', ')} | ${(q.wrong || []).join(' | ')}`;
+            }
+            if (q.type === 'pairs') {
+                return `[PAIRS] ${question} | ${(q.pairs || []).map(pair => `${pair.left} = ${pair.right}`).join(' | ')}`;
+            }
+            if (q.type === 'categories') {
+                return `[CATEGORIES] ${question} | ${(q.categories || []).map(category => `${category.name}: ${(category.items || []).join(', ')}`).join(' | ')}`;
+            }
+            if (q.type === 'error') {
+                return `[ERROR] ${prompt ? `${prompt} // ` : ''}${question} | ${q.correct || ''}`;
+            }
+            if (q.type === 'gaps') {
+                return `[GAPS] ${prompt} // ${question} | ${(q.answers || []).join(' | ')}`;
+            }
+            if (q.type === 'order') {
+                return prompt ? `[ORDER] ${prompt} | ${question}` : question;
+            }
+            return question;
+        }
+
         function parseBulkQuestions(isInit = false) {
-            const text = document.getElementById('q-bulk-text').value.trim(); if (!text) return;
-            const lines = text.split('\n'); const inputRegex = /^(.*?)\(([^)]+)\)\s*$/;
-            if (!isInit) questionsArray = [];
-            const removePrefix=(str,prefix)=>str.slice(prefix.length).trim();
-            lines.forEach(line => {
-                const str=line.trim(); if(!str || (str.startsWith('//')&&!str.substring(2).trim())) return;
-                let qObj={hasImg:false,imgSrc:null,prompt:''};
-                if(/^\[MULTI\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[MULTI\]/i)[0]).split('|').map(v=>v.trim()); if(parts.length>=3){qObj.type='multi';qObj.question=parts[0];qObj.correct=parts[1].split(',').map(v=>v.trim()).filter(Boolean);qObj.wrong=parts.slice(2).flatMap(v=>v.split(',')).map(v=>v.trim()).filter(Boolean);questionsArray.push(qObj);} return;
-                }
-                if(/^\[PAIRS\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[PAIRS\]/i)[0]).split('|').map(v=>v.trim());
-                    const pairs=parts.slice(1).map(v=>v.split('=').map(x=>x.trim())).filter(v=>v.length>=2&&v[0]&&v[1]).map(v=>({left:v[0],right:v.slice(1).join('=').trim()}));
-                    if(pairs.length<2||pairs.length>10){ alert('Для задания [PAIRS] нужно указать от 2 до 10 пар. Каждую новую пару добавляйте через |, а слова внутри пары соединяйте знаком =.'); return; }
-                    qObj.type='pairs';qObj.question=parts[0]||'Соедините пары';qObj.pairs=pairs;questionsArray.push(qObj);return;
-                }
-                if(/^\[CATEGORIES\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[CATEGORIES\]/i)[0]).split('|').map(v=>v.trim());
-                    const categories=parts.slice(1).map(v=>{const pos=v.indexOf(':');if(pos<0)return null;return{name:v.slice(0,pos).trim(),items:v.slice(pos+1).split(',').map(x=>x.trim()).filter(Boolean)}}).filter(v=>v&&v.name&&v.items.length);
-                    if(categories.length<2||categories.length>4){ alert('Для задания [CATEGORIES] нужно указать от 2 до 4 категорий. Каждую категорию добавляйте через |.'); return; }
-                    qObj.type='categories';qObj.question=parts[0]||'Распределите по категориям';qObj.categories=categories;questionsArray.push(qObj);return;
-                }
-                if(/^\[ERROR\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[ERROR\]/i)[0]).split('|').map(v=>v.trim());
-                    const taskAndSentence=(parts[0]||'').split('//');
-                    const hasTask=taskAndSentence.length>1;
-                    const task=hasTask?(taskAndSentence.shift()||'').trim():'';
-                    const sentence=hasTask?taskAndSentence.join('//').trim():(parts[0]||'').trim();
-                    if(sentence&&parts[1]){qObj.type='error';qObj.prompt=task;qObj.question=sentence;qObj.correct=parts[1];questionsArray.push(qObj);} return;
-                }
-                if(/^\[ORDER\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[ORDER\]/i)[0]).split('|').map(v=>v.trim());
-                    if(parts[0]&&parts[1]){qObj.type='order';qObj.prompt=parts[0];qObj.question=parts.slice(1).join(' | ').trim();questionsArray.push(qObj);} return;
-                }
-                if(/^\[GAPS\]/i.test(str)) {
-                    const parts=removePrefix(str,str.match(/^\[GAPS\]/i)[0]).split('|').map(v=>v.trim());
-                    const taskAndSentence=parts[0].split('//'); const task=(taskAndSentence.shift()||'').trim(); const sentence=taskAndSentence.join('//').trim();
-                    const answers=parts.slice(1).map(v=>v.trim()).filter(Boolean); const gaps=(sentence.match(/_{3,}/g)||[]).length;
-                    if(task&&sentence&&answers.length===gaps){qObj.type='gaps';qObj.prompt=task;qObj.question=sentence;qObj.answers=answers;questionsArray.push(qObj);} return;
-                }
-                if (str.includes('|')) { const parts=str.split('|').map(v=>v.trim()); if(parts.length>=2){qObj.type='choice';qObj.question=parts[0];qObj.correct=parts[1];qObj.wrong=parts.slice(2);questionsArray.push(qObj);} }
-                else if(inputRegex.test(str)){const match=str.match(inputRegex);qObj.type='input';qObj.question=match[1].trim();qObj.correct=match[2].split(',').map(v=>v.trim()).filter(Boolean);questionsArray.push(qObj);}
-                else {qObj.type='order';if(str.includes('//')){const parts=str.split('//');qObj.prompt=parts[0].trim();qObj.question=parts.slice(1).join('//').trim();}else{qObj.question=str;}if(qObj.question)questionsArray.push(qObj);}
-            });
-            if(!isInit) document.getElementById('q-bulk-text').value=''; updateQuestionsList(); pushLiveUpdate();
+            const textarea = document.getElementById('q-bulk-text');
+            const text = textarea.value.trim();
+            if (!text) return;
+
+            const parsedQuestions = text
+                .split('\n')
+                .map(line => parseQuestionSourceLine(line, true))
+                .filter(Boolean);
+
+            if (!parsedQuestions.length) return;
+
+            if (isInit) questionsArray = parsedQuestions;
+            else questionsArray.push(...parsedQuestions);
+
+            textarea.value = '';
+            updateQuestionsList();
+            pushLiveUpdate();
+        }
+
+        function escapeEditorHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         function updateQuestionsList() {
-            const listDiv = document.getElementById('questions-list'); document.getElementById('q-count').innerText = questionsArray.length;
-            if (questionsArray.length === 0) { listDiv.innerHTML = 'Вопросы пока не добавлены'; return; }
+            const listDiv = document.getElementById('questions-list');
+            document.getElementById('q-count').innerText = questionsArray.length;
+
+            if (questionsArray.length === 0) {
+                listDiv.innerHTML = 'Вопросы пока не добавлены';
+                return;
+            }
+
             listDiv.innerHTML = '';
             questionsArray.forEach((q, index) => {
-                const item = document.createElement('div'); item.className = 'q-item';
-                const labels={choice:'ВЫБОР',input:'ВВОД',order:'СБОРКА',multi:'НЕСКОЛЬКО',pairs:'ПАРЫ',categories:'КАТЕГОРИИ',error:'НАЙТИ ОШИБКУ',gaps:'ПРОПУСКИ'}; let typeLabel=labels[q.type]||q.type.toUpperCase(); let answerHTML = '';
-                
+                const item = document.createElement('div');
+                item.className = 'q-item';
+
+                const labels = {
+                    choice: 'ВЫБОР',
+                    input: 'ВВОД',
+                    order: 'СБОРКА',
+                    multi: 'НЕСКОЛЬКО',
+                    pairs: 'ПАРЫ',
+                    categories: 'КАТЕГОРИИ',
+                    error: 'НАЙТИ ОШИБКУ',
+                    gaps: 'ПРОПУСКИ'
+                };
+                const typeLabel = labels[q.type] || String(q.type || '').toUpperCase();
+                let answerHTML = '';
+
                 if (q.type === 'choice') {
-                    answerHTML = `<strong style="color:#fff;">${q.question}</strong><br><span style="font-size: 0.75rem"><span style="color:var(--neon-3)">✔ ${q.correct}</span> | <span style="color:#888">${q.wrong.join(', ')}</span></span>`;
+                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem"><span style="color:var(--neon-3)">✔ ${escapeEditorHtml(q.correct)}</span> | <span style="color:#888">${escapeEditorHtml((q.wrong || []).join(', '))}</span></span>`;
                 } else if (q.type === 'input') {
-                    answerHTML = `<strong style="color:#fff;">${q.question}</strong><br><span style="font-size: 0.75rem"><span style="color:var(--neon-3)">Принимает: ${q.correct.join(', ')}</span></span>`;
+                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">Принимает: ${escapeEditorHtml((q.correct || []).join(', '))}</span>`;
                 } else if (q.type === 'multi') {
-                    answerHTML = `<strong style="color:#fff;">${q.question}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">✔ ${q.correct.join(', ')}</span>`;
+                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">✔ ${escapeEditorHtml((q.correct || []).join(', '))}</span><br><span style="font-size:.72rem;color:#888">Другие: ${escapeEditorHtml((q.wrong || []).join(', '))}</span>`;
                 } else if (q.type === 'pairs') {
-                    answerHTML = `<strong style="color:#fff;">${q.question}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">${q.pairs.map(p=>p.left+' → '+p.right).join('; ')}</span>`;
+                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">${escapeEditorHtml((q.pairs || []).map(p => `${p.left} → ${p.right}`).join('; '))}</span>`;
                 } else if (q.type === 'categories') {
-                    answerHTML = `<strong style="color:#fff;">${q.question}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">${q.categories.map(c=>c.name+': '+c.items.join(', ')).join('; ')}</span>`;
+                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.question)}</strong><br><span style="font-size:.75rem;color:var(--neon-3)">${escapeEditorHtml((q.categories || []).map(c => `${c.name}: ${(c.items || []).join(', ')}`).join('; '))}</span>`;
                 } else if (q.type === 'error') {
-                    const task = q.prompt ? `<strong style="color:#fff;">${q.prompt}</strong><br>` : '';
-                    answerHTML = `${task}<span style="color:#ddd;">${q.question}</span><br><span style="font-size:.75rem;color:var(--neon-3)">Ошибка: ${q.correct}</span>`;
+                    const task = q.prompt ? `<strong style="color:#fff;">${escapeEditorHtml(q.prompt)}</strong><br>` : '';
+                    answerHTML = `${task}<span style="color:#ddd;">${escapeEditorHtml(q.question)}</span><br><span style="font-size:.75rem;color:var(--neon-3)">Ошибка: ${escapeEditorHtml(q.correct)}</span>`;
                 } else if (q.type === 'gaps') {
-                    answerHTML = `<strong style="color:#fff;">${q.prompt}</strong><br><span style="color:#ddd;">${q.question}</span><br><span style="font-size:.75rem;color:var(--neon-3)">Слова в рамке: ${q.answers.join(' | ')}</span>`;
+                    answerHTML = `<strong style="color:#fff;">${escapeEditorHtml(q.prompt)}</strong><br><span style="color:#ddd;">${escapeEditorHtml(q.question)}</span><br><span style="font-size:.75rem;color:var(--neon-3)">Слова в рамке: ${escapeEditorHtml((q.answers || []).join(' | '))}</span>`;
                 } else if (q.type === 'order') {
-                    let prmpt = q.prompt ? `<strong style="color:#fff;">${q.prompt}</strong><br>` : '';
-                    answerHTML = `${prmpt}<span style="font-size: 0.75rem"><span style="color:var(--neon-3)">Сборка: ${q.question}</span></span>`;
+                    const task = q.prompt ? `<strong style="color:#fff;">${escapeEditorHtml(q.prompt)}</strong><br>` : '';
+                    answerHTML = `${task}<span style="font-size:.75rem;color:var(--neon-3)">Сборка: ${escapeEditorHtml(q.question)}</span>`;
                 }
-                
-                let imgControlsHTML = q.hasImg ? `<div class="q-img-controls" style="color:var(--neon-3); align-items:center;"><span>🖼 Картинка загружена</span><button class="action-btn-small" style="color:#ff073a; border-color:#ff073a; margin-left:10px;" onclick="removeQuestionImage(${index})">Удалить</button></div>` : `<div class="q-img-controls"><label class="action-btn-small" style="color:var(--neon-4); border-color:var(--neon-4);">+ ФАЙЛ (ДО 2МБ)<input type="file" accept="image/*" style="display:none;" onchange="attachQuestionFile(event, ${index})"></label><button class="action-btn-small" style="color:var(--neon-4); border-color:var(--neon-4);" onclick="attachQuestionUrl(${index})">+ URL</button></div><div id="q-img-err-${index}" style="font-size:0.65rem; margin-top:4px;"></div>`;
-                item.innerHTML = `<div class="q-item-del" onclick="deleteQuestion(${index})">✕</div><div style="padding-right:20px; margin-bottom:5px;"><strong style="color:var(--neon-4); font-size: 0.65rem;">${typeLabel}</strong><br>${answerHTML}</div>${imgControlsHTML}`;
+
+                const imgControlsHTML = q.hasImg
+                    ? `<div class="q-img-controls" style="color:var(--neon-3);align-items:center;"><span>🖼 Картинка загружена</span><button class="action-btn-small" style="color:#ff073a;border-color:#ff073a;" onclick="removeQuestionImage(${index})">Удалить картинку</button></div>`
+                    : `<div class="q-img-controls"><label class="action-btn-small" style="color:var(--neon-4);border-color:var(--neon-4);">+ ФАЙЛ (ДО 2МБ)<input type="file" accept="image/*" style="display:none;" onchange="attachQuestionFile(event, ${index})"></label><button class="action-btn-small" style="color:var(--neon-4);border-color:var(--neon-4);" onclick="attachQuestionUrl(${index})">+ URL</button></div><div id="q-img-err-${index}" style="font-size:.65rem;margin-top:4px;"></div>`;
+
+                item.innerHTML = `
+                    <div class="q-item-del" onclick="deleteQuestion(${index})" title="Удалить карточку">✕</div>
+                    <div style="padding-right:20px;margin-bottom:5px;">
+                        <strong style="color:var(--neon-4);font-size:.65rem;">${escapeEditorHtml(typeLabel)}</strong><br>
+                        ${answerHTML}
+                    </div>
+                    <div class="q-item-actions">
+                        <button class="action-btn-small q-edit-btn" type="button" onclick="toggleQuestionEditor(${index})">✎ РЕДАКТИРОВАТЬ</button>
+                    </div>
+                    <div class="q-edit-panel hidden" id="q-edit-panel-${index}">
+                        <label style="color:#aeb7c3;font-size:.65rem;text-transform:none;">Исправьте вопрос, задание, слово с ошибкой или варианты ответов:</label>
+                        <textarea id="q-edit-source-${index}" spellcheck="false"></textarea>
+                        <div class="q-edit-panel-actions">
+                            <button class="action-btn-small" style="color:var(--neon-3);border-color:var(--neon-3);" type="button" onclick="saveQuestionEdit(${index})">✓ СОХРАНИТЬ</button>
+                            <button class="action-btn-small" style="color:#aaa;border-color:#777;" type="button" onclick="cancelQuestionEdit(${index})">ОТМЕНА</button>
+                        </div>
+                    </div>
+                    ${imgControlsHTML}
+                `;
+
                 listDiv.appendChild(item);
+                const editSource = item.querySelector(`#q-edit-source-${index}`);
+                if (editSource) editSource.value = questionToSource(q);
             });
+
             checkQuestionWarning();
+        }
+
+        function toggleQuestionEditor(index) {
+            const panel = document.getElementById(`q-edit-panel-${index}`);
+            if (!panel) return;
+            const willOpen = panel.classList.contains('hidden');
+            panel.classList.toggle('hidden');
+            if (willOpen) {
+                const textarea = document.getElementById(`q-edit-source-${index}`);
+                if (textarea) {
+                    textarea.value = questionToSource(questionsArray[index]);
+                    textarea.focus();
+                    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+                }
+            }
+        }
+
+        function cancelQuestionEdit(index) {
+            const textarea = document.getElementById(`q-edit-source-${index}`);
+            if (textarea) textarea.value = questionToSource(questionsArray[index]);
+            document.getElementById(`q-edit-panel-${index}`)?.classList.add('hidden');
+        }
+
+        function saveQuestionEdit(index) {
+            const textarea = document.getElementById(`q-edit-source-${index}`);
+            if (!textarea || !questionsArray[index]) return;
+
+            const lines = textarea.value.split('\n').map(line => line.trim()).filter(Boolean);
+            if (lines.length !== 1) {
+                alert('В редакторе одной карточки должна находиться одна строка вопроса.');
+                return;
+            }
+
+            const parsed = parseQuestionSourceLine(lines[0], true);
+            if (!parsed) return;
+
+            parsed.hasImg = Boolean(questionsArray[index].hasImg);
+            parsed.imgSrc = questionsArray[index].imgSrc || null;
+            questionsArray[index] = parsed;
+
+            updateQuestionsList();
+            pushLiveUpdate();
         }
 
         function deleteQuestion(index) { questionsArray.splice(index, 1); updateQuestionsList(); pushLiveUpdate(); }
