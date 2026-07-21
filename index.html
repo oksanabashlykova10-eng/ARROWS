@@ -267,6 +267,12 @@
 <label style="margin-top:10px;">Окно вопроса</label>
 <div class="color-grid"><div class="color-option"><span>Фон окна</span><input id="cfg-qModalBg" oninput="pushLiveUpdate()" type="color" value="#0d0d1a"/></div></div>
 <div class="range-row"><span>Прозрачность</span><input id="cfg-qModalAlpha" max="1" min="0" oninput="pushLiveUpdate()" step="0.05" type="range" value="0.95"/></div>
+<label style="margin-top:10px;">Задание</label>
+<div class="field-grid">
+<div class="field-cell"><label>Шрифт задания</label><select id="cfg-taskFont" onchange="pushLiveUpdate()"></select></div>
+<div class="field-cell"><label>Размер задания</label><input id="cfg-taskSize" oninput="pushLiveUpdate()" step="0.1" type="number" value="1.5"/></div>
+</div>
+<div class="color-grid"><div class="color-option"><span>Цвет задания</span><input id="cfg-taskColor" oninput="pushLiveUpdate()" type="color" value="#39ff14"/></div></div>
 <label style="margin-top:10px;">Вопрос</label>
 <div class="field-grid">
 <div class="field-cell"><label>Шрифт вопроса</label><select id="cfg-qFont" onchange="pushLiveUpdate()"></select></div>
@@ -1341,14 +1347,15 @@
                     #game-container { background: ${CONFIG.media.bgSrc !== 'transparent' && CONFIG.media.bgSrc !== '' ? `url('${CONFIG.media.bgSrc}') center / 100% 100% no-repeat` : 'transparent'} !important; border: 2px solid ${CONFIG.design.gameBorder}; box-shadow: 0 0 15px ${CONFIG.design.gameBorder} inset; }
                     .screen { background-color: rgba(${hexToRgb(CONFIG.design.screenBg)}, ${CONFIG.design.screenAlpha}) !important; }
                     #question-modal { background-color: rgba(${hexToRgb(CONFIG.design.qModalBg)}, ${CONFIG.design.qModalAlpha}); border: 2px solid ${CONFIG.design.aNeon}; box-shadow: 0 0 20px ${CONFIG.design.aNeon}; }
-                    #q-text, .question-stem { font-family: ${CONFIG.design.qFont}; font-size: ${CONFIG.design.qSize}rem; color: ${CONFIG.design.qColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+                    #q-text.task-text { font-family: ${CONFIG.design.taskFont || CONFIG.design.qFont}; font-size: ${Number(CONFIG.design.taskSize || CONFIG.design.qSize || 1.5)}rem; color: ${CONFIG.design.taskColor || CONFIG.design.qColor}; text-shadow: 0 0 10px ${CONFIG.design.taskColor || CONFIG.design.qColor}, 0 2px 4px rgba(0,0,0,0.55); }
+                    #q-text.question-text, .question-stem, .gaps-sentence { font-family: ${CONFIG.design.qFont}; font-size: ${CONFIG.design.qSize}rem; color: ${CONFIG.design.qColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
                     .answer-btn { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; color: ${CONFIG.design.aColor}; }
                     .text-input { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; border: 2px solid ${CONFIG.design.aBg}; }
                     .text-input:focus { border-color: ${CONFIG.design.aNeon}; box-shadow: 0 0 15px ${CONFIG.design.aNeon}; }
                     .word-chunk { font-family: ${CONFIG.design.aFont}; font-size: ${CONFIG.design.aSize}rem; color: ${CONFIG.design.aColor}; }
                     .matching-card,
                     .category-chip, .category-box-title, .category-restart-btn,
-                    .error-word, .gaps-sentence, .gap-slot, .gap-word {
+                    .error-word, .gap-slot, .gap-word {
                         font-family: ${CONFIG.design.aFont} !important;
                         font-size: ${CONFIG.design.aSize}rem !important;
                         color: ${CONFIG.design.aColor};
@@ -1411,7 +1418,7 @@
 
             const gridContainer = document.getElementById('grid-container');
             let gridData = [], currentLives = 3, maxLives = 3, totalTiles = 0, timeRemaining = 120, gameFinished = false;
-            let timerInterval = null, combo = 0, isTimerFrozen = false, freezeTimeout = null, fwInterval = null, fwStopTimeout = null, chameleonInterval = null, pendingWinTimeout = null, winWatchInterval = null, boardReady = false;
+            let timerInterval = null, combo = 0, isTimerFrozen = false, freezeTimeout = null, fwInterval = null, fwStopTimeout = null, chameleonInterval = null, pendingWinTimeout = null, winWatchInterval = null, boardReady = false, pendingQuestion = false;
             let currentQuestionsQueue = []; let errorLog = []; let activeQuestion = null;
             let correctAnswers = 0, wrongAnswers = 0, finalScore = 0, bestScoreMemory = 0;
 
@@ -1600,7 +1607,7 @@
                 boardReady = false;
                 gridContainer.innerHTML = ''; gridData = []; errorLog = []; activeQuestion = null;
                 document.getElementById('question-overlay')?.classList.add('hidden');
-                currentLives = CONFIG.rules.countLife; maxLives = currentLives; timeRemaining = CONFIG.rules.timer; combo = 0; isTimerFrozen = false; gameFinished = false;
+                currentLives = CONFIG.rules.countLife; maxLives = currentLives; timeRemaining = CONFIG.rules.timer; combo = 0; isTimerFrozen = false; gameFinished = false; pendingQuestion = false;
                 correctAnswers = 0; wrongAnswers = 0; finalScore = 0;
                 clearInterval(timerInterval); clearTimeout(freezeTimeout); clearInterval(fwInterval); clearTimeout(fwStopTimeout); clearInterval(chameleonInterval); clearTimeout(pendingWinTimeout); clearInterval(winWatchInterval);
                 document.querySelectorAll('.fw-particle').forEach(el => el.remove());
@@ -1736,7 +1743,7 @@
                 totalTiles = getRemainingTileCount();
                 const questionOverlay = document.getElementById('question-overlay');
                 const questionIsOpen = questionOverlay && !questionOverlay.classList.contains('hidden');
-                if (totalTiles === 0 && !questionIsOpen) {
+                if (totalTiles === 0 && !questionIsOpen && !pendingQuestion) {
                     checkWinCondition();
                     return true;
                 }
@@ -1762,6 +1769,11 @@
 
             function moveTileOut(tile, x, y, dir, dirsObj) {
                 if (!tile || tile.dataset.moving === '1') return;
+                const type = tile.dataset.type;
+                if (type === 'question') {
+                    pendingQuestion = true;
+                    if (CONFIG.rules.smartPause) clearInterval(timerInterval);
+                }
                 tile.dataset.moving = '1';
                 gridData[y][x] = null; totalTiles=Math.max(0,totalTiles-1);
                 if (combo >= 5) tile.classList.add('trail-active');
@@ -1775,7 +1787,6 @@
                     tile.style.setProperty('transform', `translate3d(${tx}px, ${ty}px, 0) scale(1.08)`, 'important');
                     tile.style.opacity = '0';
                 }));
-                const type = tile.dataset.type;
                 setTimeout(() => {
                     if(tile.parentNode) tile.parentNode.innerHTML = '';
                     applyRemovedTileEffect(type);
@@ -1801,10 +1812,11 @@
             }
 
             function triggerQuestion() {
-                if (!CONFIG.questionsDB || CONFIG.questionsDB.length === 0) return false;
+                if (!CONFIG.questionsDB || CONFIG.questionsDB.length === 0) { pendingQuestion = false; return false; }
                 if (currentQuestionsQueue.length === 0) { currentQuestionsQueue = makeQuestionQueue(); }
                 activeQuestion = currentQuestionsQueue.shift();
-                if (!activeQuestion) return false;
+                if (!activeQuestion) { pendingQuestion = false; return false; }
+                pendingQuestion = true;
                 if (CONFIG.rules.smartPause) clearInterval(timerInterval); 
                 document.getElementById('question-overlay').classList.remove('hidden');
                 
@@ -1813,10 +1825,15 @@
                 if (activeQuestion.img) { qImg.src = activeQuestion.img; qImg.style.display = 'inline-block'; } else { qImg.style.display = 'none'; }
                 
                 const textEl = document.getElementById('q-text');
+                textEl.classList.remove('task-text','question-text');
                 if (activeQuestion.prompt && activeQuestion.prompt.trim() !== '') {
-                    textEl.innerText = activeQuestion.prompt; textEl.style.display = 'block';
+                    textEl.innerText = activeQuestion.prompt;
+                    textEl.classList.add('task-text');
+                    textEl.style.display = 'block';
                 } else if (!['order','gaps'].includes(activeQuestion.type)) {
-                    textEl.innerText = activeQuestion.text; textEl.style.display = 'block';
+                    textEl.innerText = activeQuestion.text;
+                    textEl.classList.add('question-text');
+                    textEl.style.display = 'block';
                 } else {
                     textEl.style.display = 'none';
                 }
@@ -2017,6 +2034,7 @@
 
             function checkAnswer(isCorrect) {
                 const overlay = document.getElementById('question-overlay');
+                pendingQuestion = false;
                 if (isCorrect) {
                     correctAnswers++;
                     playSound('cor');
@@ -2047,6 +2065,7 @@
 
             function checkWinCondition() {
                 if (gameFinished) return;
+                pendingQuestion = false;
                 gameFinished = true;
                 boardReady = false;
                 clearInterval(timerInterval);
@@ -2195,11 +2214,12 @@
             <option value="'Russo One', sans-serif" style="font-family: 'Russo One', sans-serif;">Russo One (Bold)</option>
             <option value="'Comic Neue', cursive" style="font-family: 'Comic Neue', cursive;">Comic Neue (Friendly)</option>
         `;
-        ['startFont','startDescFont','qFont','aFont','winFont','loseFont','timeFont','errorTitleFont','errorCorrectFont','errorAnswerFont'].forEach(id => {
+        ['startFont','startDescFont','taskFont','qFont','aFont','winFont','loseFont','timeFont','errorTitleFont','errorCorrectFont','errorAnswerFont'].forEach(id => {
             const el = document.getElementById('cfg-' + id);
             if (el) el.innerHTML = fontOptions;
         });
         document.getElementById('cfg-startDescFont').value = "'Roboto', sans-serif";
+        document.getElementById('cfg-taskFont').value = "'Orbitron', sans-serif";
         document.getElementById('cfg-aFont').value = "'Roboto', sans-serif";
         document.getElementById('cfg-errorCorrectFont').value = "'Roboto', sans-serif";
         document.getElementById('cfg-errorAnswerFont').value = "'Roboto', sans-serif";
@@ -2224,7 +2244,7 @@
                 errorScreenBg: "#000000", errorScreenAlpha: 0.92, errorBoxBg: "#14141e", errorBoxAlpha: 0.95, errorBoxGlow: "#39ff14",
                 errorOpenBtnText: "РАБОТА НАД ОШИБКАМИ", errorOpenBtnBg: "#000000", errorOpenBtnColor: "#39ff14", errorOpenBtnGlow: "#39ff14",
                 errorCloseBtnText: "ЗАКРЫТЬ", errorCloseBtnBg: "#000000", errorCloseBtnColor: "#ffffff", errorCloseBtnGlow: "#ffffff",
-                gameBorder: "#9d00ff", qModalBg: "#0d0d1a", qModalAlpha: 0.95, qFont: "'Orbitron', sans-serif", qSize: 1.5, qColor: "#ffffff", aFont: "'Roboto', sans-serif", aSize: 1.0, aColor: "#ffffff", aBg: "#1a1a2e", aNeon: "#9d00ff"
+                gameBorder: "#9d00ff", qModalBg: "#0d0d1a", qModalAlpha: 0.95, taskFont: "'Orbitron', sans-serif", taskSize: 1.5, taskColor: "#39ff14", qFont: "'Orbitron', sans-serif", qSize: 1.5, qColor: "#ffffff", aFont: "'Roboto', sans-serif", aSize: 1.0, aColor: "#ffffff", aBg: "#1a1a2e", aNeon: "#9d00ff"
             },
             media: {
                 bgSrc: "https://img.genially.com/67961b32a116fb001568a75e/36df24a6-f276-4cba-959a-e13d067103e3.png",
@@ -3026,7 +3046,7 @@
         function deepClone(value){return JSON.parse(JSON.stringify(value));}
         function collectProjectSnapshot(){
             parseInputsToConfig();
-            return {app:'NEON_ARROWS_EDITOR',version:2,savedAt:new Date().toISOString(),projectName:document.getElementById('cfg-projectName')?.value||'My_Arrows_Game',editorState:deepClone(editorState),questionsArray:deepClone(questionsArray),bulkText:document.getElementById('q-bulk-text')?.value||''};
+            return {app:'NEON_ARROWS_EDITOR',version:3,savedAt:new Date().toISOString(),projectName:document.getElementById('cfg-projectName')?.value||'My_Arrows_Game',editorState:deepClone(editorState),questionsArray:deepClone(questionsArray),bulkText:document.getElementById('q-bulk-text')?.value||''};
         }
         function setProjectStatus(message,isError=false){const el=document.getElementById('project-status');if(!el)return;el.textContent=message||'';el.style.color=isError?'#ff6b86':'var(--neon-2)';}
         function setAutosaveStatus(message,isError=false){const el=document.getElementById('autosave-status');if(!el)return;el.textContent=message||'';el.style.color=isError?'#ff8ba0':'#c5bcc8';}
