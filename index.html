@@ -22,6 +22,37 @@
         
         .brand-header { padding: 15px; text-align: center; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--active-neon); text-shadow: 0 0 10px var(--active-neon); transition: all 0.3s; text-transform: uppercase;}
         .brand-subtitle { font-family: 'Roboto', sans-serif; font-size: 0.75rem; color: #aaa; text-shadow: none; font-weight: 400; text-transform: none; display: block; margin-top: 2px;}
+        #editor-header-brand-link {
+            display: inline-flex;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            text-decoration: none;
+            outline: none;
+            filter: drop-shadow(0 0 7px rgba(0,243,255,.55));
+            transition: transform .2s ease, filter .2s ease;
+        }
+        #editor-header-brand-link:hover,
+        #editor-header-brand-link:focus-visible {
+            transform: scale(1.08);
+            filter:
+                drop-shadow(0 0 5px #00f3ff)
+                drop-shadow(0 0 12px #00f3ff)
+                drop-shadow(0 0 22px rgba(0,153,255,.95));
+        }
+        #editor-header-brand-logo {
+            display: block;
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 50%;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
         
         /* Tabs Nav */
         #tabs-nav { display: flex; flex-wrap: wrap; background: #0d0d16; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -155,7 +186,9 @@
 <div id="editor-sidebar">
 <div class="brand-header" id="brand-title">
 <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
-<img src="https://img.genially.com/67961b32a116fb001568a75e/673752a5-8d4d-40d1-9b5f-f04ebd91a27c.png" style="width: 42px; height: 42px; filter: drop-shadow(0 0 10px var(--neon-1));"/>
+<a aria-label="Открыть сообщество English Bootcamp во ВКонтакте" href="https://vk.ru/gim231041939" id="editor-header-brand-link" rel="noopener noreferrer" target="_blank" title="English Bootcamp — сообщество ВКонтакте">
+<img alt="English Bootcamp" draggable="false" id="editor-header-brand-logo" src="https://img.genially.com/67961b32a116fb001568a75e/673752a5-8d4d-40d1-9b5f-f04ebd91a27c.png"/>
+</a>
 <div style="text-align: left; line-height: 1.1;">
                     NEON ARROWS EDITOR
                     <span class="brand-subtitle">by English Bootcamp</span>
@@ -2273,6 +2306,17 @@
             zh:{'tab.design':'设计','tab.screens':'屏幕','tab.rules':'规则','tab.questions':'问题','tab.audio':'声音','preview.start':'开始','preview.game':'游戏','preview.question':'问题','preview.lose':'失败','preview.time':'时间到','preview.win':'胜利','preview.errors':'错误','heading.language':'🌐 界面语言','label.chooseLanguage':'选择编辑器语言','label.languageHint':'将翻译选项卡名称和主要霓虹标题。','heading.quickThemes':'🎨 快速主题','heading.gameBackground':'游戏背景（图像）','heading.sadCharacter':'角色（悲伤）','heading.happyCharacter':'角色（开心）','heading.arrowSettings':'箭头设置','heading.screenBackground':'屏幕背景','heading.startScreen':'开始屏幕','heading.gameQuestions':'游戏屏幕和问题','heading.winScreen':'胜利屏幕','heading.loseScreen':'失败屏幕','heading.timeScreen':'时间到屏幕','heading.errorScreen':'错题回顾屏幕','heading.latex':'数学公式（LaTeX）','heading.winSound':'胜利音效','heading.loseSound':'失败音效','heading.arrowSound':'箭头飞行音效','heading.correctSound':'正确答案音效','heading.wrongSound':'错误答案音效','heading.fieldDifficulty':'游戏区域难度','heading.arrowDifficulty':'箭头难度','heading.specialArrows':'特殊箭头与奖励','tab.code':'代码','heading.exportCode':'用于 Genially 的代码','label.codeHelp':'完整游戏 HTML 被封装在 srcdoc 中。iframe 代码不会使用编辑器页面的真实地址。','button.refreshCode':'⟳ 更新代码','button.copyCode':'📋 复制代码','button.downloadHtml':'⬇ 下载 HTML 文件','button.selectCode':'选择全部代码','heading.projectFiles':'保存项目','label.projectName':'项目和文件名称','label.projectHelp':'JSON 文件会保存设置、问题、图片、声音和元素位置，之后可再次加载继续编辑。','button.saveProject':'💾 保存项目 .json','button.loadProject':'📂 加载项目 .json','heading.autosave':'自动保存','button.restoreAutosave':'↶ 恢复自动保存','button.clearAutosave':'✕ 删除自动保存','button.code':'💗 代码'},
             ko:{'tab.design':'디자인','tab.screens':'화면','tab.rules':'규칙','tab.questions':'질문','tab.audio':'소리','preview.start':'시작','preview.game':'게임','preview.question':'질문','preview.lose':'패배','preview.time':'시간 종료','preview.win':'승리','preview.errors':'오류','heading.language':'🌐 인터페이스 언어','label.chooseLanguage':'편집기 언어 선택','label.languageHint':'탭 이름과 주요 네온 제목이 번역됩니다.','heading.quickThemes':'🎨 빠른 테마','heading.gameBackground':'게임 배경(이미지)','heading.sadCharacter':'캐릭터(슬픔)','heading.happyCharacter':'캐릭터(행복)','heading.arrowSettings':'화살표 설정','heading.screenBackground':'화면 배경','heading.startScreen':'시작 화면','heading.gameQuestions':'게임 화면 및 질문','heading.winScreen':'승리 화면','heading.loseScreen':'패배 화면','heading.timeScreen':'시간 종료 화면','heading.errorScreen':'오답 검토 화면','heading.latex':'수학 공식(LaTeX)','heading.winSound':'승리 소리','heading.loseSound':'패배 소리','heading.arrowSound':'화살표 비행 소리','heading.correctSound':'정답 소리','heading.wrongSound':'오답 소리','heading.fieldDifficulty':'게임 필드 난이도','heading.arrowDifficulty':'화살표 난이도','heading.specialArrows':'특수 화살표와 보너스','tab.code':'코드','heading.exportCode':'Genially 삽입 코드','label.codeHelp':'전체 게임 HTML이 srcdoc 안에 포함됩니다. iframe 코드에는 편집기 페이지의 실제 주소가 사용되지 않습니다.','button.refreshCode':'⟳ 코드 새로고침','button.copyCode':'📋 코드 복사','button.downloadHtml':'⬇ HTML 파일 다운로드','button.selectCode':'전체 코드 선택','heading.projectFiles':'프로젝트 저장','label.projectName':'프로젝트 및 파일 이름','label.projectHelp':'JSON 파일은 설정, 질문, 이미지, 소리 및 요소 위치를 저장하며 나중에 다시 불러올 수 있습니다.','button.saveProject':'💾 프로젝트 .json 저장','button.loadProject':'📂 프로젝트 .json 불러오기','heading.autosave':'자동 저장','button.restoreAutosave':'↶ 자동 저장 복원','button.clearAutosave':'✕ 자동 저장 삭제','button.code':'💗 코드'}
         };
+        function openEditorVkCommunity(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const url = 'https://vk.ru/gim231041939';
+            const opened = window.open(url, '_blank', 'noopener,noreferrer');
+            if (opened) {
+                try { opened.opener = null; } catch (error) {}
+            }
+            return false;
+        }
+
         function setInterfaceLanguage(lang) {
             const selected=UI_TRANSLATIONS[lang]?lang:'ru'; editorState.uiLanguage=selected; scheduleAutosave();
             const select=document.getElementById('cfg-interfaceLanguage'); if(select&&select.value!==selected) select.value=selected;
@@ -2282,6 +2326,7 @@
         }
 
         const brandTitle = document.getElementById('brand-title');
+        document.getElementById('editor-header-brand-link')?.addEventListener('click', openEditorVkCommunity);
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
@@ -2762,7 +2807,7 @@
                         options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
                     };
                 <\/script>
-                <script defer src="${MATHJAX_CDN}"><\/script>
+                <script async src="${MATHJAX_CDN}" onload="if(window.MathJax&&window.MathJax.typesetPromise){window.MathJax.typesetPromise().catch(function(){})}"><\/script>
             `;
         }
 
@@ -2979,24 +3024,122 @@
                 .replace(/'/g, '&#39;');
         }
 
+        // Безопасная сериализация настроек для вставки внутрь inline-script.
+        // Защищает игру от случайного закрытия тега script пользовательским текстом,
+        // а также от проблем с Unicode-разделителями строк.
+        function serializeConfigForInlineScript(value) {
+            return JSON.stringify(value)
+                .replace(/</g, '\\u003C')
+                .replace(/>/g, '\\u003E')
+                .replace(/&/g, '\\u0026')
+                .replace(/\u2028/g, '\\u2028')
+                .replace(/\u2029/g, '\\u2029');
+        }
+
+        function utf8ToBase64(text) {
+            const bytes = new TextEncoder().encode(String(text));
+            let binary = '';
+            const CHUNK = 0x8000;
+            for (let i = 0; i < bytes.length; i += CHUNK) {
+                binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+            }
+            return btoa(binary);
+        }
+
+        function validateGeneratedGameHtml(html) {
+            const source = String(html || '');
+            if (!source.trim()) throw new Error('Итоговый HTML игры пуст.');
+            if (source.includes('let CONFIG = {}; let isEditor = true;')) {
+                throw new Error('Настройки игры не были встроены в итоговый HTML.');
+            }
+
+            const parsed = new DOMParser().parseFromString(source, 'text/html');
+            const parserError = parsed.querySelector('parsererror');
+            if (parserError) throw new Error('Ошибка структуры HTML игры.');
+
+            const inlineScripts = Array.from(parsed.scripts).filter(script => !script.src);
+            inlineScripts.forEach((script, index) => {
+                const code = script.textContent || '';
+                if (!code.trim()) return;
+                try {
+                    // Только проверка синтаксиса: код здесь не выполняется.
+                    new Function(code);
+                } catch (error) {
+                    throw new Error(`Синтаксическая ошибка в игровом скрипте ${index + 1}: ${error.message}`);
+                }
+            });
+        }
+
+        function buildSafeSrcdocLoader(gameHtml) {
+            const encodedGame = utf8ToBase64(gameHtml);
+            // Genially видит только короткий безопасный загрузчик и Base64-строку.
+            // Внутренние кавычки, шаблонные выражения и теги игры больше не проходят
+            // через повторную обработку редактором Genially.
+            return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<style>html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#000}#boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font:700 14px Arial,sans-serif;background:#000}</style>
+</head>
+<body>
+<div id="boot">LOADING…</div>
+<script>
+(function(){
+    try {
+        var binary = atob('${encodedGame}');
+        var bytes = new Uint8Array(binary.length);
+        for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        var html = new TextDecoder('utf-8').decode(bytes);
+        document.open();
+        document.write(html);
+        document.close();
+    } catch (error) {
+        var boot = document.getElementById('boot');
+        if (boot) boot.textContent = 'GAME LOAD ERROR';
+        console.error('Neon Arrows loader error:', error);
+    }
+})();
+<\/script>
+</body>
+</html>`;
+        }
+
         function buildExportBundle() {
             parseInputsToConfig();
             capturePreviewPositions();
-            let tmpl=document.getElementById('game-engine-template').innerHTML;
-            tmpl=tmpl.replace('<!-- MATHJAX_INJECTION -->',()=>getMathJaxInjection());
-            tmpl=tmpl.replace('let CONFIG = {}; let isEditor = true;',`let CONFIG = ${JSON.stringify(editorState)}; let isEditor = false;`);
-            tmpl=tmpl.replace('<body class="editor-mode">','<body>');
-            tmpl=tmpl.replace(/<div class="resize-handle"><\/div>/g, '');
-            tmpl=tmpl.replace('// INIT_INJECTION','if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", bootExportedGame, { once: true }); } else { bootExportedGame(); }');
-            tmpl=tmpl.replace('<!-- PROTECTIONS_INJECTION -->',`
+
+            let tmpl = document.getElementById('game-engine-template').innerHTML;
+            tmpl = tmpl.replace('<!-- MATHJAX_INJECTION -->', () => getMathJaxInjection());
+            tmpl = tmpl.replace(
+                'let CONFIG = {}; let isEditor = true;',
+                `let CONFIG = ${serializeConfigForInlineScript(editorState)}; let isEditor = false;`
+            );
+            tmpl = tmpl.replace('<body class="editor-mode">', '<body>');
+            tmpl = tmpl.replace(/<div class="resize-handle"><\/div>/g, '');
+            tmpl = tmpl.replace(
+                '// INIT_INJECTION',
+                'if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", bootExportedGame, { once: true }); } else { bootExportedGame(); }'
+            );
+            tmpl = tmpl.replace('<!-- PROTECTIONS_INJECTION -->', `
                 <script>
                     document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
                     document.addEventListener('keydown',function(e){const key=String(e.key||'').toLowerCase();if(e.key==='F12'||((e.ctrlKey||e.metaKey)&&e.shiftKey&&(key==='i'||key==='j'))||((e.ctrlKey||e.metaKey)&&key==='u')){e.preventDefault();return false;}});
                 <\/script>
             `);
-            const escapedHtml=escapeForSrcdocAttribute(tmpl);
-            const iframeCode=`<iframe srcdoc='${escapedHtml}' width="100%" height="100%" frameborder="0" scrolling="no" style="border:0; display:block; width:100%; height:100%; min-width:100%; min-height:100%; margin:0; padding:0; background:transparent; overflow:hidden;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-            return {tmpl,iframeCode,bytes:new Blob([iframeCode],{type:'text/plain;charset=utf-8'}).size};
+
+            validateGeneratedGameHtml(tmpl);
+
+            const loaderHtml = buildSafeSrcdocLoader(tmpl);
+            const escapedLoader = escapeForSrcdocAttribute(loaderHtml);
+            const iframeCode = `<iframe srcdoc="${escapedLoader}" width="100%" height="100%" frameborder="0" scrolling="no" style="border:0;display:block;width:100%;height:100%;min-width:100%;min-height:100%;margin:0;padding:0;background:#000;overflow:hidden;" allow="autoplay; fullscreen"></iframe>`;
+
+            return {
+                tmpl,
+                loaderHtml,
+                iframeCode,
+                bytes: new Blob([iframeCode], { type: 'text/plain;charset=utf-8' }).size
+            };
         }
 
         let exportSizeTimer;
@@ -3127,6 +3270,7 @@
             try{localStorage.removeItem(AUTOSAVE_KEY);}catch(error){}return false;
         }
         function restoreAutosaveManually(){const snapshot=readAutosave();if(!snapshot){setAutosaveStatus('Сохранённый незавершённый проект не найден.',true);return;}if(window.confirm('Восстановить последнее автосохранение? Текущие несохранённые изменения будут заменены.')){applyStateToEditorControls(snapshot);setAutosaveStatus('Автосохранение восстановлено.');}}
+
     </script>
 
     <script>
