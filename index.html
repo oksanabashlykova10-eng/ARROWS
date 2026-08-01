@@ -179,6 +179,43 @@
 
         .game-frame-container { flex-grow: 1; min-width: 0; min-height: 0; display: flex; justify-content: center; align-items: center; padding: 12px; position: relative; overflow: hidden; }
         #live-preview-frame { flex: none; width: 100%; height: auto; aspect-ratio: 16 / 9; max-width: 100%; max-height: 100%; border: none; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.8); background: #000;}
+        /* Встроенные диалоги редактора: не используют browser alert/prompt/confirm,
+           поэтому адрес GitHub Pages нигде не показывается. */
+        .editor-dialog-backdrop {
+            position: fixed; inset: 0; z-index: 50000;
+            display: flex; align-items: center; justify-content: center;
+            padding: 22px; background: rgba(3, 3, 10, 0.82);
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        }
+        .editor-dialog {
+            width: min(460px, calc(100vw - 34px));
+            border: 1px solid var(--active-neon); border-radius: 14px;
+            background: linear-gradient(145deg, rgba(20,20,34,.99), rgba(7,7,14,.99));
+            box-shadow: 0 0 26px color-mix(in srgb, var(--active-neon) 58%, transparent), 0 22px 70px rgba(0,0,0,.72);
+            padding: 20px; color: #fff; animation: editorDialogIn .16s ease-out;
+        }
+        @keyframes editorDialogIn { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:none; } }
+        .editor-dialog-title {
+            margin-bottom: 10px; color: var(--active-neon); font: 700 .98rem 'Orbitron', sans-serif;
+            text-transform: uppercase; text-shadow: 0 0 10px var(--active-neon);
+        }
+        .editor-dialog-message { color:#e4e4ea; font-size:.82rem; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; }
+        .editor-dialog-input {
+            margin: 14px 0 0 !important; min-height: 42px; padding: 10px 11px !important;
+            border-color: color-mix(in srgb, var(--active-neon) 62%, #555) !important;
+            font-size: .84rem !important;
+        }
+        .editor-dialog-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+        .editor-dialog-btn {
+            min-width: 108px; min-height: 40px; padding: 8px 15px; border-radius: 8px;
+            border: 1px solid var(--active-neon); background: transparent; color: var(--active-neon);
+            font-weight: 700; cursor:pointer; transition:.18s;
+        }
+        .editor-dialog-btn:hover, .editor-dialog-btn:focus-visible {
+            outline:none; background:var(--active-neon); color:#050508; box-shadow:0 0 14px var(--active-neon);
+        }
+        .editor-dialog-btn.secondary { border-color:#777; color:#d5d5da; }
+        .editor-dialog-btn.secondary:hover, .editor-dialog-btn.secondary:focus-visible { background:#ddd; color:#111; box-shadow:0 0 12px rgba(255,255,255,.35); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -694,6 +731,18 @@
 <iframe id="live-preview-frame"></iframe>
 </div>
 </div>
+<!-- Стилизованный диалог редактора. Он заменяет системные prompt/confirm/alert. -->
+<div class="editor-dialog-backdrop hidden" id="editor-dialog-backdrop" aria-hidden="true">
+  <div class="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="editor-dialog-title">
+    <div class="editor-dialog-title" id="editor-dialog-title">Сообщение</div>
+    <div class="editor-dialog-message" id="editor-dialog-message"></div>
+    <input class="editor-dialog-input hidden" id="editor-dialog-input" type="text" autocomplete="off" spellcheck="false"/>
+    <div class="editor-dialog-actions">
+      <button class="editor-dialog-btn secondary hidden" id="editor-dialog-cancel" type="button">Отмена</button>
+      <button class="editor-dialog-btn" id="editor-dialog-ok" type="button">ОК</button>
+    </div>
+  </div>
+</div>
 <!-- ========================================== -->
 <!-- ШАБЛОН ДВИЖКА (Внедряется в iframe)        -->
 <!-- ========================================== -->
@@ -1070,13 +1119,13 @@
 <script>
             let CONFIG = {}; let isEditor = true;
             const GAME_TEXTS = {
-                ru: { question:'Вопрос', check:'Проверить', restart:'Сбросить', gapHint:'Выберите слово, затем нажмите на нужный пропуск', questions:'Вопросы:', errors:'Ошибки:', timeLeft:'Осталось времени:', score:'Очки:', best:'Лучший результат:' },
-                en: { question:'Question', check:'Check', restart:'Restart', gapHint:'Choose a word, then click the correct gap', questions:'Questions:', errors:'Errors:', timeLeft:'Time left:', score:'Score:', best:'Best score:' },
-                de: { question:'Frage', check:'Prüfen', restart:'Neu starten', gapHint:'Wähle ein Wort und klicke dann auf die richtige Lücke', questions:'Fragen:', errors:'Fehler:', timeLeft:'Restzeit:', score:'Punkte:', best:'Bestes Ergebnis:' },
-                es: { question:'Pregunta', check:'Comprobar', restart:'Reiniciar', gapHint:'Elige una palabra y pulsa el espacio correcto', questions:'Preguntas:', errors:'Errores:', timeLeft:'Tiempo restante:', score:'Puntos:', best:'Mejor resultado:' },
-                kk: { question:'Сұрақ', check:'Тексеру', restart:'Қайта бастау', gapHint:'Сөзді таңдап, дұрыс бос орынды басыңыз', questions:'Сұрақтар:', errors:'Қателер:', timeLeft:'Қалған уақыт:', score:'Ұпай:', best:'Үздік нәтиже:' },
-                zh: { question:'问题', check:'检查', restart:'重新开始', gapHint:'选择一个词，然后点击正确的空格', questions:'问题:', errors:'错误:', timeLeft:'剩余时间:', score:'得分:', best:'最佳成绩:' },
-                ko: { question:'질문', check:'확인', restart:'다시 시작', gapHint:'단어를 선택한 다음 알맞은 빈칸을 누르세요', questions:'질문:', errors:'오류:', timeLeft:'남은 시간:', score:'점수:', best:'최고 기록:' }
+                ru: { loading:'ЗАГРУЗКА…', time:'Время', combo:'Комбо', inputPlaceholder:'Введите ответ…', loadError:'ОШИБКА ЗАГРУЗКИ ИГРЫ', question:'Вопрос', check:'Проверить', restart:'Сбросить', gapHint:'Выберите слово, затем нажмите на нужный пропуск', questions:'Вопросы:', errors:'Ошибки:', timeLeft:'Осталось времени:', score:'Очки:', best:'Лучший результат:' },
+                en: { loading:'LOADING…', time:'Time', combo:'Combo', inputPlaceholder:'Enter your answer…', loadError:'GAME LOAD ERROR', question:'Question', check:'Check', restart:'Restart', gapHint:'Choose a word, then click the correct gap', questions:'Questions:', errors:'Errors:', timeLeft:'Time left:', score:'Score:', best:'Best score:' },
+                de: { loading:'WIRD GELADEN…', time:'Zeit', combo:'Kombo', inputPlaceholder:'Antwort eingeben…', loadError:'FEHLER BEIM LADEN DES SPIELS', question:'Frage', check:'Prüfen', restart:'Neu starten', gapHint:'Wähle ein Wort und klicke dann auf die richtige Lücke', questions:'Fragen:', errors:'Fehler:', timeLeft:'Restzeit:', score:'Punkte:', best:'Bestes Ergebnis:' },
+                es: { loading:'CARGANDO…', time:'Tiempo', combo:'Combo', inputPlaceholder:'Escribe tu respuesta…', loadError:'ERROR AL CARGAR EL JUEGO', question:'Pregunta', check:'Comprobar', restart:'Reiniciar', gapHint:'Elige una palabra y pulsa el espacio correcto', questions:'Preguntas:', errors:'Errores:', timeLeft:'Tiempo restante:', score:'Puntos:', best:'Mejor resultado:' },
+                kk: { loading:'ЖҮКТЕЛУДЕ…', time:'Уақыт', combo:'Комбо', inputPlaceholder:'Жауапты енгізіңіз…', loadError:'ОЙЫНДЫ ЖҮКТЕУ ҚАТЕСІ', question:'Сұрақ', check:'Тексеру', restart:'Қайта бастау', gapHint:'Сөзді таңдап, дұрыс бос орынды басыңыз', questions:'Сұрақтар:', errors:'Қателер:', timeLeft:'Қалған уақыт:', score:'Ұпай:', best:'Үздік нәтиже:' },
+                zh: { loading:'加载中…', time:'时间', combo:'连击', inputPlaceholder:'输入答案…', loadError:'游戏加载错误', question:'问题', check:'检查', restart:'重新开始', gapHint:'选择一个词，然后点击正确的空格', questions:'问题:', errors:'错误:', timeLeft:'剩余时间:', score:'得分:', best:'最佳成绩:' },
+                ko: { loading:'로딩 중…', time:'시간', combo:'콤보', inputPlaceholder:'답을 입력하세요…', loadError:'게임 로딩 오류', question:'질문', check:'확인', restart:'다시 시작', gapHint:'단어를 선택한 다음 알맞은 빈칸을 누르세요', questions:'질문:', errors:'오류:', timeLeft:'남은 시간:', score:'점수:', best:'최고 기록:' }
             };
             function gameText(key) {
                 const lang = GAME_TEXTS[CONFIG.uiLanguage] ? CONFIG.uiLanguage : 'ru';
@@ -1494,6 +1543,8 @@
                     .btn-close-errors { font-family: ${CONFIG.design.errorTitleFont}; background-color: ${CONFIG.design.errorCloseBtnBg}; color: ${CONFIG.design.errorCloseBtnColor}; border-color: ${CONFIG.design.errorCloseBtnGlow}; box-shadow: 0 0 10px ${CONFIG.design.errorCloseBtnGlow}, inset 0 0 8px ${CONFIG.design.errorCloseBtnGlow}; }
                 `;
                 document.getElementById('dynamic-styles').innerHTML = css;
+                const loadingTitle = document.getElementById('loading-title');
+                if (loadingTitle) loadingTitle.innerText = gameText('loading');
                 document.getElementById('el-start-title').innerText = CONFIG.design.startTitle; document.getElementById('el-start-desc').innerText = CONFIG.design.startDesc; document.querySelector('#el-start-btn button').innerText = CONFIG.design.startBtnText;
                 document.getElementById('el-win-title').innerText = CONFIG.design.winTitle; document.querySelector('#el-win-btn button').innerText = CONFIG.design.winBtnText;
                 document.getElementById('btn-check-answer').innerText = gameText('check');
@@ -1973,7 +2024,7 @@
                 }
                 else if (activeQuestion.type === 'input') {
                     appendQuestionStem();
-                    let input = document.createElement('input'); input.type = 'text'; input.className = 'text-input'; input.placeholder = 'Введите ответ...'; dynamicArea.appendChild(input); 
+                    let input = document.createElement('input'); input.type = 'text'; input.className = 'text-input'; input.placeholder = gameText('inputPlaceholder'); dynamicArea.appendChild(input); 
                     checkBtn.classList.remove('hidden'); checkBtn.onclick = () => checkAnswer(activeQuestion.correct.map(c=>c.toLowerCase()).includes(input.value.trim().toLowerCase()));
                 }
                 else if (activeQuestion.type === 'pairs') {
@@ -2226,8 +2277,10 @@
             
             function updateUI() {
                 document.getElementById('lives-container').innerText = '❤️'.repeat(Math.max(0, currentLives)) + '🖤'.repeat(Math.max(0, maxLives - currentLives));
-                if (CONFIG.rules.timer >= 9999) document.getElementById('timer').innerText = `Time: ∞`; else document.getElementById('timer').innerText = `Time: ${Math.floor(timeRemaining / 60).toString().padStart(2, '0')}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
-                document.getElementById('combo').innerText = `Combo: x${combo}`;
+                const timeLabel = gameText('time');
+                const comboLabel = gameText('combo');
+                if (CONFIG.rules.timer >= 9999) document.getElementById('timer').innerText = `${timeLabel}: ∞`; else document.getElementById('timer').innerText = `${timeLabel}: ${Math.floor(timeRemaining / 60).toString().padStart(2, '0')}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
+                document.getElementById('combo').innerText = `${comboLabel}: x${combo}`;
             }
 
             function showScreen(id) { 
@@ -2408,6 +2461,79 @@
             pushLiveUpdate();
         }
 
+        // ---------- Встроенные диалоги без отображения адреса сайта ----------
+        let editorDialogResolve = null;
+        let editorDialogMode = 'alert';
+
+        function closeEditorDialog(result) {
+            const backdrop = document.getElementById('editor-dialog-backdrop');
+            if (!backdrop || backdrop.classList.contains('hidden')) return;
+            backdrop.classList.add('hidden');
+            backdrop.setAttribute('aria-hidden', 'true');
+            const resolver = editorDialogResolve;
+            editorDialogResolve = null;
+            if (resolver) resolver(result);
+        }
+
+        function openEditorDialog({ mode = 'alert', title = 'Сообщение', message = '', defaultValue = '', okText = 'ОК', cancelText = 'Отмена' } = {}) {
+            const backdrop = document.getElementById('editor-dialog-backdrop');
+            const titleEl = document.getElementById('editor-dialog-title');
+            const messageEl = document.getElementById('editor-dialog-message');
+            const input = document.getElementById('editor-dialog-input');
+            const ok = document.getElementById('editor-dialog-ok');
+            const cancel = document.getElementById('editor-dialog-cancel');
+            if (!backdrop || !titleEl || !messageEl || !input || !ok || !cancel) return Promise.resolve(mode === 'confirm' ? false : mode === 'prompt' ? null : true);
+
+            // На случай повторного вызова не оставляем незавершённый Promise.
+            if (editorDialogResolve) editorDialogResolve(mode === 'confirm' ? false : null);
+            editorDialogMode = mode;
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            ok.textContent = okText;
+            cancel.textContent = cancelText;
+            input.classList.toggle('hidden', mode !== 'prompt');
+            cancel.classList.toggle('hidden', mode === 'alert');
+            input.value = mode === 'prompt' ? String(defaultValue || '') : '';
+            backdrop.classList.remove('hidden');
+            backdrop.setAttribute('aria-hidden', 'false');
+
+            return new Promise(resolve => {
+                editorDialogResolve = resolve;
+                requestAnimationFrame(() => (mode === 'prompt' ? input : ok).focus());
+            });
+        }
+
+        function showEditorAlert(message, title = 'Сообщение') {
+            return openEditorDialog({ mode: 'alert', title, message });
+        }
+        function showEditorConfirm(message, title = 'Подтверждение') {
+            return openEditorDialog({ mode: 'confirm', title, message, okText: 'Да', cancelText: 'Отмена' });
+        }
+        function showEditorPrompt(message, title = 'Введите данные', defaultValue = '') {
+            return openEditorDialog({ mode: 'prompt', title, message, defaultValue, okText: 'Применить', cancelText: 'Отмена' });
+        }
+
+        document.getElementById('editor-dialog-ok')?.addEventListener('click', () => {
+            const input = document.getElementById('editor-dialog-input');
+            closeEditorDialog(editorDialogMode === 'prompt' ? input.value : true);
+        });
+        document.getElementById('editor-dialog-cancel')?.addEventListener('click', () => closeEditorDialog(editorDialogMode === 'confirm' ? false : null));
+        document.getElementById('editor-dialog-backdrop')?.addEventListener('mousedown', event => {
+            if (event.target === event.currentTarget && editorDialogMode !== 'alert') closeEditorDialog(editorDialogMode === 'confirm' ? false : null);
+        });
+        document.addEventListener('keydown', event => {
+            const backdrop = document.getElementById('editor-dialog-backdrop');
+            if (!backdrop || backdrop.classList.contains('hidden')) return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeEditorDialog(editorDialogMode === 'confirm' ? false : null);
+            } else if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                const input = document.getElementById('editor-dialog-input');
+                closeEditorDialog(editorDialogMode === 'prompt' ? input.value : true);
+            }
+        }, true);
+
         const presets = {
             'bg': [{name:'Бамбук', url:'https://img.genially.com/67961b32a116fb001568a75e/36df24a6-f276-4cba-959a-e13d067103e3.png'}, {name:'Кладовка', url:'https://img.genially.com/67961b32a116fb001568a75e/8ca18635-c570-46c1-ad92-dbb88728d3d9.png'}, {name:'Морковки', url:'https://img.genially.com/67961b32a116fb001568a75e/59668ac4-e502-48d6-b663-584fec64d960.png'}, {name:'Библиотека', url:'https://img.genially.com/67961b32a116fb001568a75e/2f5253ad-de1e-408a-85fb-2026ac72261c.png'}, {name:'Курятник', url:'https://img.genially.com/67961b32a116fb001568a75e/0bc707e0-99ad-4d0f-95cd-ab991d27b1d7.png'}, {name:'Космос', url:'https://img.genially.com/67961b32a116fb001568a75e/06ac03c6-b17d-4d07-84ba-fd38378c4cd4.png'}],
             'char-sad': [{name:'Панда', url:'https://img.genially.com/67961b32a116fb001568a75e/1c9ca612-bfba-43a0-a152-d1d775e34311.png'}, {name:'Кошка', url:'https://img.genially.com/67961b32a116fb001568a75e/48487a37-988f-4a7e-83b6-92b2327c6505.png'}, {name:'Заяц', url:'https://img.genially.com/67961b32a116fb001568a75e/0f0f011d-ac87-4990-ac3d-eda5ce45aa57.png'}, {name:'Гусеница', url:'https://img.genially.com/67961b32a116fb001568a75e/2a1dd609-ffb5-427c-b604-6c5b4152bb85.png'}, {name:'Петух', url:'https://img.genially.com/67961b32a116fb001568a75e/9bf95ba0-9f44-4b2f-913d-c4b377208f69.png'}, {name:'Звезда', url:'https://img.genially.com/67961b32a116fb001568a75e/3e876fbd-d92f-46e1-bbc3-3ad5dfafd3f4.png'}],
@@ -2416,7 +2542,89 @@
         function buildGrids() { ['bg', 'char-sad', 'char-happy'].forEach(type => { const grid = document.getElementById(`grid-${type}`); grid.innerHTML = presets[type].map(p => `<div class="preset-item" onclick="selectPreset('${type}', '${p.url}', this)"><img src="${p.url}"><div class="preset-label">${p.name}</div></div>`).join(''); grid.firstElementChild.classList.add('selected'); }); }
         buildGrids();
         function selectPreset(type, url, el) { document.querySelectorAll(`#grid-${type} .preset-item`).forEach(i => i.classList.remove('selected')); if(el) el.classList.add('selected'); document.getElementById(`val-${type}`).value = url; pushLiveUpdate(); }
-        function promptMedia(type, mode) { if(mode==='url') { let url = prompt("Введите ссылку (URL):"); if(url) selectPreset(type, url, null); } }
+        async function promptMedia(type, mode) {
+            if (mode !== 'url') return;
+            const url = await showEditorPrompt('Введите прямую ссылку на изображение (URL):', 'Изображение по ссылке');
+            if (url && url.trim()) selectPreset(type, url.trim(), null);
+        }
+
+        function mediaFileToDataUrl(file, type, maxSizeKB, callback) {
+            const reader = new FileReader();
+            reader.onerror = () => callback(null, null, 'Не удалось прочитать файл.');
+            reader.onload = event => {
+                const img = new Image();
+                img.onerror = () => callback(null, null, 'Выбранный файл не удалось открыть как изображение.');
+                img.onload = () => {
+                    try {
+                        const preserveAlpha = type === 'char-sad' || type === 'char-happy';
+                        const maxDimension = type === 'bg' ? 1920 : 1400;
+                        let width = img.naturalWidth || img.width;
+                        let height = img.naturalHeight || img.height;
+                        const ratio = Math.min(1, maxDimension / Math.max(width, height));
+                        width = Math.max(1, Math.round(width * ratio));
+                        height = Math.max(1, Math.round(height * ratio));
+
+                        let canvas = document.createElement('canvas');
+                        let dataUrl = '';
+                        let sizeKB = Infinity;
+                        let quality = type === 'bg' ? 0.88 : 0.92;
+                        const mime = preserveAlpha ? 'image/webp' : 'image/jpeg';
+
+                        // Несколько мягких попыток сжатия. Для персонажей WebP сохраняет прозрачность.
+                        for (let attempt = 0; attempt < 8; attempt++) {
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d', { alpha: preserveAlpha });
+                            if (!ctx) throw new Error('Canvas недоступен.');
+                            ctx.clearRect(0, 0, width, height);
+                            if (!preserveAlpha) {
+                                ctx.fillStyle = '#000';
+                                ctx.fillRect(0, 0, width, height);
+                            }
+                            ctx.drawImage(img, 0, 0, width, height);
+                            dataUrl = canvas.toDataURL(mime, quality);
+                            // В старых браузерах WebP может не поддерживаться: используем PNG.
+                            if (preserveAlpha && !dataUrl.startsWith('data:image/webp')) dataUrl = canvas.toDataURL('image/png');
+                            sizeKB = Math.round((dataUrl.length * 3 / 4) / 1024);
+                            if (sizeKB <= maxSizeKB) break;
+                            quality = Math.max(0.58, quality - 0.08);
+                            width = Math.max(320, Math.round(width * 0.86));
+                            height = Math.max(320, Math.round(height * 0.86));
+                        }
+
+                        if (sizeKB > maxSizeKB) {
+                            callback(null, sizeKB, `Файл после сжатия всё ещё больше лимита ${Math.round(maxSizeKB / 1024)} МБ.`);
+                        } else {
+                            callback(dataUrl, sizeKB, null);
+                        }
+                    } catch (error) {
+                        callback(null, null, 'Не удалось обработать изображение: ' + (error?.message || error));
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleFileUpload(event, type, maxSizeKB) {
+            const input = event?.target;
+            const file = input?.files?.[0];
+            if (!file) return;
+            if (!String(file.type || '').startsWith('image/')) {
+                showEditorAlert('Пожалуйста, выберите файл изображения.', 'Неверный формат файла');
+                input.value = '';
+                return;
+            }
+            mediaFileToDataUrl(file, type, Number(maxSizeKB) || 2048, (dataUrl, sizeKB, error) => {
+                input.value = '';
+                if (error || !dataUrl) {
+                    showEditorAlert(error || 'Не удалось загрузить изображение.', 'Ошибка загрузки');
+                    return;
+                }
+                selectPreset(type, dataUrl, null);
+                scheduleAutosave();
+            });
+        }
         function compressAndReturnBase64(file, maxSizeKB, callback) {
             const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const MAX_SIZE = 1200; let width = img.width, height = img.height; if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } } canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.8); const sizeKB = Math.round(((dataUrl.length * 3) / 4) / 1024); if (sizeKB > maxSizeKB) callback(null, null, `❌ Лимит ${Math.round(maxSizeKB/1024)} МБ. Ваш файл: ${sizeKB} KB`); else callback(dataUrl, sizeKB, null); }; img.src = e.target.result; }; reader.readAsDataURL(file);
         }
@@ -2430,7 +2638,7 @@
             const inputRegex = /^(.*?)\(([^)]+)\)\s*$/;
             const removePrefix = (value, prefix) => value.slice(prefix.length).trim();
             const fail = message => {
-                if (showAlerts) alert(message);
+                if (showAlerts) showEditorAlert(message, 'Ошибка формата вопроса');
                 return null;
             };
             const qObj = { hasImg: false, imgSrc: null, prompt: '' };
@@ -2762,7 +2970,7 @@
 
             const lines = textarea.value.split('\n').map(line => line.trim()).filter(Boolean);
             if (lines.length !== 1) {
-                alert('В редакторе одной карточки должна находиться одна строка вопроса.');
+                showEditorAlert('В редакторе одной карточки должна находиться одна строка вопроса.', 'Ошибка редактирования');
                 return;
             }
 
@@ -2779,7 +2987,15 @@
 
         function deleteQuestion(index) { questionsArray.splice(index, 1); updateQuestionsList(); pushLiveUpdate(); }
         function attachQuestionFile(event, index) { const file = event.target.files[0]; if (!file) return; const errDiv = document.getElementById(`q-img-err-${index}`); errDiv.innerText = "Загрузка..."; errDiv.style.color = "var(--neon-4)"; compressAndReturnBase64(file, 2048, (dataUrl, sizeKB, error) => { if (error) { errDiv.innerText = error; errDiv.style.color = "#ff073a"; } else { questionsArray[index].hasImg = true; questionsArray[index].imgSrc = dataUrl; updateQuestionsList(); pushLiveUpdate(); } }); }
-        function attachQuestionUrl(index) { const url = prompt("Введите ссылку на картинку (URL):"); if (url && url.trim() !== "") { questionsArray[index].hasImg = true; questionsArray[index].imgSrc = url.trim(); updateQuestionsList(); pushLiveUpdate(); } }
+        async function attachQuestionUrl(index) {
+            const url = await showEditorPrompt('Введите прямую ссылку на изображение (URL):', 'Картинка для вопроса');
+            if (url && url.trim() !== '') {
+                questionsArray[index].hasImg = true;
+                questionsArray[index].imgSrc = url.trim();
+                updateQuestionsList();
+                pushLiveUpdate();
+            }
+        }
         function removeQuestionImage(index) { questionsArray[index].hasImg = false; questionsArray[index].imgSrc = null; updateQuestionsList(); pushLiveUpdate(); }
         function checkQuestionWarning() { const tiles = parseInt(document.getElementById('cfg-qCount').value) || 8; const warnEl = document.getElementById('q-warning'); if (questionsArray.length > 0 && questionsArray.length !== tiles) warnEl.style.display = 'block'; else warnEl.style.display = 'none'; }
 
@@ -2998,8 +3214,8 @@
             fitPreviewFrame();
             fullRebuildPreview();
             scheduleExportSizeUpdate();
-            setTimeout(() => {
-                const restored = offerAutosaveRestore();
+            setTimeout(async () => {
+                const restored = await offerAutosaveRestore();
                 if (!restored) refreshGeneratedCode(false);
                 startAutosave();
                 autosaveDirty = false;
@@ -3132,6 +3348,18 @@
 
         function buildSafeSrcdocLoader(gameHtml) {
             const encodedGame = utf8ToBase64(gameHtml);
+            const loaderTexts = {
+                ru:{loading:'ЗАГРУЗКА…',error:'ОШИБКА ЗАГРУЗКИ ИГРЫ'},
+                en:{loading:'LOADING…',error:'GAME LOAD ERROR'},
+                de:{loading:'WIRD GELADEN…',error:'FEHLER BEIM LADEN DES SPIELS'},
+                es:{loading:'CARGANDO…',error:'ERROR AL CARGAR EL JUEGO'},
+                kk:{loading:'ЖҮКТЕЛУДЕ…',error:'ОЙЫНДЫ ЖҮКТЕУ ҚАТЕСІ'},
+                zh:{loading:'加载中…',error:'游戏加载错误'},
+                ko:{loading:'로딩 중…',error:'게임 로딩 오류'}
+            };
+            const loaderLanguage = loaderTexts[editorState.uiLanguage] ? editorState.uiLanguage : 'ru';
+            const loaderLoadingText = JSON.stringify(loaderTexts[loaderLanguage].loading);
+            const loaderErrorText = JSON.stringify(loaderTexts[loaderLanguage].error);
             // Genially видит только короткий безопасный загрузчик и Base64-строку.
             // Внутренние кавычки, шаблонные выражения и теги игры больше не проходят
             // через повторную обработку редактором Genially.
@@ -3143,9 +3371,11 @@
 <style>html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#000}#boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font:700 14px Arial,sans-serif;background:#000}</style>
 </head>
 <body>
-<div id="boot">LOADING…</div>
+<div id="boot"></div>
 <script>
 (function(){
+    var boot = document.getElementById('boot');
+    if (boot) boot.textContent = ${loaderLoadingText};
     try {
         var binary = atob('${encodedGame}');
         var bytes = new Uint8Array(binary.length);
@@ -3156,7 +3386,7 @@
         document.close();
     } catch (error) {
         var boot = document.getElementById('boot');
-        if (boot) boot.textContent = 'GAME LOAD ERROR';
+        if (boot) boot.textContent = ${loaderErrorText};
         console.error('Neon Arrows loader error:', error);
     }
 })();
@@ -3322,14 +3552,19 @@
             finally{input.value='';}
         }
         function readAutosave(){try{const raw=localStorage.getItem(AUTOSAVE_KEY);return raw?JSON.parse(raw):null;}catch(error){return null;}}
-        function offerAutosaveRestore(){
+        async function offerAutosaveRestore(){
             const snapshot=readAutosave();if(!snapshot)return false;
             const date=snapshot.savedAt?new Date(snapshot.savedAt).toLocaleString():'';
-            const restore=window.confirm(`Найден незавершённый проект${date?' от '+date:''}. Восстановить?`);
+            const restore=await showEditorConfirm(`Найден незавершённый проект${date?' от '+date:''}.\nВосстановить его?`, 'Восстановление проекта');
             if(restore){applyStateToEditorControls(snapshot);setAutosaveStatus('Незавершённый проект восстановлен.');return true;}
             try{localStorage.removeItem(AUTOSAVE_KEY);}catch(error){}return false;
         }
-        function restoreAutosaveManually(){const snapshot=readAutosave();if(!snapshot){setAutosaveStatus('Сохранённый незавершённый проект не найден.',true);return;}if(window.confirm('Восстановить последнее автосохранение? Текущие несохранённые изменения будут заменены.')){applyStateToEditorControls(snapshot);setAutosaveStatus('Автосохранение восстановлено.');}}
+        async function restoreAutosaveManually(){
+            const snapshot=readAutosave();
+            if(!snapshot){setAutosaveStatus('Сохранённый незавершённый проект не найден.',true);return;}
+            const restore=await showEditorConfirm('Текущие несохранённые изменения будут заменены последним автосохранением. Продолжить?', 'Восстановление проекта');
+            if(restore){applyStateToEditorControls(snapshot);setAutosaveStatus('Автосохранение восстановлено.');}
+        }
 
     </script>
 
