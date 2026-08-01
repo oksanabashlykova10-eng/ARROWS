@@ -631,7 +631,10 @@
 <span style="color:#8f98a5;">Все слова в верхнем банке автоматически перемешиваются при каждом открытии задания.</span><br><br>
 <strong>7. Найти ошибку:</strong><br><code>[ERROR] Find the mistake. // She go to school every day. | go</code><br><br>
 <strong>8. Заполнить пропуски словами из рамки:</strong><br><code>[GAPS] Fill the gaps using Present Simple. // I ___ to school and ___ football. | go | play</code><br>
-<span style="display:block;margin-top:8px;color:#888;">До знаков // обязательно напишите задание. После // — предложение с пропусками. Затем укажите по одному точному слову для каждого пропуска. В игре слова перемешиваются в рамке: ребёнок выбирает слово, затем нужный пропуск. Кнопка Restart очищает ответ.</span>
+<span style="display:block;margin-top:8px;color:#888;">До знаков // обязательно напишите задание. После // — предложение с пропусками. Затем укажите по одному точному слову для каждого пропуска. В игре слова перемешиваются в рамке: ребёнок выбирает слово, затем нужный пропуск. Кнопка Restart очищает ответ.</span><br>
+<strong>9. Открытый вопрос (Open-ended question):</strong><br>
+<code>[OPEN] What is the best superpower to have and why?</code><br>
+<span style="display:block;margin-top:8px;color:#888;">Автоматической проверки нет. После устного ответа ученик нажимает кнопку «Далее», и игра продолжается. При необходимости можно отдельно написать задание до знаков //: <code>[OPEN] Discuss and explain your opinion. // What is the best superpower to have and why?</code></span>
 </div>
 <textarea id="q-bulk-text">[CHOICE] Choose the correct answer. // I ___ tired. | am | is | are
 [INPUT] Complete the sentence. // _______ is the capital of Great Britain. (London, LONDON)
@@ -1119,13 +1122,13 @@
 <script>
             let CONFIG = {}; let isEditor = true;
             const GAME_TEXTS = {
-                ru: { loading:'ЗАГРУЗКА…', time:'Время', combo:'Комбо', inputPlaceholder:'Введите ответ…', loadError:'ОШИБКА ЗАГРУЗКИ ИГРЫ', question:'Вопрос', check:'Проверить', restart:'Сбросить', gapHint:'Выберите слово, затем нажмите на нужный пропуск', questions:'Вопросы:', errors:'Ошибки:', timeLeft:'Осталось времени:', score:'Очки:', best:'Лучший результат:' },
-                en: { loading:'LOADING…', time:'Time', combo:'Combo', inputPlaceholder:'Enter your answer…', loadError:'GAME LOAD ERROR', question:'Question', check:'Check', restart:'Restart', gapHint:'Choose a word, then click the correct gap', questions:'Questions:', errors:'Errors:', timeLeft:'Time left:', score:'Score:', best:'Best score:' },
-                de: { loading:'WIRD GELADEN…', time:'Zeit', combo:'Kombo', inputPlaceholder:'Antwort eingeben…', loadError:'FEHLER BEIM LADEN DES SPIELS', question:'Frage', check:'Prüfen', restart:'Neu starten', gapHint:'Wähle ein Wort und klicke dann auf die richtige Lücke', questions:'Fragen:', errors:'Fehler:', timeLeft:'Restzeit:', score:'Punkte:', best:'Bestes Ergebnis:' },
-                es: { loading:'CARGANDO…', time:'Tiempo', combo:'Combo', inputPlaceholder:'Escribe tu respuesta…', loadError:'ERROR AL CARGAR EL JUEGO', question:'Pregunta', check:'Comprobar', restart:'Reiniciar', gapHint:'Elige una palabra y pulsa el espacio correcto', questions:'Preguntas:', errors:'Errores:', timeLeft:'Tiempo restante:', score:'Puntos:', best:'Mejor resultado:' },
-                kk: { loading:'ЖҮКТЕЛУДЕ…', time:'Уақыт', combo:'Комбо', inputPlaceholder:'Жауапты енгізіңіз…', loadError:'ОЙЫНДЫ ЖҮКТЕУ ҚАТЕСІ', question:'Сұрақ', check:'Тексеру', restart:'Қайта бастау', gapHint:'Сөзді таңдап, дұрыс бос орынды басыңыз', questions:'Сұрақтар:', errors:'Қателер:', timeLeft:'Қалған уақыт:', score:'Ұпай:', best:'Үздік нәтиже:' },
-                zh: { loading:'加载中…', time:'时间', combo:'连击', inputPlaceholder:'输入答案…', loadError:'游戏加载错误', question:'问题', check:'检查', restart:'重新开始', gapHint:'选择一个词，然后点击正确的空格', questions:'问题:', errors:'错误:', timeLeft:'剩余时间:', score:'得分:', best:'最佳成绩:' },
-                ko: { loading:'로딩 중…', time:'시간', combo:'콤보', inputPlaceholder:'답을 입력하세요…', loadError:'게임 로딩 오류', question:'질문', check:'확인', restart:'다시 시작', gapHint:'단어를 선택한 다음 알맞은 빈칸을 누르세요', questions:'질문:', errors:'오류:', timeLeft:'남은 시간:', score:'점수:', best:'최고 기록:' }
+                ru: { loading:'ЗАГРУЗКА…', time:'Время', combo:'Комбо', inputPlaceholder:'Введите ответ…', loadError:'ОШИБКА ЗАГРУЗКИ ИГРЫ', question:'Вопрос', check:'Проверить', next:'Далее', restart:'Сбросить', gapHint:'Выберите слово, затем нажмите на нужный пропуск', questions:'Вопросы:', errors:'Ошибки:', timeLeft:'Осталось времени:', score:'Очки:', best:'Лучший результат:' },
+                en: { loading:'LOADING…', time:'Time', combo:'Combo', inputPlaceholder:'Enter your answer…', loadError:'GAME LOAD ERROR', question:'Question', check:'Check', next:'Next', restart:'Restart', gapHint:'Choose a word, then click the correct gap', questions:'Questions:', errors:'Errors:', timeLeft:'Time left:', score:'Score:', best:'Best score:' },
+                de: { loading:'WIRD GELADEN…', time:'Zeit', combo:'Kombo', inputPlaceholder:'Antwort eingeben…', loadError:'FEHLER BEIM LADEN DES SPIELS', question:'Frage', check:'Prüfen', next:'Weiter', restart:'Neu starten', gapHint:'Wähle ein Wort und klicke dann auf die richtige Lücke', questions:'Fragen:', errors:'Fehler:', timeLeft:'Restzeit:', score:'Punkte:', best:'Bestes Ergebnis:' },
+                es: { loading:'CARGANDO…', time:'Tiempo', combo:'Combo', inputPlaceholder:'Escribe tu respuesta…', loadError:'ERROR AL CARGAR EL JUEGO', question:'Pregunta', check:'Comprobar', next:'Siguiente', restart:'Reiniciar', gapHint:'Elige una palabra y pulsa el espacio correcto', questions:'Preguntas:', errors:'Errores:', timeLeft:'Tiempo restante:', score:'Puntos:', best:'Mejor resultado:' },
+                kk: { loading:'ЖҮКТЕЛУДЕ…', time:'Уақыт', combo:'Комбо', inputPlaceholder:'Жауапты енгізіңіз…', loadError:'ОЙЫНДЫ ЖҮКТЕУ ҚАТЕСІ', question:'Сұрақ', check:'Тексеру', next:'Келесі', restart:'Қайта бастау', gapHint:'Сөзді таңдап, дұрыс бос орынды басыңыз', questions:'Сұрақтар:', errors:'Қателер:', timeLeft:'Қалған уақыт:', score:'Ұпай:', best:'Үздік нәтиже:' },
+                zh: { loading:'加载中…', time:'时间', combo:'连击', inputPlaceholder:'输入答案…', loadError:'游戏加载错误', question:'问题', check:'检查', next:'下一步', restart:'重新开始', gapHint:'选择一个词，然后点击正确的空格', questions:'问题:', errors:'错误:', timeLeft:'剩余时间:', score:'得分:', best:'最佳成绩:' },
+                ko: { loading:'로딩 중…', time:'시간', combo:'콤보', inputPlaceholder:'답을 입력하세요…', loadError:'게임 로딩 오류', question:'질문', check:'확인', next:'다음', restart:'다시 시작', gapHint:'단어를 선택한 다음 알맞은 빈칸을 누르세요', questions:'질문:', errors:'오류:', timeLeft:'남은 시간:', score:'점수:', best:'최고 기록:' }
             };
             function gameText(key) {
                 const lang = GAME_TEXTS[CONFIG.uiLanguage] ? CONFIG.uiLanguage : 'ru';
@@ -2027,6 +2030,12 @@
                     let input = document.createElement('input'); input.type = 'text'; input.className = 'text-input'; input.placeholder = gameText('inputPlaceholder'); dynamicArea.appendChild(input); 
                     checkBtn.classList.remove('hidden'); checkBtn.onclick = () => checkAnswer(activeQuestion.correct.map(c=>c.toLowerCase()).includes(input.value.trim().toLowerCase()));
                 }
+                else if (activeQuestion.type === 'open') {
+                    appendQuestionStem();
+                    checkBtn.classList.remove('hidden');
+                    checkBtn.innerText = gameText('next');
+                    checkBtn.onclick = completeOpenQuestion;
+                }
                 else if (activeQuestion.type === 'pairs') {
                     const palette=['#00f3ff','#ff2d75','#ffd43b','#39ff14','#ff8a00','#9d5cff','#31e6a1','#ff5ac8','#63a4ff','#f05d5e'];
                     const pairs=(activeQuestion.pairs||[]).slice(0,10);
@@ -2174,6 +2183,15 @@
                 if(question.type==='error') return question.correct;
                 if(question.type==='gaps') return question.answers.join(' | ');
                 return question.correct;
+            }
+
+            function completeOpenQuestion() {
+                const overlay = document.getElementById('question-overlay');
+                pendingQuestion = false;
+                correctAnswers++;
+                overlay.classList.add('hidden');
+                activeQuestion = null;
+                if (!maybeFinishGame() && CONFIG.rules.smartPause && !gameFinished) startTimer();
             }
 
             function checkAnswer(isCorrect) {
@@ -2770,6 +2788,20 @@
                 return qObj;
             }
 
+            if (/^\[OPEN(?:-ENDED)?\]/i.test(str)) {
+                const prefix = str.match(/^\[OPEN(?:-ENDED)?\]/i)[0];
+                const body = removePrefix(str, prefix);
+                const taskAndQuestion = body.split('//');
+                const hasTask = taskAndQuestion.length > 1;
+                const task = hasTask ? (taskAndQuestion.shift() || '').trim() : '';
+                const question = hasTask ? taskAndQuestion.join('//').trim() : body.trim();
+                if (!question) return fail('Формат [OPEN]: открытый вопрос. Например: [OPEN] What is the best superpower to have and why?');
+                qObj.type = 'open';
+                qObj.prompt = task;
+                qObj.question = question;
+                return qObj;
+            }
+
             if (str.includes('|')) {
                 const parts = str.split('|').map(v => v.trim());
                 if (parts.length < 2 || !parts[0] || !parts[1]) return fail('Формат выбора ответа: вопрос | правильный ответ | неправильные варианты.');
@@ -2826,6 +2858,9 @@
             }
             if (q.type === 'gaps') {
                 return `[GAPS] ${prompt} // ${question} | ${(q.answers || []).join(' | ')}`;
+            }
+            if (q.type === 'open') {
+                return `[OPEN] ${prompt ? `${prompt} // ` : ''}${question}`;
             }
             if (q.type === 'order') {
                 return prompt ? `[ORDER] ${prompt} | ${question}` : question;
@@ -2884,7 +2919,8 @@
                     pairs: 'ПАРЫ',
                     categories: 'КАТЕГОРИИ',
                     error: 'НАЙТИ ОШИБКУ',
-                    gaps: 'ПРОПУСКИ'
+                    gaps: 'ПРОПУСКИ',
+                    open: 'ОТКРЫТЫЙ ВОПРОС'
                 };
                 const typeLabel = labels[q.type] || String(q.type || '').toUpperCase();
                 let answerHTML = '';
@@ -2909,6 +2945,9 @@
                 } else if (q.type === 'order') {
                     const task = q.prompt ? `<strong style="color:#fff;">${escapeEditorHtml(q.prompt)}</strong><br>` : '';
                     answerHTML = `${task}<span style="font-size:.75rem;color:var(--neon-3)">Сборка: ${escapeEditorHtml(q.question)}</span>`;
+                } else if (q.type === 'open') {
+                    const task = q.prompt ? `<strong style="color:#fff;">${escapeEditorHtml(q.prompt)}</strong><br>` : '';
+                    answerHTML = `${task}<span style="color:#ddd;">${escapeEditorHtml(q.question)}</span><br><span style="font-size:.72rem;color:#888">Без автоматической проверки — кнопка «Далее».</span>`;
                 }
 
                 const imgControlsHTML = q.hasImg
@@ -3044,6 +3083,8 @@
                 if (q.type === 'categories') return { ...base, categories:q.categories.map(c=>({name:c.name,items:[...c.items]})) };
                 if (q.type === 'error') return { ...base, prompt:q.prompt || '', correct:q.correct };
                 if (q.type === 'gaps') return { ...base, prompt:q.prompt, answers:[...q.answers] };
+                if (q.type === 'open') return { ...base, prompt:q.prompt || '' };
+                return base;
             });
             if (editorState.questionsDB.length === 0) editorState.questionsDB = [{ type: 'choice', text: 'Вопросы не добавлены. Это тестовый вопрос.', options: ['Понятно', 'ОК'], correct: 'Понятно' }];
         }
